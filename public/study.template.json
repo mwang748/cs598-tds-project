@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0",
+  "studyId": "replace-study-id",
+  "contentVersion": "draft-01",
+  "title": "Replace with your study title",
+  "stimulusLabel": "Researcher draft",
+  "instructions": [
+    "Each checkpoint is an independent example.",
+    "Choose the approach you would prefer."
+  ],
+  "settings": { "allowBackNavigation": true },
+  "scenarios": [
+    {
+      "id": "replace-scenario-id",
+      "title": "Replace with a scenario title",
+      "factors": { "budget": "replace factor value", "schedule": "replace factor value" },
+      "introduction": [{ "type": "paragraph", "text": "Replace with the scenario introduction." }],
+      "summary": [{ "label": "Budget", "value": "Replace with a budget" }],
+      "checkpoints": [
+        {
+          "id": "replace-checkpoint-id",
+          "title": "Replace with a checkpoint title",
+          "context": [{ "type": "paragraph", "text": "Replace with the information participants need." }],
+          "question": "Which approach would you prefer?",
+          "responseType": "single-choice",
+          "options": [
+            { "id": "replace-option-a", "kind": "chatbot", "text": "Replace with an alternative chatbot response." },
+            { "id": "replace-option-b", "kind": "manual", "text": "Replace with a manual choice, or remove this option." }
+          ],
+          "researcherMetadata": { "researchQuestions": ["RQ1"], "construct": "Replace with your construct" }
+        }
+      ]
+    }
+  ]
+}

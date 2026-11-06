@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "1.0",
+  "studyId": "travel-chatbot-preferences",
+  "contentVersion": "fictional-draft-01",
+  "title": "Travel Planning Study",
+  "stimulusLabel": "Fictional draft stimuli",
+  "instructions": [
+    "Imagine yourself in each travel scenario. We’ll give you the details you need.",
+    "Compare the alternative chatbot responses and choose the approach you would prefer. There are no right or wrong answers.",
+    "Treat every checkpoint as a fresh example. Your choices do not change what happens next."
+  ],
+  "settings": { "allowBackNavigation": true },
+  "scenarios": [
+    {
+      "id": "city-fixed",
+      "title": "A few days in Washington, DC",
+      "factors": { "budget": "comfortable", "schedule": "fixed" },
+      "introduction": [
+        { "type": "paragraph", "text": "Imagine a solo, three-night trip to Washington, DC. You’re looking forward to neighborhood walks, museums, and a little time to explore." },
+        { "type": "paragraph", "text": "Your travel dates are fixed, and you have $2,400 for the trip. You’re considering how a travel assistant could help you plan." }
+      ],
+      "summary": [
+        { "label": "Destination", "value": "Washington, DC" },
+        { "label": "Trip budget", "value": "$2,400 total" },
+        { "label": "Dates", "value": "June 10–13, 2027 · fixed" },
+        { "label": "Travel party", "value": "Just you · 3 nights" }
+      ],
+      "checkpoints": [
+        {
+          "id": "hotel-selection",
+          "title": "Finding a place to stay",
+          "context": [
+            { "type": "paragraph", "text": "You need a private room for three nights. These two fictional hotels are available for your dates." },
+            { "type": "table", "columns": ["Hotel", "Three-night total", "Walk to transit"], "rows": [["Park Hotel", "$600", "12 minutes"], ["Union Hotel", "$660", "5 minutes"]] }
+          ],
+          "travelerMessage": "Can you help me choose a hotel?",
+          "question": "How would you like to approach this choice?",
+          "responseType": "single-choice",
+          "options": [
+            { "id": "compare", "kind": "chatbot", "text": "Here’s a comparison of price and location for both hotels. You can decide which one you’d like to add to your itinerary." },
+            { "id": "recommend", "kind": "chatbot", "text": "I recommend Union Hotel because it’s closer to transit. Would you like me to add it to your draft itinerary?" },
+            { "id": "draft-selection", "kind": "chatbot", "text": "I’ve added Union Hotel to your draft itinerary for its convenient transit access. You can change it. Nothing has been booked." },
+            { "id": "manual", "kind": "manual", "text": "I’d compare the hotels and make this choice myself, without chatbot assistance." }
+          ],
+          "researcherMetadata": { "researchQuestions": ["RQ1", "RQ2"], "construct": "Preferred hotel-selection authority" }
+        },
+        {
+          "id": "hotel-recovery",
+          "title": "When a plan needs a rethink",
+          "context": [
+            { "type": "paragraph", "text": "In this independent example, Union Hotel was on a draft itinerary, but the room is no longer available. Nothing has been booked, and Park Hotel is still available for $600." }
+          ],
+          "travelerMessage": "The hotel is unavailable. What should we do?",
+          "question": "Which response would you prefer now?",
+          "responseType": "single-choice",
+          "options": [
+            { "id": "ask-priorities", "kind": "chatbot", "text": "That room is no longer available. Would you rather keep the lower price or stay close to transit? I can look for another option based on what matters to you." },
+            { "id": "suggest-alternative", "kind": "chatbot", "text": "That room is no longer available. Park Hotel is still available for $600. I suggest it as an alternative. Shall I update your draft itinerary?" },
+            { "id": "manual", "kind": "manual", "text": "I’d take over the hotel search and work out an alternative myself." }
+          ],
+          "researcherMetadata": { "researchQuestions": ["RQ3"], "construct": "Preferred recovery approach" }
+        }
+      ]
+    },
+    {
+      "id": "coast-flexible",
+      "title": "A weekend by the coast",
+      "factors": { "budget": "tight", "schedule": "flexible" },
+      "introduction": [
+        { "type": "paragraph", "text": "Now imagine a different trip: a relaxed two-night visit to the coast with a friend. You’re sharing a total budget of $700." },
+        { "type": "bullet-list", "items": ["You can travel on any weekend in September 2027.", "You’d like time outdoors and one local activity.", "Treat this as a fresh scenario, independent of your earlier choices."] }
+      ],
+      "summary": [
+        { "label": "Destination", "value": "The coast" },
+        { "label": "Trip budget", "value": "$700 shared total" },
+        { "label": "Dates", "value": "September 2027 · flexible" },
+        { "label": "Travel party", "value": "You + a friend · 2 nights" }
+      ],
+      "checkpoints": [
+        {
+          "id": "ground-transport",
+          "title": "Getting there together",
+          "context": [
+            { "type": "paragraph", "text": "A return train journey costs $120 for two people and takes three hours each way. A return coach journey costs $70 for two people and takes four hours each way. Both fit your possible weekends." }
+          ],
+          "question": "How much help would you like with transportation?",
+          "responseType": "single-choice",
+          "options": [
+            { "id": "compare", "kind": "chatbot", "text": "The coach saves $50, while the train saves an hour each way. Here are the details so you can choose the best fit." },
+            { "id": "draft-selection", "kind": "chatbot", "text": "I’ve added the coach to your draft itinerary to leave more of your budget for the weekend. You can change it. No tickets have been bought." },
+            { "id": "manual", "kind": "manual", "text": "I’d compare transportation and choose it myself, without chatbot assistance." }
+          ],
+          "researcherMetadata": { "researchQuestions": ["RQ1", "RQ2"] }
+        },
+        {
+          "id": "activity-planning",
+          "title": "Making room for a little exploring",
+          "context": [
+            { "type": "paragraph", "text": "In this independent example, your accommodation and transport are already arranged. You have $90 left for activities for both of you. A guided coastal walk costs $50 for two; exploring a public beach is free." }
+          ],
+          "travelerMessage": "Help us plan an afternoon outdoors.",
+          "question": "Which approach would you prefer?",
+          "responseType": "single-choice",
+          "options": [
+            { "id": "recommend", "kind": "chatbot", "text": "I suggest the guided coastal walk for $50, leaving $40 of your activity budget. Would you like to add it to the plan?" },
+            { "id": "manual", "kind": "manual", "text": "We’d decide how to spend the afternoon ourselves, without chatbot assistance." }
+          ],
+          "researcherMetadata": { "researchQuestions": ["RQ1", "RQ2"] }
+        }
+      ]
+    }
+  ]
+}
