@@ -4,6 +4,8 @@ import type { Checkpoint } from '../content/schema';
 import { Blocks } from './Blocks';
 import { Choices } from './Choices';
 
+const REPLY_DELAY_MS = 3000;
+
 interface Props {
   checkpoint: Checkpoint;
   headingRef: Ref<HTMLHeadingElement>;
@@ -15,15 +17,21 @@ interface Props {
 
 export function TaskChat({ checkpoint, headingRef, message, selected, onSend, onSelect }: Props) {
   const [draft, setDraft] = useState('');
+  const [isThinking, setIsThinking] = useState(false);
   const repliesHeading = useRef<HTMLHeadingElement>(null);
   const focusReplies = useRef(false);
 
   useEffect(() => {
-    if (message && focusReplies.current) {
+    if (!message) return;
+    if (isThinking) {
+      const timer = window.setTimeout(() => setIsThinking(false), REPLY_DELAY_MS);
+      return () => window.clearTimeout(timer);
+    }
+    if (focusReplies.current) {
       repliesHeading.current?.focus();
       focusReplies.current = false;
     }
-  }, [message]);
+  }, [message, isThinking]);
 
   return <>
     <div className="task-divider"><span>New task</span></div>
@@ -40,6 +48,7 @@ export function TaskChat({ checkpoint, headingRef, message, selected, onSend, on
       const text = draft.trim();
       if (!text) return;
       focusReplies.current = true;
+      setIsThinking(true);
       onSend(text);
     }}>
       <label htmlFor="task-message" className="composer-label">Your message</label>
@@ -66,12 +75,14 @@ export function TaskChat({ checkpoint, headingRef, message, selected, onSend, on
       </div>
     </form> : <>
       <div className="traveler-message"><span>You</span><p>{message}</p></div>
-      <div className="question-section">
-        <span className="alternatives-label">Alternative responses</span>
-        <h2 ref={repliesHeading} tabIndex={-1}>{checkpoint.question}</h2>
-        <p>Choose the reply you’d prefer to receive.</p>
-        <Choices checkpoint={checkpoint} selected={selected} onSelect={onSelect} />
-      </div>
+      {isThinking ? <div className="assistant-message thinking-message" role="status">
+        <span className="sr-only">Preparing replies…</span>
+        <div className="assistant-avatar" aria-hidden="true"><Bot size={20} /></div>
+        <div className="thinking-bubble" aria-hidden="true"><span /><span /><span /></div>
+      </div> : <div className="question-section">
+        <h2 id="task-replies-heading" ref={repliesHeading} tabIndex={-1}>Choose the reply you’d prefer</h2>
+        <Choices checkpoint={checkpoint} selected={selected} onSelect={onSelect} labelledBy="task-replies-heading" />
+      </div>}
     </>}
   </>;
 }

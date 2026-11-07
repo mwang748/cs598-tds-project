@@ -2,9 +2,14 @@ import { useRef } from 'react';
 import { Bot, Check } from 'lucide-react';
 import type { Checkpoint } from '../content/schema';
 
-export function Choices({ checkpoint, selected, onSelect }: { checkpoint: Checkpoint; selected?: string; onSelect: (id: string) => void }) {
+export function Choices({ checkpoint, selected, onSelect, labelledBy }: {
+  checkpoint: Checkpoint;
+  selected?: string;
+  onSelect: (id: string) => void;
+  labelledBy: string;
+}) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  return <div className="choice-group" role="radiogroup" aria-label={checkpoint.question}>
+  return <div className="choice-group" role="radiogroup" aria-labelledby={labelledBy}>
     {checkpoint.options.map((option, index) => <button
       key={option.id}
       ref={element => { refs.current[index] = element; }}

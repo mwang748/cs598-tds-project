@@ -1,6 +1,6 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import example from '../public/study.default.json';
 import { studySchema } from './content/schema';
 import { App } from './App';
@@ -8,7 +8,13 @@ import { App } from './App';
 const study = studySchema.parse(example);
 async function sendTaskMessage(user: ReturnType<typeof userEvent.setup>, message = 'Can you help?') {
   await user.type(screen.getByRole('textbox', { name: 'Your message' }), message);
-  await user.click(screen.getByRole('button', { name: 'Send' }));
+  vi.useFakeTimers();
+  try {
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }));
+    act(() => vi.advanceTimersByTime(3000));
+  } finally {
+    vi.useRealTimers();
+  }
 }
 
 async function begin() {
@@ -20,7 +26,7 @@ async function begin() {
 }
 
 describe('participant and researcher flows', () => {
-  it('reveals the fixed replies only after the participant sends a message', async () => {
+  it('shows a thinking indicator before revealing the fixed replies under one prompt', async () => {
     const user = await begin();
     const composer = screen.getByRole('textbox', { name: 'Your message' });
     expect(screen.getByText('New task')).toBeVisible();
@@ -32,10 +38,16 @@ describe('participant and researcher flows', () => {
     await user.type(composer, 'I need a quiet place to stay.{Enter}');
     expect(screen.getByText('I need a quiet place to stay.')).toBeVisible();
     expect(screen.queryByRole('textbox', { name: 'Your message' })).not.toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('Preparing replies…');
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
+    await screen.findByRole('radiogroup', { name: 'Choose the reply you’d prefer' }, { timeout: 4000 });
+    expect(screen.queryByText('Alternative responses')).not.toBeInTheDocument();
+    expect(screen.queryByText(study.scenarios[0].checkpoints[0].question)).not.toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
     const options = study.scenarios[0].checkpoints[0].options;
     expect(screen.getAllByRole('radio')).toHaveLength(options.length);
     options.forEach((option, index) => expect(screen.getAllByRole('radio')[index]).toHaveAccessibleName(option.text));
-  });
+  }, 10000);
 
   it('opens the current scenario from the hamburger without changing the selected reply', async () => {
     const user = await begin();

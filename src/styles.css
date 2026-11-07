@@ -117,10 +117,39 @@ td { padding: 12px 13px; border-top: 1px solid #ededf1; overflow-wrap: anywhere;
 .traveler-message p { background: #e9ebfc; color: #535b9a; border-radius: 17px 4px 17px 17px; padding: 14px 20px; font-size: 14px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; }
 
 /* Alternatives use message bubbles. Radio semantics remain for keyboard users. */
-.question-section { margin-top: 32px; }
-.alternatives-label { display: block; font-size: 11px; color: #a0a2ad; margin: 0 0 8px 44px; }
-.question-section h2 { font-size: 17px; font-weight: 500; line-height: 1.6; margin-left: 44px; letter-spacing: -.2px; }
-.question-section > p { font-size: 11px; color: #9295a0; line-height: 1.7; margin: 6px 0 20px 44px; }
+.thinking-message { align-items: center; }
+.thinking-message .assistant-avatar { margin-top: 0; }
+.thinking-bubble {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 15px 18px;
+  border-radius: 4px 18px 18px 18px;
+  background: var(--bubble);
+}
+.thinking-bubble span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #777fae;
+  animation: thinking-bounce .9s ease-in-out infinite;
+}
+.thinking-bubble span:nth-child(2) { animation-delay: .12s; }
+.thinking-bubble span:nth-child(3) { animation-delay: .24s; }
+@keyframes thinking-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-5px); }
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.question-section { margin-top: 32px; animation: page-in .16s ease-out; }
+.question-section h2 { font-size: 17px; font-weight: 500; line-height: 1.6; margin: 0 0 16px 44px; letter-spacing: -.2px; }
 .choice-group { display: flex; flex-direction: column; gap: 17px; }
 .choice-card {
   display: flex;
