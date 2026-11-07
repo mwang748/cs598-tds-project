@@ -37,13 +37,14 @@ Scenario IDs must be unique. Summary labels need not correspond to any fixed cat
 | `id` | string | Unique within its scenario. May be reused in a different scenario. |
 | `title` | string | Nonblank. |
 | `context` | block array, optional | May be absent or empty. |
-| `travelerMessage` | string, optional | Omit to hide the scripted traveler bubble. If present, must be nonblank. |
+| `taskInstruction` | string, optional | Short, neutral instruction above the message box. If omitted, the app asks the participant to request help with the task. |
+| `travelerMessage` | string, optional | Example wording shown below the instruction. The message box starts empty. |
 | `question` | string | Exact nonblank question wording, included in the export. |
 | `responseType` | string | Exactly `"single-choice"`. Other types are rejected. |
 | `options` | option array | At least one. Any number is supported, in array order. |
 | `researcherMetadata` | object, optional | Any JSON keys/values, e.g. researchQuestions or construct. Hidden from participant screens; not included in response exports. |
 
-Each checkpoint is independent. There are no conditions, branch rules, scores or generated responses. Removing an optional field means removing its key, rather than setting it to `null`.
+Each checkpoint appears as a separate chat task. After the participant sends one message, the app shows the authored alternatives in array order. The message is used for the in-memory chat display. Response exports record the selected option. Removing an optional field means removing its key, rather than setting it to `null`.
 
 ## Option
 

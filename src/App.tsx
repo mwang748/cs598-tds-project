@@ -3,17 +3,23 @@ import { AlertCircle, ArrowDownToLine, ArrowLeft, ArrowRight, Bot, Check, CheckC
 import { checkpointCount, validateStudy, type Study } from './content/schema';
 import { answerKey, chooseAnswer, countAnswered, createSession, hasUnexportedAnswers, nextCheckpoint, previousRoute, type ParticipantSession, type StudyRoute } from './session/session';
 import { Blocks } from './components/Blocks';
-import { Choices } from './components/Choices';
 import { Modal } from './components/Modal';
 import { ResearcherPanel } from './components/ResearcherPanel';
 import { ScenarioMenu } from './components/ScenarioMenu';
+import { TaskChat } from './components/TaskChat';
 
-interface Preview { study: Study; route: StudyRoute; selected?: string }
+interface Preview {
+  study: Study;
+  route: StudyRoute;
+  messages: Record<string, string>;
+  answers: Record<string, string>;
+}
 
 export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const [study, setStudy] = useState<Study | null>(initialStudy ?? null);
   const [loadError, setLoadError] = useState('');
   const [session, setSession] = useState<ParticipantSession | null>(null);
+  const [participantMessages, setParticipantMessages] = useState<Record<string, string>>({});
   const [participantRoute, setParticipantRoute] = useState<StudyRoute>({ screen: 'welcome' });
   const [preview, setPreview] = useState<Preview | null>(null);
   const [researcherOpen, setResearcherOpen] = useState(false);
@@ -49,7 +55,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const routeIdentity = route.screen + ('scenarioIndex' in route ? `-${route.scenarioIndex}` : '') + ('checkpointIndex' in route ? `-${route.checkpointIndex}` : '') + (preview ? '-preview' : '');
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-    headingRef.current?.focus({ preventScroll: true });
+    headingRef.current?.focus();
   }, [routeIdentity, activeStudy?.studyId]);
 
   if (!activeStudy) return <div className="loading-screen"><Compass size={32} /><h1>{loadError ? 'The study needs attention' : 'Opening your study…'}</h1>{loadError && <><pre role="alert">{loadError}</pre><p>Fix public/study.default.json using the format in docs/JSON_FORMAT.md, then reload.</p></>}</div>;
@@ -58,29 +64,45 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const checkpoint = route.screen === 'checkpoint' ? scenario!.checkpoints[route.checkpointIndex] : undefined;
   const ordinal = route.screen === 'checkpoint' ? activeStudy.scenarios.slice(0, route.scenarioIndex).reduce((n, s) => n + s.checkpoints.length, 0) + route.checkpointIndex + 1 : 0;
   const answered = !preview && session ? countAnswered(activeStudy, session) : 0;
-  const selected = preview ? preview.selected : session && scenario && checkpoint ? session.answers[answerKey(scenario.id, checkpoint.id)] : undefined;
+  const messages = preview?.messages ?? participantMessages;
+  const answers = preview?.answers ?? session?.answers;
+  const taskKey = scenario && checkpoint ? answerKey(scenario.id, checkpoint.id) : undefined;
+  const message = taskKey ? messages[taskKey] : undefined;
+  const selected = taskKey ? answers?.[taskKey] : undefined;
+  const nextTask = route.screen === 'checkpoint' ? nextCheckpoint(activeStudy, route.scenarioIndex, route.checkpointIndex) : undefined;
+  const advanceLabel = nextTask?.screen === 'intro' ? 'Next scenario' : nextTask?.screen === 'complete' ? 'Finish study' : 'Next task';
   const progress = preview ? (route.screen === 'complete' ? 100 : Math.round(ordinal / total * 100)) : Math.round(answered / total * 100);
 
   const navigate = (next: StudyRoute) => {
-    if (preview) setPreview({ ...preview, route: next, selected: undefined });
+    if (preview) setPreview({ ...preview, route: next });
     else setParticipantRoute(next);
   };
   const start = () => {
-    if (!preview) { setSession(createSession()); setExportNotice(''); setExportError(''); }
+    if (!preview) {
+      setSession(createSession());
+      setParticipantMessages({});
+      setExportNotice('');
+      setExportError('');
+    }
     navigate({ screen: 'intro', scenarioIndex: 0 });
   };
+  const sendMessage = (text: string) => {
+    if (!taskKey || message) return;
+    if (preview) setPreview({ ...preview, messages: { ...preview.messages, [taskKey]: text } });
+    else setParticipantMessages(current => ({ ...current, [taskKey]: text }));
+  };
   const select = (optionId: string) => {
-    if (preview) setPreview({ ...preview, selected: optionId });
+    if (!taskKey || !message) return;
+    if (preview) setPreview({ ...preview, answers: { ...preview.answers, [taskKey]: optionId } });
     else if (session && route.screen === 'checkpoint') {
       setSession(chooseAnswer(session, activeStudy, route.scenarioIndex, route.checkpointIndex, optionId));
       setExportNotice('');
     }
   };
   const continueCheckpoint = () => {
-    if (!selected || route.screen !== 'checkpoint') return;
-    const next = nextCheckpoint(activeStudy, route.scenarioIndex, route.checkpointIndex);
-    if (!preview && session && next.screen === 'complete') setSession({ ...session, completed: true });
-    navigate(next);
+    if (!message || !selected || !nextTask) return;
+    if (!preview && session && nextTask.screen === 'complete') setSession({ ...session, completed: true });
+    navigate(nextTask);
   };
   const exportResults = async (format: 'xlsx' | 'csv') => {
     if (!session || !study || busy) return;
@@ -97,6 +119,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const requestReset = () => { setResetConfirmed(false); setResetOpen(true); };
   const reset = () => {
     if (!resetConfirmed || busy) return;
+    setParticipantMessages({});
     setSession(null); setParticipantRoute({ screen: 'welcome' }); setPreview(null); setResetOpen(false); setResearcherOpen(false); setExportNotice(''); setExportError('');
   };
 
@@ -110,24 +133,35 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
     }}><option value="welcome">Welcome & instructions</option>{activeStudy.scenarios.map((s, si) => <optgroup key={s.id} label={`${si + 1}. ${s.title}`}><option value={`${si}:intro`}>Scenario introduction</option>{s.checkpoints.map((cp, ci) => <option key={cp.id} value={`${si}:${ci}`}>{ci + 1}. {cp.title}</option>)}</optgroup>)}<option value="complete">Completion screen</option></select><button className="text-button" onClick={() => setPreview(null)}>Exit preview <X size={15} /></button></div></div>}
     <div className="study-layout">
       <main className="main-panel" id="study-content" ref={contentRef}>
-        {route.screen !== 'welcome' && <div className="progress-area"><div><span>{preview ? 'Preview' : 'Travel chat'}</span><span>{preview ? (ordinal ? `Example ${ordinal} of ${total}` : `${total} examples`) : `${answered} of ${total} answered`}</span></div><div className="progress-track" role="progressbar" aria-label="Study progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}><span style={{ width: `${progress}%` }} /></div></div>}
+        {route.screen !== 'welcome' && <div className="progress-area"><div><span>{preview ? 'Preview' : 'Travel chat'}</span><span>{preview ? (ordinal ? `Task ${ordinal} of ${total}` : `${total} tasks`) : `${answered} of ${total} answered`}</span></div><div className="progress-track" role="progressbar" aria-label="Study progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}><span style={{ width: `${progress}%` }} /></div></div>}
         <div className={`study-page page-${route.screen}`} key={routeIdentity}>
           {route.screen === 'welcome' && <>
-            <div className="assistant-message welcome-message"><div className="assistant-avatar"><Bot size={20} /></div><div className="message-body"><span className="message-author">Travel assistant</span><div className="assistant-bubble"><h1 ref={headingRef} tabIndex={-1}>Hi! Let’s plan a trip.</h1><p className="welcome-lede">Imagine a few trips and choose how you’d like a chatbot to help.</p><div className="welcome-instructions"><h2>A couple of things before we start</h2><ul>{activeStudy.instructions.map((instruction, index) => <li key={index}>{instruction}</li>)}</ul></div></div></div></div>
+            <div className="assistant-message welcome-message"><div className="assistant-avatar"><Bot size={20} /></div><div className="message-body"><span className="message-author">Travel assistant</span><div className="assistant-bubble"><h1 ref={headingRef} tabIndex={-1}>Hi! Let’s plan a trip.</h1><p className="welcome-lede">Imagine a few trips and choose how you’d like a chatbot to help.</p><div className="welcome-instructions"><h2>A couple of things before we start</h2><p>Each task is a separate chat. Send one message, then choose the reply you’d prefer to receive. Use the trip details for the current scenario. Your choices from earlier tasks don’t carry over.</p><ul>{activeStudy.instructions.map((instruction, index) => <li key={index}>{instruction}</li>)}</ul></div></div></div></div>
             <div className="welcome-bottom"><span>No names or sign-in needed.</span><button className="button primary" onClick={start}>Start study <ArrowRight size={17} /></button></div>
           </>}
           {route.screen === 'intro' && scenario && <>
-            <div className="assistant-message"><div className="assistant-avatar"><Bot size={20} /></div><div className="message-body"><span className="message-author">Travel assistant</span><div className="assistant-bubble"><p className="conversation-note">{route.scenarioIndex === 0 ? 'Picture this trip…' : 'Let’s try a different trip.'}</p><h1 ref={headingRef} tabIndex={-1}>{scenario.title}</h1><Blocks blocks={scenario.introduction} /><dl className="inline-trip-summary">{scenario.summary.map((item, i) => <div key={i}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}</dl></div></div></div>
-            <div className="independent-note"><Info size={17} /><p>Each checkpoint stands on its own. Earlier selections won’t change later examples.</p></div>
+            <div className="assistant-message"><div className="assistant-avatar"><Bot size={20} /></div><div className="message-body"><span className="message-author">Travel assistant</span><div className="assistant-bubble"><p className="conversation-note">New trip</p><h1 ref={headingRef} tabIndex={-1}>{scenario.title}</h1><Blocks blocks={scenario.introduction} /><dl className="inline-trip-summary">{scenario.summary.map((item, i) => <div key={i}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}</dl></div></div></div>
+            <div className="independent-note"><Info size={17} /><p>Use these trip details for each task. Each task starts a separate chat.</p></div>
             <div className="page-actions">{activeStudy.settings.allowBackNavigation && route.scenarioIndex > 0 ? <button className="button ghost" onClick={() => navigate(previousRoute(activeStudy, route))}><ArrowLeft size={16} /> Back</button> : <span />}<button className="button primary" onClick={() => navigate({ screen: 'checkpoint', scenarioIndex: route.scenarioIndex, checkpointIndex: 0 })}>Begin scenario <ArrowRight size={17} /></button></div>
           </>}
-          {route.screen === 'checkpoint' && checkpoint && <>
-            <div className="checkpoint-heading"><h1 ref={headingRef} tabIndex={-1}>{checkpoint.title}</h1><span>Independent example</span></div>
-            {checkpoint.context && checkpoint.context.length > 0 && <div className="assistant-message"><div className="assistant-avatar"><Bot size={20} /></div><div className="message-body"><span className="message-author">Travel assistant</span><div className="assistant-bubble"><Blocks blocks={checkpoint.context} /></div></div></div>}
-            {checkpoint.travelerMessage && <div className="traveler-message"><span>You, in this scenario</span><p>{checkpoint.travelerMessage}</p></div>}
-            <div className="question-section"><span className="alternatives-label">Alternative responses</span><h2>{checkpoint.question}</h2><p>Tap the reply you’d prefer. Each bubble is a separate alternative.</p><Choices checkpoint={checkpoint} selected={selected} onSelect={select} /></div>
-            <div className="page-actions"><button className="button ghost" onClick={() => navigate(previousRoute(activeStudy, route))} disabled={!activeStudy.settings.allowBackNavigation}><ArrowLeft size={16} /> Back</button><span className="selection-hint">{selected ? <><Check size={14} /> One response selected</> : 'Select a response to continue'}</span><button className="button primary" disabled={!selected} onClick={continueCheckpoint}>Continue <ArrowRight size={17} /></button></div>
-            <p className="keyboard-tip">Use <kbd>Tab</kbd> to focus choices, <kbd>↑</kbd> <kbd>↓</kbd> to select, and <kbd>Enter</kbd> or <kbd>Space</kbd> to choose.</p>
+          {route.screen === 'checkpoint' && scenario && checkpoint && <>
+            {activeStudy.settings.allowBackNavigation && scenario.checkpoints.slice(0, route.checkpointIndex).map(previous => {
+              const key = answerKey(scenario.id, previous.id);
+              const reply = previous.options.find(option => option.id === answers?.[key]);
+              if (!messages[key] || !reply) return null;
+              return <details className="previous-task" key={key}>
+                <summary>Previous task · {previous.title}</summary>
+                <div className="traveler-message"><span>You</span><p>{messages[key]}</p></div>
+                <div className="previous-reply"><span>Preferred reply</span><p>{reply.text}</p></div>
+              </details>;
+            })}
+            <TaskChat checkpoint={checkpoint} headingRef={headingRef} message={message} selected={selected} onSend={sendMessage} onSelect={select} />
+            <div className="page-actions">
+              <button className="button ghost" onClick={() => navigate(previousRoute(activeStudy, route))} disabled={!activeStudy.settings.allowBackNavigation}><ArrowLeft size={16} /> Back</button>
+              {message && <span className="selection-hint">{selected ? <><Check size={14} /> One response selected</> : 'Choose a reply to continue'}</span>}
+              <button className="button primary" disabled={!message || !selected} onClick={continueCheckpoint}>{advanceLabel} <ArrowRight size={17} /></button>
+            </div>
+            {message && <p className="keyboard-tip">Use <kbd>Tab</kbd> to focus choices, <kbd>↑</kbd> <kbd>↓</kbd> to select, and <kbd>Enter</kbd> or <kbd>Space</kbd> to choose.</p>}
           </>}
           {route.screen === 'complete' && <div className="completion-content"><span className="completion-icon"><Bot size={28} /></span><h1 ref={headingRef} tabIndex={-1}>Thanks, that’s everything!</h1><p className="welcome-lede">You’ve shared how you’d like a travel chatbot to help.</p>
             <div className="completion-card"><FileCheck2 size={26} /><div><h2>{preview ? 'This is the completion preview' : 'Your responses are ready to download'}</h2><p>{preview ? 'Preview mode does not create a session or any exportable results.' : `${answered} checkpoints answered across ${activeStudy.scenarios.length} scenarios.`}</p>{!preview && session && <code>{session.id}</code>}</div></div>
@@ -139,7 +173,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
         <footer className="study-footer"><div><p>{session ? 'Download before refreshing or closing. Answers are held in memory.' : 'Chat mockup · all assistant messages are prewritten.'}</p>{activeStudy.stimulusLabel && <p>{activeStudy.stimulusLabel}</p>}</div><button className="researcher-button" onClick={() => setResearcherOpen(true)}><Settings2 size={14} /> Researcher</button></footer>
       </main>
     </div>
-    {study && <ResearcherPanel open={researcherOpen} study={study} session={session} busy={busy} onClose={() => setResearcherOpen(false)} onPreview={content => { setPreview({ study: content, route: { screen: 'welcome' } }); setResearcherOpen(false); }} onActivate={content => { if (session) return; setStudy(content); setPreview(null); setParticipantRoute({ screen: 'welcome' }); }} onReset={requestReset} onExport={exportResults} />}
+    {study && <ResearcherPanel open={researcherOpen} study={study} session={session} busy={busy} onClose={() => setResearcherOpen(false)} onPreview={content => { setPreview({ study: content, route: { screen: 'welcome' }, messages: {}, answers: {} }); setResearcherOpen(false); }} onActivate={content => { if (session) return; setStudy(content); setPreview(null); setParticipantRoute({ screen: 'welcome' }); }} onReset={requestReset} onExport={exportResults} />}
     {researcherOpen && !resetOpen && (exportNotice || exportError) && <div className="toast" role={exportError ? 'alert' : 'status'}>{exportError || exportNotice}</div>}
     {resetOpen && <Modal title="Ready for the next participant?" onClose={() => setResetOpen(false)}><div className="reset-body"><div className="reset-warning"><AlertCircle size={22} /><p>Download this participant’s results before continuing. Resetting clears their answers from this browser, including any responses you haven’t downloaded.</p></div><div className="button-row"><button className="button primary small" disabled={busy} onClick={() => exportResults('xlsx')}><Download size={15} /> Download current results</button><button className="text-button" disabled={busy} onClick={() => exportResults('csv')}>CSV fallback</button></div>{(exportNotice || exportError) && <p className={exportError ? 'error-text' : 'success-text'} role="status">{exportError || exportNotice}</p>}<label className="confirmation-label"><input type="checkbox" checked={resetConfirmed} onChange={event => setResetConfirmed(event.target.checked)} /> I have retained the download, or I understand these responses will be lost.</label><div className="page-actions"><button className="button" onClick={() => setResetOpen(false)}>Keep session</button><button className="button danger" disabled={!resetConfirmed || busy} onClick={reset}>Confirm reset</button></div></div></Modal>}
   </div>;

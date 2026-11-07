@@ -5,8 +5,7 @@
   "title": "Replace with your study title",
   "stimulusLabel": "Researcher draft",
   "instructions": [
-    "Each checkpoint is an independent example.",
-    "Choose the approach you would prefer."
+    "Imagine yourself in each trip scenario."
   ],
   "settings": { "allowBackNavigation": true },
   "scenarios": [
@@ -20,6 +19,7 @@
         {
           "id": "replace-checkpoint-id",
           "title": "Replace with a checkpoint title",
+          "taskInstruction": "Ask for help with the travel task described above.",
           "context": [{ "type": "paragraph", "text": "Replace with the information participants need." }],
           "question": "Which approach would you prefer?",
           "responseType": "single-choice",

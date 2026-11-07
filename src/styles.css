@@ -70,6 +70,7 @@ h1 { font-size: 23px; font-weight: 600; line-height: 1.4; letter-spacing: -.5px;
 .content-blocks li + li { margin-top: 7px; }
 .welcome-instructions { margin-top: 24px; }
 .welcome-instructions h2 { font-size: 13px; font-weight: 600; color: #575c67; }
+.welcome-instructions p { margin-top: 10px; font-size: 14px; line-height: 1.75; color: #555963; }
 .welcome-instructions ul { padding-left: 17px; margin: 13px 0 0; color: #6c707a; font-size: 13px; line-height: 1.85; }
 .welcome-instructions li + li { margin-top: 11px; }
 .welcome-bottom { margin: 23px 0 55px 44px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
@@ -93,10 +94,27 @@ td { padding: 12px 13px; border-top: 1px solid #ededf1; overflow-wrap: anywhere;
 .progress-track > span { display: block; height: 100%; background: #bdc1e9; transition: width .2s; }
 .checkpoint-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin-left: 44px; }
 .checkpoint-heading h1 { font-size: 20px; font-weight: 500; }
-.checkpoint-heading > span { font-size: 10px; color: #a0a2aa; white-space: nowrap; }
+.task-divider { display: flex; align-items: center; gap: 12px; margin: 0 0 14px 44px; color: #6c707d; font-size: 11px; }
+.task-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.previous-task { margin: 0 0 11px 44px; border: 1px solid var(--line); border-radius: 12px; padding: 10px 13px; }
+.previous-task:last-of-type { margin-bottom: 23px; }
+.previous-task summary { cursor: pointer; color: #686d7b; font-size: 12px; }
+.previous-task summary:focus-visible { outline: 3px solid #9099e7; outline-offset: 4px; }
+.previous-task .traveler-message { margin-top: 16px; }
+.previous-reply { margin-top: 12px; }
+.previous-reply > span { display: block; margin: 0 5px 5px; color: #717582; font-size: 11px; }
+.previous-reply p { background: var(--bubble); border-radius: 4px 15px 15px 15px; padding: 13px 16px; font-size: 13px; line-height: 1.7; }
+.task-composer { margin: 26px 0 0 44px; }
+.composer-label { display: block; font-size: 14px; font-weight: 600; }
+.task-instruction, .task-message-example { margin-top: 7px; color: #626671; font-size: 13px; line-height: 1.6; }
+.task-message-example { font-size: 12px; }
+.composer-field { display: flex; align-items: flex-end; gap: 12px; margin-top: 12px; }
+.composer-field textarea { flex: 1; min-width: 0; min-height: 68px; padding: 12px 14px; resize: vertical; border: 1px solid #d9dbe6; border-radius: 14px; background: #fafafe; color: var(--ink); font-size: 14px; line-height: 1.55; }
+.composer-field textarea::placeholder { color: #717582; }
+.checkpoint-heading h1, .question-section h2 { scroll-margin-top: 80px; }
 .traveler-message { display: flex; align-items: flex-end; flex-direction: column; margin: 24px 0 0 auto; max-width: 80%; }
 .traveler-message > span { color: #aaaeb8; font-size: 10px; margin: 0 6px 7px; }
-.traveler-message p { background: #e9ebfc; color: #535b9a; border-radius: 17px 4px 17px 17px; padding: 14px 20px; font-size: 14px; line-height: 1.75; white-space: pre-wrap; }
+.traveler-message p { background: #e9ebfc; color: #535b9a; border-radius: 17px 4px 17px 17px; padding: 14px 20px; font-size: 14px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; }
 
 /* Alternatives use message bubbles. Radio semantics remain for keyboard users. */
 .question-section { margin-top: 32px; }

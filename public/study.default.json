@@ -1,13 +1,12 @@
 {
   "schemaVersion": "1.0",
   "studyId": "travel-chatbot-preferences",
-  "contentVersion": "fictional-draft-01",
+  "contentVersion": "fictional-draft-02",
   "title": "Travel Planning Study",
   "stimulusLabel": "Fictional draft stimuli",
   "instructions": [
     "Imagine yourself in each travel scenario. We’ll give you the details you need.",
-    "Compare the alternative chatbot responses and choose the approach you would prefer. There are no right or wrong answers.",
-    "Treat every checkpoint as a fresh example. Your choices do not change what happens next."
+    "There are no right or wrong answers."
   ],
   "settings": { "allowBackNavigation": true },
   "scenarios": [
@@ -33,7 +32,7 @@
             { "type": "paragraph", "text": "You need a private room for three nights. These two fictional hotels are available for your dates." },
             { "type": "table", "columns": ["Hotel", "Three-night total", "Walk to transit"], "rows": [["Park Hotel", "$600", "12 minutes"], ["Union Hotel", "$660", "5 minutes"]] }
           ],
-          "travelerMessage": "Can you help me choose a hotel?",
+          "taskInstruction": "Ask for help choosing a hotel.",
           "question": "How would you like to approach this choice?",
           "responseType": "single-choice",
           "options": [
@@ -50,7 +49,7 @@
           "context": [
             { "type": "paragraph", "text": "In this independent example, Union Hotel was on a draft itinerary, but the room is no longer available. Nothing has been booked, and Park Hotel is still available for $600." }
           ],
-          "travelerMessage": "The hotel is unavailable. What should we do?",
+          "taskInstruction": "Tell the assistant the hotel is unavailable and ask for help with what to do next.",
           "question": "Which response would you prefer now?",
           "responseType": "single-choice",
           "options": [
@@ -80,6 +79,7 @@
         {
           "id": "ground-transport",
           "title": "Getting there together",
+          "taskInstruction": "Ask for help getting to the coast.",
           "context": [
             { "type": "paragraph", "text": "A return train journey costs $120 for two people and takes three hours each way. A return coach journey costs $70 for two people and takes four hours each way. Both fit your possible weekends." }
           ],
@@ -98,7 +98,7 @@
           "context": [
             { "type": "paragraph", "text": "In this independent example, your accommodation and transport are already arranged. You have $90 left for activities for both of you. A guided coastal walk costs $50 for two; exploring a public beach is free." }
           ],
-          "travelerMessage": "Help us plan an afternoon outdoors.",
+          "taskInstruction": "Ask for help planning an afternoon outdoors.",
           "question": "Which approach would you prefer?",
           "responseType": "single-choice",
           "options": [

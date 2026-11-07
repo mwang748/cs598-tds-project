@@ -13,6 +13,7 @@ const optionSchema = z.object({ id, kind: z.enum(['manual', 'chatbot']), text })
 const checkpointSchema = z.object({
   id, title: text,
   context: z.array(blockSchema).optional(),
+  taskInstruction: text.optional(),
   travelerMessage: text.optional(),
   question: text,
   responseType: z.literal('single-choice'),

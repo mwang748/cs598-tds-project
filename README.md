@@ -27,7 +27,7 @@ npm run sample   # regenerate the clearly marked test-data workbook
 
 1. Review the fictional example stimuli before research use. Replace them with your own study content.
 2. Open the app. Read the instructions and click **Start study**. The app generates an anonymous ID, without collecting identifying information.
-3. Read each scenario brief and click **Begin scenario**. At each independent checkpoint, choose one alternative and **Continue**. The latest selection is recorded immediately. Earlier selections never change later stimuli.
+3. Read each scenario brief and click **Begin scenario**. For each **New task**, type a message and select **Send**. Choose your preferred reply from the alternatives, then advance. **Next task** collapses the exchange. **Next scenario** introduces a fresh trip. The exports record the selected replies. Typed messages stay in memory for the chat display.
 4. Use **Back** to review or change answers, if enabled in the JSON. Responses use stable IDs and exports retain the latest selection.
 5. At completion, click **Download responses** for a formatted `.xlsx`. CSV is available as a fallback. Check your browser’s download list and retain the file. Downloading does not clear answers or prove that a file was permanently saved.
 6. Click **Next participant**, download if needed, acknowledge the reminder and click **Confirm reset**. This clears responses and returns to the welcome screen. The next **Start study** generates a new ID. Cancelling keeps the existing session.
@@ -53,7 +53,7 @@ Imported content lasts only until refresh. To change startup content permanently
 
 The production export function also generates [`outputs/sample/TEST-DATA_travel-study_P-TESTONLY_2026-11-05_1430.xlsx`](outputs/sample/TEST-DATA_travel-study_P-TESTONLY_2026-11-05_1430.xlsx). The study title and session ID explicitly identify this as fictional test data. It is not a participant record.
 
-Each Excel workbook has **Session summary** and **Responses** sheets, bold headers, frozen first rows, filters, wrapped text, readable column widths and alternating row shading. The response sheet has one unmerged row per checkpoint, in JSON order. Scenario factors become individual columns named `Factor: <key>` using the union of authored factor keys. Checkpoint positions are local to their scenario, starting at 1. Dates include the session’s IANA timezone, the applicable offset, and UTC timestamps. Status is Complete only after the final Continue with every question answered; other exports are Partial.
+Each Excel workbook has **Session summary** and **Responses** sheets, bold headers, frozen first rows, filters, wrapped text, readable column widths and alternating row shading. The response sheet has one unmerged row per checkpoint, in JSON order. Scenario factors become individual columns named `Factor: <key>` using the union of authored factor keys. Checkpoint positions are local to their scenario, starting at 1. Dates include the session’s IANA timezone, the applicable offset, and UTC timestamps. Selecting **Finish study** with every question answered marks the session Complete. Earlier exports are Partial.
 
 XLSX exports write strings as literal values, including strings beginning with `=`. CSV contains the same response table and UTF-8 BOM, with quoted fields and escaped quotes. To prevent formula evaluation in spreadsheet software, CSV prefixes a single apostrophe to formula-like fields (including leading whitespace followed by `=`, `+`, `-`, `@`, tabs or line breaks). Use XLSX for exact unmodified text. CSV does not contain the session summary; keep the XLSX when session metadata is needed.
 
@@ -70,7 +70,7 @@ src/styles.css             desktop layout and accessible interaction styles
 scripts/generate-sample.ts reproducible test-data workbook from the real exporter
 ```
 
-Keyboard: Tab moves between controls. Arrow keys change the focused response, Home/End jump within the response group, Space/Enter select, and Tab then Enter activates Continue. Native dialogs trap focus, support Escape, and restore focus on close. Motion respects the operating system’s reduced-motion preference.
+Tab moves between controls. In the message box, Enter sends and Shift+Enter inserts a line break. Arrow keys change the focused reply, Home/End jump within the reply group, and Space/Enter select. Native dialogs trap focus, support Escape, and restore focus on close. Motion respects the operating system’s reduced-motion preference.
 
 ## Scope
 
