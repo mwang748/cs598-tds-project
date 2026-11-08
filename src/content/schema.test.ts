@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import example from '../../public/study.default.json';
+import boston from '../../public/study.default.json';
+import example from '../test/fixtures/study.example.json';
 import template from '../../public/study.template.json';
 import { checkpointCount, validateStudy } from './schema';
 
 describe('researcher content validation', () => {
   it('accepts the draft and the editable starter template', () => {
+    expect(validateStudy(JSON.stringify(boston)).success).toBe(true);
     expect(validateStudy(JSON.stringify(example)).success).toBe(true);
     expect(validateStudy(JSON.stringify(template)).success).toBe(true);
   });

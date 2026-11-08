@@ -27,7 +27,7 @@ npm run sample   # regenerate the clearly marked test-data workbook
 
 1. Review the fictional example stimuli before research use. Replace them with your own study content.
 2. Open the app. Read the instructions and click **Start study**. The app generates an anonymous ID, without collecting identifying information.
-3. Read each scenario brief and click **Begin scenario**. For each **New task**, type a message and select **Send**. Choose your preferred reply from the alternatives, then advance. **Next task** collapses the exchange. **Next scenario** introduces a fresh trip. The exports record the selected replies. Typed messages stay in memory for the chat display.
+3. Read each scenario brief and click **Begin scenario**. For each **New task**, type a message and select **Send**. Choose an AI reply or select an option under **Do it yourself**, when available. Where a follow-up is provided, you can also write your own approach. **Next task** collapses the exchange. **Next scenario** introduces a fresh trip. The exports record selected options and written follow-up answers. The opening chat messages stay in memory for display.
 4. Use **Back** to review or change answers, if enabled in the JSON. Responses use stable IDs and exports retain the latest selection.
 5. At completion, click **Download responses** for a formatted `.xlsx`. CSV is available as a fallback. Check your browser’s download list and retain the file. Downloading does not clear answers or prove that a file was permanently saved.
 6. Click **Next participant**, download if needed, acknowledge the reminder and click **Confirm reset**. This clears responses and returns to the welcome screen. The next **Start study** generates a new ID. Cancelling keeps the existing session.
@@ -38,7 +38,7 @@ For an early departure, choose **Researcher → Export partial**. A partial work
 
 ## Change the study through JSON
 
-- Default example / startup content: [`public/study.default.json`](public/study.default.json).
+- Boston travel study / startup content: [`public/study.default.json`](public/study.default.json).
 - Minimal editable starter: [`public/study.template.json`](public/study.template.json).
 - Full format and validation rules: [`docs/JSON_FORMAT.md`](docs/JSON_FORMAT.md).
 - Types and runtime Zod schema: [`src/content/schema.ts`](src/content/schema.ts).
@@ -74,4 +74,4 @@ Tab moves between controls. In the message box, Enter sends and Shift+Enter inse
 
 ## Scope
 
-The bundled content contains two short fictional scenarios and four checkpoints for demonstration, with different numbers of alternatives and an independent recovery example. These counts and categories are not assumed by the app. Examples are labeled fictional draft stimuli throughout the participant flow. The JSON is authoritative, researcher metadata is hidden from participants, and all strings render as plain text rather than HTML.
+The Boston travel study uses four combinations of budget and schedule. Each scenario contains flight selection, reservation preparation, hotel selection, and room and rate selection in that order. Add further tasks for a condition to that scenario’s `checkpoints` array. Each task presents four fixed replies and a written follow-up. The demonstration study used by the sample workbook lives in `src/test/fixtures/study.example.json`.

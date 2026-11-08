@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type Ref } from 'react';
-import { Bot, Send } from 'lucide-react';
+import { Bot, ClipboardList, Send } from 'lucide-react';
 import type { Checkpoint } from '../content/schema';
 import { Blocks } from './Blocks';
 import { Choices } from './Choices';
@@ -11,11 +11,13 @@ interface Props {
   headingRef: Ref<HTMLHeadingElement>;
   message?: string;
   selected?: string;
+  followUpAnswer: string;
   onSend: (message: string) => void;
-  onSelect: (optionId: string) => void;
+  onSelect: (optionId?: string) => void;
+  onFollowUp: (value: string) => void;
 }
 
-export function TaskChat({ checkpoint, headingRef, message, selected, onSend, onSelect }: Props) {
+export function TaskChat({ checkpoint, headingRef, message, selected, followUpAnswer, onSend, onSelect, onFollowUp }: Props) {
   const [draft, setDraft] = useState('');
   const [isThinking, setIsThinking] = useState(false);
   const repliesHeading = useRef<HTMLHeadingElement>(null);
@@ -36,13 +38,15 @@ export function TaskChat({ checkpoint, headingRef, message, selected, onSend, on
   return <>
     <div className="task-divider"><span>New task</span></div>
     <div className="checkpoint-heading"><h1 ref={headingRef} tabIndex={-1}>{checkpoint.title}</h1></div>
-    {!!checkpoint.context?.length && <div className="assistant-message">
-      <div className="assistant-avatar" aria-hidden="true"><Bot size={20} /></div>
-      <div className="message-body">
-        <span className="message-author">Travel assistant</span>
-        <div className="assistant-bubble"><Blocks blocks={checkpoint.context} /></div>
-      </div>
-    </div>}
+    {(!message || !!checkpoint.context?.length) && <section className="instruction-panel" aria-labelledby="task-instructions-heading">
+      <h2 id="task-instructions-heading" className="instruction-label"><ClipboardList size={18} aria-hidden="true" /> Task instructions</h2>
+      {!!checkpoint.context?.length && <Blocks blocks={checkpoint.context} />}
+      {!message && <div className="instruction-callout">
+        <strong>What to send</strong>
+        <p id="task-instruction">{checkpoint.taskInstruction ?? 'Send a message asking for help with this task.'}</p>
+        {checkpoint.travelerMessage && <p id="task-message-example" className="task-message-example">For example, “{checkpoint.travelerMessage}”</p>}
+      </div>}
+    </section>}
     {!message ? <form className="task-composer" onSubmit={event => {
       event.preventDefault();
       const text = draft.trim();
@@ -52,10 +56,6 @@ export function TaskChat({ checkpoint, headingRef, message, selected, onSend, on
       onSend(text);
     }}>
       <label htmlFor="task-message" className="composer-label">Your message</label>
-      <p id="task-instruction" className="task-instruction">
-        {checkpoint.taskInstruction ?? 'Send a message asking for help with this task.'}
-      </p>
-      {checkpoint.travelerMessage && <p id="task-message-example" className="task-message-example">For example, “{checkpoint.travelerMessage}”</p>}
       <div className="composer-field">
         <textarea
           id="task-message"
@@ -80,8 +80,25 @@ export function TaskChat({ checkpoint, headingRef, message, selected, onSend, on
         <div className="assistant-avatar" aria-hidden="true"><Bot size={20} /></div>
         <div className="thinking-bubble" aria-hidden="true"><span /><span /><span /></div>
       </div> : <div className="question-section">
-        <h2 id="task-replies-heading" ref={repliesHeading} tabIndex={-1}>Choose the reply you’d prefer</h2>
-        <Choices checkpoint={checkpoint} selected={selected} onSelect={onSelect} labelledBy="task-replies-heading" />
+        <h2 ref={repliesHeading} tabIndex={-1}>
+          {checkpoint.options.some(option => option.kind === 'chatbot') ? 'Choose the reply you’d prefer' : 'Choose how you’d proceed'}
+        </h2>
+        <Choices checkpoint={checkpoint} selected={selected} onSelect={onSelect} />
+        {checkpoint.followUp && <section className="instruction-panel follow-up" aria-labelledby="follow-up-heading">
+          <h3 id="follow-up-heading" className="instruction-label">Written follow-up</h3>
+          <label htmlFor="task-follow-up" className="composer-label">{checkpoint.followUp}</label>
+          <p id="task-follow-up-help" className="task-instruction">This is optional if you make a selection. You can describe a different approach here.</p>
+          <textarea
+            id="task-follow-up"
+            aria-describedby="task-follow-up-help"
+            placeholder="Write your response…"
+            rows={3}
+            maxLength={2000}
+            value={followUpAnswer}
+            onChange={event => onFollowUp(event.target.value)}
+          />
+          {selected && <button className="text-button" type="button" onClick={() => onSelect()}>Clear selection</button>}
+        </section>}
       </div>}
     </>}
   </>;

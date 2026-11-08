@@ -16,6 +16,7 @@ const checkpointSchema = z.object({
   taskInstruction: text.optional(),
   travelerMessage: text.optional(),
   question: text,
+  followUp: text.optional(),
   responseType: z.literal('single-choice'),
   options: z.array(optionSchema).min(1, 'Add at least one response option'),
   researcherMetadata: z.record(z.unknown()).optional(),

@@ -5,6 +5,7 @@ export interface ParticipantSession {
   startedAt: string;
   timezone: string;
   answers: Record<string, string>;
+  followUps?: Record<string, string>;
   /** Increases for answer changes only; downloads do not remove answers. */
   revision: number;
   exportedRevision: number;
@@ -27,19 +28,35 @@ export function createSession(): ParticipantSession {
   };
 }
 
-export function chooseAnswer(session: ParticipantSession, study: Study, si: number, ci: number, optionId: string): ParticipantSession {
+export function chooseAnswer(session: ParticipantSession, study: Study, si: number, ci: number, optionId?: string): ParticipantSession {
   const scenario = study.scenarios[si];
   const checkpoint = scenario?.checkpoints[ci];
-  if (!checkpoint?.options.some(option => option.id === optionId)) return session;
+  if (!checkpoint) return session;
+  if (optionId === undefined ? !checkpoint.followUp : !checkpoint.options.some(option => option.id === optionId)) return session;
   const key = answerKey(scenario.id, checkpoint.id);
   if (session.answers[key] === optionId) return session;
-  return { ...session, answers: { ...session.answers, [key]: optionId }, revision: session.revision + 1, completed: false };
+  const answers = { ...session.answers };
+  if (optionId === undefined) delete answers[key];
+  else answers[key] = optionId;
+  return { ...session, answers, revision: session.revision + 1, completed: false };
+}
+
+export function writeFollowUp(session: ParticipantSession, key: string, value: string): ParticipantSession {
+  if ((session.followUps?.[key] ?? '') === value) return session;
+  return {
+    ...session,
+    followUps: { ...session.followUps, [key]: value },
+    revision: session.revision + 1,
+    completed: false,
+  };
 }
 
 export function countAnswered(study: Study, session: ParticipantSession): number {
-  return study.scenarios.reduce((count, scenario) => count + scenario.checkpoints.filter(checkpoint =>
-    checkpoint.options.some(option => option.id === session.answers[answerKey(scenario.id, checkpoint.id)])
-  ).length, 0);
+  return study.scenarios.reduce((count, scenario) => count + scenario.checkpoints.filter(checkpoint => {
+    const key = answerKey(scenario.id, checkpoint.id);
+    return checkpoint.options.some(option => option.id === session.answers[key])
+      || !!(checkpoint.followUp && session.followUps?.[key]?.trim());
+  }).length, 0);
 }
 
 export const isComplete = (study: Study, session: ParticipantSession) => session.completed && countAnswered(study, session) === checkpointCount(study);

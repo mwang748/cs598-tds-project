@@ -1,33 +1,55 @@
 import { useRef } from 'react';
 import { Bot, Check } from 'lucide-react';
 import type { Checkpoint } from '../content/schema';
+import { ReplyText } from './ReplyText';
 
-export function Choices({ checkpoint, selected, onSelect, labelledBy }: {
+export function Choices({ checkpoint, selected, onSelect }: {
   checkpoint: Checkpoint;
   selected?: string;
   onSelect: (id: string) => void;
-  labelledBy: string;
 }) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  return <div className="choice-group" role="radiogroup" aria-labelledby={labelledBy}>
-    {checkpoint.options.map((option, index) => <button
+  const replies = checkpoint.options.filter(option => option.kind === 'chatbot');
+  const manualOptions = checkpoint.options.filter(option => option.kind === 'manual');
+  const options = [...replies, ...manualOptions];
+
+  function renderOption(option: Checkpoint['options'][number], index: number) {
+    const manual = option.kind === 'manual';
+    const checked = selected === option.id;
+    return <button
       key={option.id}
       ref={element => { refs.current[index] = element; }}
-      type="button" role="radio" aria-checked={selected === option.id}
-      tabIndex={selected ? (selected === option.id ? 0 : -1) : index === 0 ? 0 : -1}
-      className={`choice-card ${selected === option.id ? 'selected' : ''}`}
+      type="button" role="radio" aria-checked={checked} aria-label={option.text}
+      tabIndex={(selected ? checked : index === 0) ? 0 : -1}
+      className={`${manual ? 'manual-answer manual-choice' : 'choice-card'}${checked ? ' selected' : ''}`}
       onClick={() => onSelect(option.id)}
       onKeyDown={event => {
         let next: number | undefined;
-        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (index + 1) % checkpoint.options.length;
-        if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (index - 1 + checkpoint.options.length) % checkpoint.options.length;
+        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (index + 1) % options.length;
+        if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (index - 1 + options.length) % options.length;
         if (event.key === 'Home') next = 0;
-        if (event.key === 'End') next = checkpoint.options.length - 1;
-        if (next !== undefined) { event.preventDefault(); onSelect(checkpoint.options[next].id); refs.current[next]?.focus(); }
+        if (event.key === 'End') next = options.length - 1;
+        if (next !== undefined) { event.preventDefault(); onSelect(options[next].id); refs.current[next]?.focus(); }
       }}
     >
-      <span className="reply-avatar" aria-hidden="true"><Bot size={18} /></span>
-      <span className="reply-bubble"><span className="choice-text">{option.text}</span>{selected === option.id && <span className="reply-selected" aria-hidden="true"><Check size={13} /> Selected</span>}</span>
-    </button>)}
+      {manual ? <>
+        <span className="manual-choice-indicator" aria-hidden="true" />
+        <ReplyText text={option.text} />
+      </> : <>
+        <span className="reply-avatar" aria-hidden="true"><Bot size={18} /></span>
+        <span className="reply-bubble">
+          <ReplyText text={option.text} />
+          {checked && <span className="reply-selected" aria-hidden="true"><Check size={13} /> Selected</span>}
+        </span>
+      </>}
+    </button>;
+  }
+
+  return <div className="choice-group" role="radiogroup" aria-label="Choose an approach">
+    {replies.map(renderOption)}
+    {manualOptions.length > 0 && <div className="manual-options">
+      <h3>Do it yourself</h3>
+      {manualOptions.map((option, index) => renderOption(option, replies.length + index))}
+    </div>}
   </div>;
 }
