@@ -43,7 +43,7 @@ export async function buildWorkbook(study: Study, session: ParticipantSession, e
     ['Export date/time', zonedTime(exportedAt.toISOString(), session.timezone)],
     ['Status', isComplete(study, session) ? 'Complete' : 'Partial'],
     ['Answered checkpoints', countAnswered(study, session)], ['Total checkpoints', checkpointCount(study)],
-    ['Collection note', 'Browser download only. Retain this file locally. No server copy is stored.'],
+    ['Collection note', 'This workbook is a browser-generated copy of the participant’s responses.'],
   ]);
   summary.autoFilter = 'A1:B11';
   const data = responseData(study, session);

@@ -27,6 +27,39 @@ async function begin(content = study) {
 }
 
 describe('participant and researcher flows', () => {
+  it('submits only after Finish, preserves the same payload on retry and waits for confirmation', async () => {
+    const oneTask = structuredClone(study);
+    oneTask.scenarios = oneTask.scenarios.slice(0, 1);
+    oneTask.scenarios[0].checkpoints = oneTask.scenarios[0].checkpoints.slice(0, 1);
+    const submit = vi.fn<typeof fetch>()
+      .mockResolvedValueOnce(Response.json({ saved: false }, { status: 502 }))
+      .mockResolvedValueOnce(Response.json({ saved: true }));
+    vi.stubGlobal('fetch', submit);
+    try {
+      const user = userEvent.setup();
+      render(<App initialStudy={oneTask} qualtricsEnabled />);
+      await user.click(screen.getByRole('button', { name: 'Start study' }));
+      await user.click(screen.getByRole('button', { name: 'Begin scenario' }));
+      await sendTaskMessage(user, 'Could you help me pick a hotel?');
+      await user.click(screen.getByRole('radio', { name: /I’d compare the hotels and make this choice myself/ }));
+      expect(submit).not.toHaveBeenCalled();
+      await user.click(screen.getByRole('button', { name: 'Finish study' }));
+      expect(await screen.findByRole('alert')).toHaveTextContent('couldn’t confirm');
+      expect(screen.getByRole('button', { name: /Download responses/ })).toBeEnabled();
+      await user.click(screen.getByRole('button', { name: 'Retry submission' }));
+      expect(await screen.findByText('Your responses were saved')).toBeVisible();
+      expect(submit).toHaveBeenCalledTimes(2);
+      expect(submit.mock.calls[1]).toEqual(submit.mock.calls[0]);
+      const [url, init] = submit.mock.calls[0];
+      expect(url).toBe('/api/submit');
+      const payload = JSON.parse(init?.body as string);
+      expect(Object.values(payload.answers)).toEqual(['manual']);
+      expect(init?.body).not.toContain('Could you help me pick a hotel?');
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it('completes the flight and hotel tasks before changing scenario conditions', async () => {
     const fetchStudy = vi.fn(async () => new Response(JSON.stringify(boston)));
     vi.stubGlobal('fetch', fetchStudy);

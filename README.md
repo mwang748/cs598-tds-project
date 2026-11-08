@@ -1,6 +1,6 @@
 # Waypoint · Travel planning preference study
 
-A desktop-first, local-only React + TypeScript + Vite app for a university HCI preference study. All scenarios and replies are static JSON. There is no AI, backend, database, account, telemetry, or remote response upload.
+A desktop-first React + TypeScript + Vite app for a university HCI preference study. Scenarios and replies are prewritten in JSON. The app defaults to local Excel/CSV export and can optionally submit completed sessions to Qualtrics.
 
 The participant view is a simple chat mockup. Alternative responses look like selectable message bubbles, and the hamburger button reopens the current scenario details. There is no persistent header or study journey sidebar. Researcher tools are available through the small **Researcher** link beneath the chat.
 
@@ -35,6 +35,23 @@ npm run sample   # regenerate the clearly marked test-data workbook
 For an early departure, choose **Researcher → Export partial**. A partial workbook includes every checkpoint, with unanswered rows explicitly marked. End/reset through that workspace before the next participant.
 
 **Refresh and closing can lose responses.** Answers are held in memory, and there is no persistent session recovery. The footer reminds participants; a best-effort `beforeunload` warning runs while answers have changed since the last download request. Browsers control whether they show it. Retain every download before resetting, refreshing or closing.
+
+## Collect responses in Qualtrics
+
+1. Run `npm run qualtrics:survey`. In a new blank Qualtrics survey, remove the default question and use **Survey → Tools → Import/Export → Import survey** to import `qualtrics-survey.txt`. Review and publish the survey. Keep the imported question export tags and choice labels (the app's option IDs). The chat app contains the full response wording and is the only link participants need.
+2. Check that your Qualtrics account can generate an API token under **Account Settings → Qualtrics IDs** and has access to the destination survey. Use the same page to find the survey ID and datacenter ID.
+3. Import this repository as a Vite project on Vercel. Set the following variables for the intended deployment environment, then deploy the app.
+
+   | Variable | Value |
+   | --- | --- |
+   | `VITE_QUALTRICS_ENABLED` | `true` |
+   | `QUALTRICS_DATACENTER` | The datacenter ID, such as `iad1` |
+   | `QUALTRICS_SURVEY_ID` | The destination survey ID starting with `SV_` |
+   | `QUALTRICS_API_TOKEN` | A server-side secret. Enter it in the hosting settings. |
+
+4. Before collecting study data, use a test survey and complete a pilot from the deployed chat app. Check that **Finish study** confirms the save and that one row appears under **Data & Analysis** with the intended choices, a written-only answer, and the participant ID. Use a separate destination for live responses.
+
+The server looks up the imported field tags and choice labels in the Qualtrics response schema before it creates the response. Each retry uses the same submission key. Only the final option selections, written follow-ups, participant ID, and study content version are submitted. If saving cannot be confirmed, the participant can retry or download Excel/CSV. Preview and studies activated from JSON in the researcher panel use the local flow. If you change the bundled study, regenerate and import its survey before collecting that version. A school VM can use the same handler if its web server routes `POST /api/submit` to it. The plain Vite development server runs the local flow by default.
 
 ## Change the study through JSON
 
