@@ -1,4 +1,4 @@
-import { checkpointCount, type Study } from '../content/schema';
+import { checkpointCount, type Study } from '../content/schema.js';
 
 export interface ParticipantSession {
   id: string;

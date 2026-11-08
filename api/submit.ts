@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import boston from '../public/study.default.json';
-import { studySchema } from '../src/content/schema';
-import { answerKey } from '../src/session/session';
-import { participantTag, studyFields, versionTag } from '../src/qualtrics/studyFields';
+import boston from '../public/study.default.json' with { type: 'json' };
+import { studySchema } from '../src/content/schema.js';
+import { answerKey } from '../src/session/session.js';
+import { participantTag, studyFields, versionTag } from '../src/qualtrics/studyFields.js';
 
 const study = studySchema.parse(boston);
 const fields = studyFields(study);
