@@ -50,7 +50,7 @@ describe('participant and researcher flows', () => {
     }
   });
 
-  it('shows all four flight-selection questions before reservation and hotel tasks', async () => {
+  it('shows all flights, then all hotels, then all rental-car questions before reservation tasks', async () => {
     const fetchStudy = vi.fn(async () => new Response(JSON.stringify(boston)));
     vi.stubGlobal('fetch', fetchStudy);
     try {
@@ -66,7 +66,10 @@ describe('participant and researcher flows', () => {
       expect(screen.getByRole('heading', { name: 'Boston · Tight budget, tight schedule' })).toBeVisible();
       expect(screen.getByText('$350 total, including taxes and one checked bag')).toBeVisible();
       expect(screen.getByText('$600 maximum, including taxes and fees')).toBeVisible();
-      expect(screen.getByText(/No message is needed/)).toBeVisible();
+      expect(screen.getByText('Choose a chatbot approach or do it yourself.')).toBeVisible();
+      expect(screen.queryByText('Hotel task assumptions')).not.toBeInTheDocument();
+      expect(screen.queryByText('Rental task assumptions')).not.toBeInTheDocument();
+      expect(screen.queryByText('Rental-car budget')).not.toBeInTheDocument();
       await user.click(screen.getByRole('button', { name: 'Begin scenario' }));
       expect(screen.getByRole('heading', { name: 'Finding and choosing a flight' })).toBeVisible();
       expect(screen.getAllByText('HarborLink Airways HL 112')).toHaveLength(1);
@@ -138,8 +141,7 @@ describe('participant and researcher flows', () => {
       expect(screen.queryByRole('heading', { name: 'Preparing the reservation' })).not.toBeInTheDocument();
       const hotelSearch = screen.getByRole('radio', { name: /Chatbot searches; I choose/ });
       expect(hotelSearch).toHaveTextContent('3 matching hotel/room/date packages across 3 hotels');
-      expect(hotelSearch).toHaveTextContent('Garden Square is unavailable Friday–Monday.');
-      expect(hotelSearch).toHaveTextContent('Parkside Grand is available but over budget.');
+      expect(hotelSearch).not.toHaveTextContent(/Garden Square|Parkside Grand/);
       await user.click(hotelSearch);
       await user.click(screen.getByRole('button', { name: 'Clear selection' }));
       expect(screen.getByRole('button', { name: 'Next task' })).toBeDisabled();
@@ -161,6 +163,37 @@ describe('participant and researcher flows', () => {
       expect(screen.getByText('Boston · Flexible budget, flexible schedule')).toBeVisible();
       expect(screen.getByRole('radio', { name: /Chatbot searches; I choose/ })).toHaveTextContent('11 matching hotel/room/date packages across 5 hotels');
       expect(screen.queryByRole('heading', { name: 'Finding and choosing a room and rate' })).not.toBeInTheDocument();
+      await user.click(screen.getAllByRole('radio')[0]);
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByRole('heading', { name: 'Finding and choosing a rental car' })).toBeVisible();
+      expect(screen.getByText('Boston · Tight budget, tight schedule')).toBeVisible();
+      const rentalSearch = screen.getByRole('radio', { name: /Chatbot searches; I choose/ });
+      expect(rentalSearch).toHaveTextContent('3 matching rentals across 3 companies');
+      expect(rentalSearch).not.toHaveTextContent(/Beacon Rentals|Park Rentals|Garden Rentals|Metro Rentals|River Rentals/);
+      expect(rentalSearch).toHaveTextContent('Harbor Rentals · Compact');
+      expect(rentalSearch).toHaveTextContent('West Rentals · Midsize');
+      expect(rentalSearch).toHaveTextContent('City Rentals · Compact');
+      expect(rentalSearch).toHaveTextContent('Downtown Boston; 25-minute shuttle each way.');
+      expect(screen.getByText(/Shuttles are free/)).toHaveTextContent('times include waiting');
+      const rentalRecommendation = screen.getByRole('radio', { name: /Chatbot recommends a shortlist; I choose/ });
+      expect(rentalRecommendation).toHaveTextContent('City Rentals costs $10 more than Harbor Rentals but saves 10 minutes of shuttle time each way.');
+      await user.click(rentalRecommendation);
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByText('Boston · Tight budget, flexible schedule')).toBeVisible();
+      expect(screen.getByRole('radio', { name: /Chatbot searches; I choose/ })).toHaveTextContent('7 matching rentals across 3 companies');
+      expect(screen.getByText(/Your trip can shift/)).toHaveTextContent('without extra flight or hotel costs');
+      await user.click(screen.getByRole('button', { name: /^Back$/ }));
+      expect(screen.getByRole('radio', { name: /Chatbot recommends a shortlist; I choose/ })).toHaveAttribute('aria-checked', 'true');
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      await user.click(screen.getAllByRole('radio')[0]);
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByText('Boston · Flexible budget, tight schedule')).toBeVisible();
+      expect(screen.getByRole('radio', { name: /Chatbot searches; I choose/ })).toHaveTextContent('8 matching rentals across 8 companies');
+      await user.click(screen.getAllByRole('radio')[0]);
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByText('Boston · Flexible budget, flexible schedule')).toBeVisible();
+      expect(screen.getByRole('radio', { name: /Chatbot searches; I choose/ })).toHaveTextContent('16 matching rentals across 8 companies');
+      expect(screen.getByRole('radio', { name: /Chatbot chooses without asking me/ })).toHaveTextContent('Beacon Rentals · Compact');
       await user.click(screen.getAllByRole('radio')[0]);
       await user.click(screen.getByRole('button', { name: 'Next task' }));
       expect(screen.getByRole('heading', { name: 'Preparing the reservation' })).toBeVisible();

@@ -17,7 +17,7 @@ button { cursor: pointer; color: inherit; }
 button:disabled { cursor: not-allowed; opacity: .4; }
 button, a { touch-action: manipulation; }
 button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
-button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [role="radio"]:focus-visible, .reply-list-window:focus-visible {
   outline: 3px solid #9099e7;
   outline-offset: 4px;
 }
@@ -182,6 +182,7 @@ td { padding: 12px 13px; border-top: 1px solid #ededf1; overflow-wrap: anywhere;
   padding: 0;
   background: transparent;
   text-align: left;
+  cursor: pointer;
 }
 .reply-avatar { margin-top: 3px; background: #f4f4f7; color: #a1a4b6; }
 .reply-bubble { display: block; flex: 1; min-width: 0; padding: 17px 21px; border: 1px solid #e3e4ec; border-radius: 4px 18px 18px 18px; background: var(--bubble); transition: background .15s, border-color .15s; }
@@ -195,6 +196,23 @@ td { padding: 12px 13px; border-top: 1px solid #ededf1; overflow-wrap: anywhere;
 }
 .reply-paragraph { white-space: pre-wrap; }
 .reply-list { display: grid; gap: 5px; }
+.package-list-block { display: grid; gap: 6px; min-width: 0; }
+.package-scroll-hint { color: #626a7a; font-size: 12px; }
+.reply-list-window {
+  display: block;
+  max-height: 24rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: auto;
+  padding: 3px 7px 3px 3px;
+  border: 1px solid #dcdfe8;
+  border-radius: 8px;
+  cursor: auto;
+}
+.reply-list-window::-webkit-scrollbar { width: 10px; }
+.reply-list-window::-webkit-scrollbar-thumb { background: #a8afbf; border: 2px solid var(--bubble); border-radius: 8px; }
+.reply-list-window::-webkit-scrollbar-track { background: #e9ebf1; border-radius: 8px; }
 .reply-list-item {
   display: grid;
   grid-template-columns: 1.25em minmax(0, 1fr);
@@ -224,7 +242,7 @@ td { padding: 12px 13px; border-top: 1px solid #ededf1; overflow-wrap: anywhere;
 .manual-options { display: grid; gap: 9px; margin: 7px 0 0 44px; padding-top: 14px; border-top: 1px solid var(--line); }
 .manual-options h3 { color: #444956; font-size: 14px; font-weight: 600; }
 .manual-answer { padding: 12px 15px; border: 1px solid #dcdde6; border-radius: 8px; background: #fff; }
-.manual-choice { display: flex; align-items: baseline; gap: 11px; width: 100%; text-align: left; }
+.manual-choice { display: flex; align-items: baseline; gap: 11px; width: 100%; text-align: left; cursor: pointer; }
 .manual-choice:hover { background: #f6f6fa; }
 .manual-choice.selected { border-color: #919be0; background: #eceefa; }
 .manual-choice-indicator { flex: 0 0 16px; height: 16px; align-self: flex-start; margin-top: 4px; border: 1px solid #828694; border-radius: 50%; }

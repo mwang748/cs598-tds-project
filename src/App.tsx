@@ -172,7 +172,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
               <dl className="inline-trip-summary">
                 {scenario.summary.map((item, index) => <div key={index}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}
               </dl>
-              <p className="instruction-callout"><strong>For each task</strong> Use these trip details and choose how you’d proceed—with the chatbot or on your own. No message is needed.</p>
+              <p className="instruction-callout">Choose a chatbot approach or do it yourself.</p>
             </section>
             <div className="page-actions">{study.settings.allowBackNavigation && route.scenarioIndex > 0 && !study.settings.firstTaskId && !study.settings.taskOrder?.length ? <button className="button ghost" onClick={() => setRoute(previousRoute(study, route))}><ArrowLeft size={16} /> Back</button> : <span />}<button className="button primary" onClick={() => setRoute(study.settings.firstTaskId || study.settings.taskOrder?.length ? orderedCheckpoints(study)[0] : { screen: 'checkpoint', scenarioIndex: route.scenarioIndex, checkpointIndex: 0 })}>Begin scenario <ArrowRight size={17} /></button></div>
           </>}

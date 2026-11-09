@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "studyId": "boston-travel-study",
-  "contentVersion": "draft-11",
+  "contentVersion": "draft-17",
   "title": "Travel Chatbot Study",
   "stimulusLabel": "Fictional study details",
   "instructions": {
@@ -9,7 +9,7 @@
     "steps": [
       {
         "title": "Planning your trip:",
-        "text": "Choose how you’d find and select flights, then a hotel and room/rate together. Complete all flight scenarios before all hotel scenarios."
+        "text": "Choose how you’d find and select flights, hotel/room/rate packages, and rental-car packages. Complete all flight scenarios, then all hotel scenarios, then all rental-car scenarios."
       },
       {
         "title": "Preparing your reservations:",
@@ -20,13 +20,14 @@
         "text": "This is where you decide how you’d want to pay for the trip."
       }
     ],
-    "note": "First, choose flights across four budget and schedule scenarios. Then choose hotel/room/rate packages across the same four conditions, followed by flight reservation preparation. All travel details are fictional; you and the chatbot can search the same options. Nothing is actually reserved or paid for. Treat each task independently. Choose a chatbot approach or Do it yourself, or describe another approach. Click Start Study to begin."
+    "note": "Complete all flight-selection scenarios, then all hotel-selection scenarios, then all rental-car-selection scenarios, followed by the existing flight reservation preparation. All travel details are fictional; you and the chatbot can search the same options. Nothing is actually reserved or paid for. Treat each task independently. Choose a chatbot approach or Do it yourself, or describe another approach. Click Start Study to begin."
   },
   "settings": {
     "allowBackNavigation": true,
     "taskOrder": [
       "flight-selection",
-      "hotel-selection"
+      "hotel-selection",
+      "rental-car-selection"
     ]
   },
   "scenarios": [
@@ -67,10 +68,6 @@
         {
           "label": "Travel party",
           "value": "One adult · three nights"
-        },
-        {
-          "label": "Hotel task assumptions",
-          "value": "Independent of flight answers. Three nights; private room and bathroom. Prefer Boston Common proximity and free cancellation; may trade these for savings. Flexible stays can shift the whole trip without extra transportation cost."
         }
       ],
       "checkpoints": [
@@ -207,7 +204,7 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot searches; I choose\n\nI found 3 matching hotel/room/date packages across 3 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n\nGarden Square is unavailable Friday–Monday. Parkside Grand is available but over budget. Compare the packages and dates, then choose one. I have not ranked or recommended them."
+              "text": "Chatbot searches; I choose\n\nI found 3 matching hotel/room/date packages across 3 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
@@ -217,7 +214,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n\nI selected Common Street · Standard Queen · Saver, Friday–Monday, for $570.\n\nIt costs $20 more than Harbor Point but is ten minutes closer to Boston Common. Free cancellation is not available among the matching Friday–Monday packages. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n\nI selected Common Street · Standard Queen · Saver, Friday–Monday, for $570.\n\nIt fits your budget and is a 10-minute walk to Boston Common. This rate is nonrefundable. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
           "researcherMetadata": {
@@ -260,6 +257,104 @@
             ],
             "selectedPackageId": "common-1"
           }
+        },
+        {
+          "id": "rental-car-selection",
+          "title": "Finding and choosing a rental car",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "Rent a car in Boston, arriving and leaving through Logan Airport. Prefer convenient airport pickup/return, but consider a longer transfer to save money."
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "Budget: $240 total, including taxes and mandatory fees.",
+                "Dates: Friday–Monday.",
+                "Pickup/return: 10 a.m. ET, same location; 72 hours."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Company names are fictional. You qualify to rent; all cars are automatic and fit you and your luggage. Companies are equally acceptable; coverage and rental terms are identical. Shuttles are free; times include waiting."
+            },
+            {
+              "type": "paragraph",
+              "text": "Independent of earlier flight/hotel answers; either location is reachable by pickup. Nothing is booked or paid."
+            }
+          ],
+          "question": "How would you prefer to find and choose your rental car?",
+          "followUp": "Why this approach? Did pickup/return convenience affect your choice?",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "Search and choose myself\n\nI search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "Chatbot searches; I choose\n\nHere are 3 matching rentals across 3 companies, listed by company. Prices cover all 3 days, including taxes and mandatory fees.\n\n- City Rentals · Compact — Friday–Monday: $220 | Downtown Boston; 25-minute shuttle each way.\n- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.\n- West Rentals · Midsize — Friday–Monday: $235 | Downtown Boston; 35-minute shuttle each way.\n\nCompare and choose. I have not ranked or recommended them."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 3 matching rentals. Here are 2 I recommend comparing:\n\n- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.\n- City Rentals · Compact — Friday–Monday: $220 | Downtown Boston; 25-minute shuttle each way.\n\nCity Rentals costs $10 more than Harbor Rentals but saves 10 minutes of shuttle time each way. You make the final choice."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "Chatbot chooses without asking me\n\nI selected City Rentals · Compact, Friday–Monday, for $220. Here are the compared packages:\n\n- City Rentals · Compact — Friday–Monday: $220 | Downtown Boston; 25-minute shuttle each way.\n- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.\n\nIt costs $10 more than Harbor Rentals but saves 10 minutes of shuttle time each way. I make the selection without asking for approval. No reservation or payment is made."
+            }
+          ],
+          "researcherMetadata": {
+            "eligiblePackages": [
+              {
+                "id": "city-1",
+                "provider": "City Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 25,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 220
+              },
+              {
+                "id": "harbor-1",
+                "provider": "Harbor Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 210
+              },
+              {
+                "id": "west-1",
+                "provider": "West Rentals",
+                "car": "Midsize",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 235
+              }
+            ],
+            "recommendedPackageIds": [
+              "harbor-1",
+              "city-1"
+            ],
+            "selectedPackageId": "city-1",
+            "comparisonPackageIds": [
+              "city-1",
+              "harbor-1"
+            ],
+            "rentalDurationHours": 72
+          }
         }
       ]
     },
@@ -300,10 +395,6 @@
         {
           "label": "Travel party",
           "value": "One adult · three nights"
-        },
-        {
-          "label": "Hotel task assumptions",
-          "value": "Independent of flight answers. Three nights; private room and bathroom. Prefer Boston Common proximity and free cancellation; may trade these for savings. Flexible stays can shift the whole trip without extra transportation cost."
         }
       ],
       "checkpoints": [
@@ -425,7 +516,7 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot searches; I choose\n\nI found 8 matching hotel/room/date packages across 4 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable. Unavailable: Thursday–Sunday, Saturday–Tuesday.\n- Common Street · Standard Queen · Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550; Saturday–Tuesday: $580 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in. Unavailable: Friday–Monday.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550; Saturday–Tuesday: $520 | 20-minute walk to Boston Common. Pay now; nonrefundable. Unavailable: Thursday–Sunday.\n\nParkside Grand is available but over budget for every listed stay. Compare the packages and dates, then choose one. I have not ranked or recommended them."
+              "text": "Chatbot searches; I choose\n\nI found 8 matching hotel/room/date packages across 4 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Thursday–Sunday: $540 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n- Garden Square · Standard Queen · Flexible — Saturday–Tuesday: $580 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Saturday–Tuesday: $520 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
@@ -435,7 +526,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n\nI selected Garden Square · Standard Queen · Flexible, Thursday–Sunday, for $550.\n\nThese are Garden Square’s cheapest dates. Compared with Common Street’s Saturday–Tuesday package, it costs $40 more and adds five minutes to the walk, but includes free cancellation and payment at the hotel. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot chooses without asking me\n\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n\nI selected Garden Square · Standard Queen · Flexible, Thursday–Sunday, for $550.\n\nIt offers free cancellation and payment at the hotel, with a 15-minute walk to Boston Common. Thursday–Sunday is this hotel’s cheapest available stay. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
           "researcherMetadata": {
@@ -528,6 +619,146 @@
             ],
             "selectedPackageId": "garden-0"
           }
+        },
+        {
+          "id": "rental-car-selection",
+          "title": "Finding and choosing a rental car",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "What changed: Your rental dates are now flexible.",
+              "emphasis": true
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "Budget: $240 total, including taxes and mandatory fees.",
+                "Dates: Thu–Sun, Fri–Mon, or Sat–Tue; no preference.",
+                "Pickup/return: 10 a.m. ET, same location; 72 hours."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Independent of earlier flight/hotel answers. Your trip can shift without extra flight or hotel costs; either location is reachable by pickup. Other rental details stay the same. Nothing is booked or paid."
+            }
+          ],
+          "question": "How would you prefer to find and choose your rental car?",
+          "followUp": "Why this approach? Did pickup/return convenience affect your choice?",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "Search and choose myself\n\nI search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "Chatbot searches; I choose\n\nHere are 7 matching rentals across 3 companies, listed by company. Prices cover all 3 days, including taxes and mandatory fees.\n\n- City Rentals · Compact — Friday–Monday: $220 | Downtown Boston; 25-minute shuttle each way.\n- City Rentals · Compact — Saturday–Tuesday: $200 | Downtown Boston; 25-minute shuttle each way.\n- Harbor Rentals · Compact — Thursday–Sunday: $180 | Downtown Boston; 35-minute shuttle each way.\n- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.\n- Harbor Rentals · Compact — Saturday–Tuesday: $190 | Downtown Boston; 35-minute shuttle each way.\n- West Rentals · Midsize — Thursday–Sunday: $225 | Downtown Boston; 35-minute shuttle each way.\n- West Rentals · Midsize — Friday–Monday: $235 | Downtown Boston; 35-minute shuttle each way.\n\nCompare and choose. I have not ranked or recommended them."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 7 matching rentals. Here are 3 I recommend comparing:\n\n- Harbor Rentals · Compact — Thursday–Sunday: $180 | Downtown Boston; 35-minute shuttle each way.\n- City Rentals · Compact — Saturday–Tuesday: $200 | Downtown Boston; 25-minute shuttle each way.\n- West Rentals · Midsize — Thursday–Sunday: $225 | Downtown Boston; 35-minute shuttle each way.\n\nHarbor Rentals is cheapest. City Rentals costs $20 more and saves 10 minutes of shuttle time each way. West Rentals offers a midsize car for $45 more than Harbor Rentals, with the same transfer time. You make the final choice."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "Chatbot chooses without asking me\n\nI selected City Rentals · Compact, Saturday–Tuesday, for $200. Here are the compared packages:\n\n- City Rentals · Compact — Saturday–Tuesday: $200 | Downtown Boston; 25-minute shuttle each way.\n- Harbor Rentals · Compact — Thursday–Sunday: $180 | Downtown Boston; 35-minute shuttle each way.\n\nIt costs $20 more than Harbor Rentals’ Thursday–Sunday rental but saves 10 minutes of shuttle time each way. I make the selection without asking for approval. No reservation or payment is made."
+            }
+          ],
+          "researcherMetadata": {
+            "eligiblePackages": [
+              {
+                "id": "city-1",
+                "provider": "City Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 25,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 220
+              },
+              {
+                "id": "city-2",
+                "provider": "City Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 25,
+                "dates": "Saturday–Tuesday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 200
+              },
+              {
+                "id": "harbor-0",
+                "provider": "Harbor Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Thursday–Sunday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 180
+              },
+              {
+                "id": "harbor-1",
+                "provider": "Harbor Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 210
+              },
+              {
+                "id": "harbor-2",
+                "provider": "Harbor Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Saturday–Tuesday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 190
+              },
+              {
+                "id": "west-0",
+                "provider": "West Rentals",
+                "car": "Midsize",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Thursday–Sunday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 225
+              },
+              {
+                "id": "west-1",
+                "provider": "West Rentals",
+                "car": "Midsize",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 235
+              }
+            ],
+            "recommendedPackageIds": [
+              "harbor-0",
+              "city-2",
+              "west-0"
+            ],
+            "selectedPackageId": "city-2",
+            "comparisonPackageIds": [
+              "city-2",
+              "harbor-0"
+            ],
+            "rentalDurationHours": 72
+          }
         }
       ]
     },
@@ -568,10 +799,6 @@
         {
           "label": "Travel party",
           "value": "One adult · three nights"
-        },
-        {
-          "label": "Hotel task assumptions",
-          "value": "Independent of flight answers. Three nights; private room and bathroom. Prefer Boston Common proximity and free cancellation; may trade these for savings. Flexible stays can shift the whole trip without extra transportation cost."
         }
       ],
       "checkpoints": [
@@ -701,7 +928,7 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot searches; I choose\n\nI found 4 matching hotel/room/date packages across 4 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Friday–Monday: $990 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nGarden Square is unavailable Friday–Monday. Compare the packages and dates, then choose one. I have not ranked or recommended them."
+              "text": "Chatbot searches; I choose\n\nI found 4 matching hotel/room/date packages across 4 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Friday–Monday: $990 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
@@ -711,7 +938,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n\nI selected Common Street · Standard Queen · Saver, Friday–Monday, for $570.\n\nIt costs $20 more than Harbor Point but is ten minutes closer to Boston Common. Free cancellation is not available among the matching Friday–Monday packages. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n\nI selected Common Street · Standard Queen · Saver, Friday–Monday, for $570.\n\nIt fits your budget and is a 10-minute walk to Boston Common. This rate is nonrefundable. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
           "researcherMetadata": {
@@ -764,6 +991,157 @@
             ],
             "selectedPackageId": "common-1"
           }
+        },
+        {
+          "id": "rental-car-selection",
+          "title": "Finding and choosing a rental car",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "What changed: Higher budget; Friday–Monday dates required.",
+              "emphasis": true
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "Budget: $450 total, including taxes and mandatory fees.",
+                "Dates: Friday–Monday.",
+                "Pickup/return: 10 a.m. ET, same location; 72 hours."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Independent of earlier flight/hotel answers; either location is reachable by pickup. Nothing is booked or paid."
+            }
+          ],
+          "question": "How would you prefer to find and choose your rental car?",
+          "followUp": "Why this approach? Did pickup/return convenience affect your choice?",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "Search and choose myself\n\nI search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "Chatbot searches; I choose\n\nHere are 8 matching rentals across 8 companies, listed by company. Prices cover all 3 days, including taxes and mandatory fees.\n\n- Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.\n- City Rentals · Compact — Friday–Monday: $220 | Downtown Boston; 25-minute shuttle each way.\n- Garden Rentals · Midsize — Friday–Monday: $260 | Near-airport location; 20-minute shuttle each way.\n- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.\n- Metro Rentals · SUV — Friday–Monday: $360 | Logan airport rental center; 10-minute shuttle each way.\n- Park Rentals · Midsize — Friday–Monday: $300 | Logan airport rental center; 10-minute shuttle each way.\n- River Rentals · SUV — Friday–Monday: $280 | Downtown Boston; 35-minute shuttle each way.\n- West Rentals · Midsize — Friday–Monday: $235 | Downtown Boston; 35-minute shuttle each way.\n\nCompare and choose. I have not ranked or recommended them."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 8 matching rentals. Here are 3 I recommend comparing:\n\n- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.\n- Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.\n- Park Rentals · Midsize — Friday–Monday: $300 | Logan airport rental center; 10-minute shuttle each way.\n\nBeacon Rentals costs $60 more than Harbor Rentals but saves 25 minutes of shuttle time each way. Park Rentals offers a midsize car for another $30, with the same airport transfer. You make the final choice."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "Chatbot chooses without asking me\n\nI selected Beacon Rentals · Compact, Friday–Monday, for $270. Here are the compared packages:\n\n- Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.\n- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.\n\nIt costs $60 more than Harbor Rentals but saves 25 minutes of shuttle time each way. I make the selection without asking for approval. No reservation or payment is made."
+            }
+          ],
+          "researcherMetadata": {
+            "eligiblePackages": [
+              {
+                "id": "beacon-1",
+                "provider": "Beacon Rentals",
+                "car": "Compact",
+                "location": "Logan airport rental center",
+                "transferMinutesEachWay": 10,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 270
+              },
+              {
+                "id": "city-1",
+                "provider": "City Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 25,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 220
+              },
+              {
+                "id": "garden-1",
+                "provider": "Garden Rentals",
+                "car": "Midsize",
+                "location": "Near-airport location",
+                "transferMinutesEachWay": 20,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 260
+              },
+              {
+                "id": "harbor-1",
+                "provider": "Harbor Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 210
+              },
+              {
+                "id": "metro-1",
+                "provider": "Metro Rentals",
+                "car": "SUV",
+                "location": "Logan airport rental center",
+                "transferMinutesEachWay": 10,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 360
+              },
+              {
+                "id": "park-1",
+                "provider": "Park Rentals",
+                "car": "Midsize",
+                "location": "Logan airport rental center",
+                "transferMinutesEachWay": 10,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 300
+              },
+              {
+                "id": "river-1",
+                "provider": "River Rentals",
+                "car": "SUV",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 280
+              },
+              {
+                "id": "west-1",
+                "provider": "West Rentals",
+                "car": "Midsize",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 235
+              }
+            ],
+            "recommendedPackageIds": [
+              "harbor-1",
+              "beacon-1",
+              "park-1"
+            ],
+            "selectedPackageId": "beacon-1",
+            "comparisonPackageIds": [
+              "beacon-1",
+              "harbor-1"
+            ],
+            "rentalDurationHours": 72
+          }
         }
       ]
     },
@@ -804,10 +1182,6 @@
         {
           "label": "Travel party",
           "value": "One adult · three nights"
-        },
-        {
-          "label": "Hotel task assumptions",
-          "value": "Independent of flight answers. Three nights; private room and bathroom. Prefer Boston Common proximity and free cancellation; may trade these for savings. Flexible stays can shift the whole trip without extra transportation cost."
         }
       ],
       "checkpoints": [
@@ -929,7 +1303,7 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot searches; I choose\n\nI found 11 matching hotel/room/date packages across 5 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable. Unavailable: Thursday–Sunday, Saturday–Tuesday.\n- Common Street · Standard Queen · Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550; Saturday–Tuesday: $580 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in. Unavailable: Friday–Monday.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550; Saturday–Tuesday: $520 | 20-minute walk to Boston Common. Pay now; nonrefundable. Unavailable: Thursday–Sunday.\n- Parkside Grand · Deluxe King · Saver — Thursday–Sunday: $900; Friday–Monday: $990; Saturday–Tuesday: $930 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
+              "text": "Chatbot searches; I choose\n\nI found 11 matching hotel/room/date packages across 5 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Thursday–Sunday: $540 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n- Garden Square · Standard Queen · Flexible — Saturday–Tuesday: $580 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Saturday–Tuesday: $520 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Thursday–Sunday: $900 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Friday–Monday: $990 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Saturday–Tuesday: $930 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
@@ -939,7 +1313,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n\nI selected Garden Square · Standard Queen · Flexible, Thursday–Sunday, for $550.\n\nThese are Garden Square’s cheapest dates. Compared with Common Street’s Saturday–Tuesday package, it costs $40 more and adds five minutes to the walk, but includes free cancellation and payment at the hotel. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot chooses without asking me\n\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n\nI selected Garden Square · Standard Queen · Flexible, Thursday–Sunday, for $550.\n\nIt offers free cancellation and payment at the hotel, with a 15-minute walk to Boston Common. Thursday–Sunday is this hotel’s cheapest available stay. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
           "researcherMetadata": {
@@ -1062,6 +1436,245 @@
               "parkside-0"
             ],
             "selectedPackageId": "garden-0"
+          }
+        },
+        {
+          "id": "rental-car-selection",
+          "title": "Finding and choosing a rental car",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "What changed: Your rental dates are now flexible.",
+              "emphasis": true
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "Budget: $450 total, including taxes and mandatory fees.",
+                "Dates: Thu–Sun, Fri–Mon, or Sat–Tue; no preference.",
+                "Pickup/return: 10 a.m. ET, same location; 72 hours."
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Independent of earlier flight/hotel answers. Your trip can shift without extra flight or hotel costs; either location is reachable by pickup. Other rental details stay the same. Nothing is booked or paid."
+            }
+          ],
+          "question": "How would you prefer to find and choose your rental car?",
+          "followUp": "Why this approach? Did pickup/return convenience affect your choice?",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "Search and choose myself\n\nI search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "Chatbot searches; I choose\n\nHere are 16 matching rentals across 8 companies, listed by company. Prices cover all 3 days, including taxes and mandatory fees.\n\n- Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.\n- City Rentals · Compact — Friday–Monday: $220 | Downtown Boston; 25-minute shuttle each way.\n- City Rentals · Compact — Saturday–Tuesday: $200 | Downtown Boston; 25-minute shuttle each way.\n- Garden Rentals · Midsize — Thursday–Sunday: $250 | Near-airport location; 20-minute shuttle each way.\n- Garden Rentals · Midsize — Friday–Monday: $260 | Near-airport location; 20-minute shuttle each way.\n- Harbor Rentals · Compact — Thursday–Sunday: $180 | Downtown Boston; 35-minute shuttle each way.\n- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.\n- Harbor Rentals · Compact — Saturday–Tuesday: $190 | Downtown Boston; 35-minute shuttle each way.\n- Metro Rentals · SUV — Friday–Monday: $360 | Logan airport rental center; 10-minute shuttle each way.\n- Metro Rentals · SUV — Saturday–Tuesday: $340 | Logan airport rental center; 10-minute shuttle each way.\n- Park Rentals · Midsize — Friday–Monday: $300 | Logan airport rental center; 10-minute shuttle each way.\n- Park Rentals · Midsize — Saturday–Tuesday: $290 | Logan airport rental center; 10-minute shuttle each way.\n- River Rentals · SUV — Friday–Monday: $280 | Downtown Boston; 35-minute shuttle each way.\n- River Rentals · SUV — Saturday–Tuesday: $270 | Downtown Boston; 35-minute shuttle each way.\n- West Rentals · Midsize — Thursday–Sunday: $225 | Downtown Boston; 35-minute shuttle each way.\n- West Rentals · Midsize — Friday–Monday: $235 | Downtown Boston; 35-minute shuttle each way.\n\nCompare and choose. I have not ranked or recommended them."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 16 matching rentals. Here are 3 I recommend comparing:\n\n- Harbor Rentals · Compact — Thursday–Sunday: $180 | Downtown Boston; 35-minute shuttle each way.\n- Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.\n- Park Rentals · Midsize — Saturday–Tuesday: $290 | Logan airport rental center; 10-minute shuttle each way.\n\nHarbor Rentals is cheapest. Beacon Rentals costs $90 more and saves 25 minutes of shuttle time each way. Park Rentals offers an airport midsize car for $20 more than Beacon Rentals. You make the final choice."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "Chatbot chooses without asking me\n\nI selected Beacon Rentals · Compact, Friday–Monday, for $270. Here are the compared packages:\n\n- Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.\n- Park Rentals · Midsize — Saturday–Tuesday: $290 | Logan airport rental center; 10-minute shuttle each way.\n\nIt’s the cheapest matching airport rental-center package. Park Rentals offers a larger car for $20 more, but a larger car is not required. I make the selection without asking for approval. No reservation or payment is made."
+            }
+          ],
+          "researcherMetadata": {
+            "eligiblePackages": [
+              {
+                "id": "beacon-1",
+                "provider": "Beacon Rentals",
+                "car": "Compact",
+                "location": "Logan airport rental center",
+                "transferMinutesEachWay": 10,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 270
+              },
+              {
+                "id": "city-1",
+                "provider": "City Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 25,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 220
+              },
+              {
+                "id": "city-2",
+                "provider": "City Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 25,
+                "dates": "Saturday–Tuesday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 200
+              },
+              {
+                "id": "garden-0",
+                "provider": "Garden Rentals",
+                "car": "Midsize",
+                "location": "Near-airport location",
+                "transferMinutesEachWay": 20,
+                "dates": "Thursday–Sunday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 250
+              },
+              {
+                "id": "garden-1",
+                "provider": "Garden Rentals",
+                "car": "Midsize",
+                "location": "Near-airport location",
+                "transferMinutesEachWay": 20,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 260
+              },
+              {
+                "id": "harbor-0",
+                "provider": "Harbor Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Thursday–Sunday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 180
+              },
+              {
+                "id": "harbor-1",
+                "provider": "Harbor Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 210
+              },
+              {
+                "id": "harbor-2",
+                "provider": "Harbor Rentals",
+                "car": "Compact",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Saturday–Tuesday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 190
+              },
+              {
+                "id": "metro-1",
+                "provider": "Metro Rentals",
+                "car": "SUV",
+                "location": "Logan airport rental center",
+                "transferMinutesEachWay": 10,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 360
+              },
+              {
+                "id": "metro-2",
+                "provider": "Metro Rentals",
+                "car": "SUV",
+                "location": "Logan airport rental center",
+                "transferMinutesEachWay": 10,
+                "dates": "Saturday–Tuesday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 340
+              },
+              {
+                "id": "park-1",
+                "provider": "Park Rentals",
+                "car": "Midsize",
+                "location": "Logan airport rental center",
+                "transferMinutesEachWay": 10,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 300
+              },
+              {
+                "id": "park-2",
+                "provider": "Park Rentals",
+                "car": "Midsize",
+                "location": "Logan airport rental center",
+                "transferMinutesEachWay": 10,
+                "dates": "Saturday–Tuesday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 290
+              },
+              {
+                "id": "river-1",
+                "provider": "River Rentals",
+                "car": "SUV",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 280
+              },
+              {
+                "id": "river-2",
+                "provider": "River Rentals",
+                "car": "SUV",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Saturday–Tuesday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 270
+              },
+              {
+                "id": "west-0",
+                "provider": "West Rentals",
+                "car": "Midsize",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Thursday–Sunday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 225
+              },
+              {
+                "id": "west-1",
+                "provider": "West Rentals",
+                "car": "Midsize",
+                "location": "Downtown Boston",
+                "transferMinutesEachWay": 35,
+                "dates": "Friday–Monday",
+                "pickupTime": "10 a.m. ET",
+                "returnTime": "10 a.m. ET",
+                "total": 235
+              }
+            ],
+            "recommendedPackageIds": [
+              "harbor-0",
+              "beacon-1",
+              "park-2"
+            ],
+            "selectedPackageId": "beacon-1",
+            "comparisonPackageIds": [
+              "beacon-1",
+              "park-2"
+            ],
+            "rentalDurationHours": 72
           }
         }
       ]

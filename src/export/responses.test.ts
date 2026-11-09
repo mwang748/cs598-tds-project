@@ -16,7 +16,7 @@ describe('state and export integrity', () => {
     expect(countAnswered(content, session)).toBe(1);
     expect(hasUnexportedAnswers(session)).toBe(true);
     const { headers, rows } = responseData(content, session);
-    expect(rows).toHaveLength(12);
+    expect(rows).toHaveLength(16);
     const rowIndex = rows.findIndex(row => row[headers.indexOf('Scenario ID')] === 'tight-tight' && row[headers.indexOf('Checkpoint ID')] === 'hotel-selection');
     expect(rowIndex).toBe(2);
     const row = rows[rowIndex];
@@ -49,14 +49,15 @@ describe('state and export integrity', () => {
     expect(previousRoute(study, { screen: 'intro', scenarioIndex: 1 })).toEqual({ screen: 'checkpoint', scenarioIndex: 0, checkpointIndex: 1 });
     expect(nextCheckpoint(study, 1, 1)).toEqual({ screen: 'complete' });
   });
-  it('visits all flights, then all combined hotel questions, then preparation and reverses the same path', () => {
+  it('visits all flights, then all hotels, then all rental cars, then preparation and reverses the same path', () => {
     const content = studySchema.parse(boston);
     const order = orderedCheckpoints(content);
     expect(order.slice(0, 4).map(route => [route.scenarioIndex, route.checkpointIndex])).toEqual([[0, 0], [1, 0], [2, 0], [3, 0]]);
     expect(order.slice(4, 8).map(route => [route.scenarioIndex, route.checkpointIndex])).toEqual([[0, 2], [1, 2], [2, 2], [3, 2]]);
-    expect(order[8]).toEqual({ screen: 'checkpoint', scenarioIndex: 0, checkpointIndex: 1 });
-    expect(order).toHaveLength(12);
-    expect(new Set(order.map(route => answerKey(content.scenarios[route.scenarioIndex].id, content.scenarios[route.scenarioIndex].checkpoints[route.checkpointIndex].id))).size).toBe(12);
+    expect(order.slice(8, 12).map(route => [route.scenarioIndex, route.checkpointIndex])).toEqual([[0, 3], [1, 3], [2, 3], [3, 3]]);
+    expect(order[12]).toEqual({ screen: 'checkpoint', scenarioIndex: 0, checkpointIndex: 1 });
+    expect(order).toHaveLength(16);
+    expect(new Set(order.map(route => answerKey(content.scenarios[route.scenarioIndex].id, content.scenarios[route.scenarioIndex].checkpoints[route.checkpointIndex].id))).size).toBe(16);
     let session = createSession();
     order.forEach((route, index) => {
       expect(nextCheckpoint(content, route.scenarioIndex, route.checkpointIndex)).toEqual(order[index + 1] ?? { screen: 'complete' });
@@ -65,7 +66,7 @@ describe('state and export integrity', () => {
       session = chooseAnswer(session, content, route.scenarioIndex, route.checkpointIndex, checkpoint.options[0].id);
     });
     expect(previousRoute(content, { screen: 'complete' })).toEqual(order.at(-1));
-    expect(countAnswered(content, session)).toBe(12);
+    expect(countAnswered(content, session)).toBe(16);
     expect(responseData(content, session).rows.every(row => row.at(-1) === 'Answered')).toBe(true);
   });
   it('includes unanswered checkpoints, exact wording, factors, IDs and numeric positions in partial exports', async () => {

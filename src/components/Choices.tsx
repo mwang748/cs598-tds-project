@@ -8,7 +8,7 @@ export function Choices({ checkpoint, selected, onSelect }: {
   selected?: string;
   onSelect: (id: string) => void;
 }) {
-  const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
   const replies = checkpoint.options.filter(option => option.kind === 'chatbot');
   const manualOptions = checkpoint.options.filter(option => option.kind === 'manual');
   const options = [...replies, ...manualOptions];
@@ -16,14 +16,21 @@ export function Choices({ checkpoint, selected, onSelect }: {
   function renderOption(option: Checkpoint['options'][number], index: number) {
     const manual = option.kind === 'manual';
     const checked = selected === option.id;
-    return <button
+    return <div
       key={option.id}
       ref={element => { refs.current[index] = element; }}
-      type="button" role="radio" aria-checked={checked} aria-label={option.text}
+      role="radio" aria-checked={checked} aria-label={option.text}
       tabIndex={(selected ? checked : index === 0) ? 0 : -1}
       className={`${manual ? 'manual-answer manual-choice' : 'choice-card'}${checked ? ' selected' : ''}`}
       onClick={() => onSelect(option.id)}
       onKeyDown={event => {
+        // A focused package viewport uses arrow keys and Space for scrolling.
+        if (event.target !== event.currentTarget) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onSelect(option.id);
+          return;
+        }
         let next: number | undefined;
         if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (index + 1) % options.length;
         if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (index - 1 + options.length) % options.length;
@@ -42,7 +49,7 @@ export function Choices({ checkpoint, selected, onSelect }: {
           {checked && <span className="reply-selected" aria-hidden="true"><Check size={13} /> Selected</span>}
         </span>
       </>}
-    </button>;
+    </div>;
   }
 
   return <div className="choice-group" role="radiogroup" aria-label="Choose an approach">

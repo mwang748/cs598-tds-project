@@ -45,12 +45,27 @@ export function ReplyText({ text }: { text: string }) {
         if (flight) return <span className="reply-flight-summary" key={index}><FlightDetails flight={flight} /></span>;
         return <span className="reply-paragraph" key={index}>{paragraph}</span>;
       }
-      return <span className="reply-list" role="list" key={index}>
+      const scrollLabel = items.length >= 12 && items.every(item => flightLine.test(item.text))
+        ? 'flights'
+        : items.length > 5 && items.every(item => / — [^:]+: \$/u.test(item.text))
+          ? 'packages'
+          : null;
+      const list = <span className="reply-list" role="list">
         {items.map((item, itemIndex) => <span className="reply-list-item" role="listitem" key={itemIndex}>
           <span className="reply-list-marker" aria-hidden="true">{/^\d/.test(item.marker) ? item.marker : '•'}</span>
           <ListItemText text={item.text} />
         </span>)}
       </span>;
+      return scrollLabel ? <span className="package-list-block" key={index}>
+        <span className="package-scroll-hint">{items.length} {scrollLabel} · Scroll to compare</span>
+        <span
+          className="reply-list-window"
+          role="region"
+          aria-label={`Compare ${items.length} ${scrollLabel}`}
+          tabIndex={0}
+          onClick={event => event.stopPropagation()}
+        >{list}</span>
+      </span> : <span key={index}>{list}</span>;
     })}
   </span>;
 }

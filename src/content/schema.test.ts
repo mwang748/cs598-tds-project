@@ -5,6 +5,11 @@ import template from '../../public/study.template.json';
 import { checkpointCount, validateStudy } from './schema';
 
 describe('researcher content validation', () => {
+  it('keeps the trip overview to its original six fields without section assumptions', () => {
+    boston.scenarios.forEach(scenario => {
+      expect(scenario.summary.map(item => item.label)).toEqual(['Route', 'Flight budget', 'Flight departure', 'Hotel budget', 'Hotel stay dates', 'Travel party']);
+    });
+  });
   it('uses consistent headings and states the 12-to-3 shortlist in the fourth flight question', () => {
     const task = boston.scenarios.find(scenario => scenario.id === 'flexible-flexible')!.checkpoints.find(checkpoint => checkpoint.id === 'flight-selection')!;
     expect(task.options.find(option => option.id === 'A')!.text).toMatch(/^Search and choose myself\n\n/);

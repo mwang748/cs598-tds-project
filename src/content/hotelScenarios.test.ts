@@ -14,6 +14,17 @@ const inventory = [
 type Package = { id: string; hotel: string; room: string; rate: string; dates: string; total: number; walk: number; terms: string };
 
 describe('combined accommodation scenarios', () => {
+  it('mentions only hotels actually displayed within each response', () => {
+    for (const scenario of study.scenarios) {
+      const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'hotel-selection')!;
+      for (const option of task.options.filter(option => option.kind === 'chatbot')) {
+        const displayedNames = new Set([...option.text.matchAll(/^- (.*?) ·/gm)].map(match => match[1]));
+        for (const hotel of inventory) {
+          if (option.text.includes(hotel.hotel)) expect(displayedNames.has(hotel.hotel), `${scenario.id}/${option.id} mentions ${hotel.hotel} without displaying it`).toBe(true);
+        }
+      }
+    }
+  });
   it.each(study.scenarios.map((scenario, index) => ({ scenario, index })))('filters one inventory correctly for $scenario.id', ({ scenario, index }) => {
     const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'hotel-selection')!;
     const metadata = task.researcherMetadata!;
