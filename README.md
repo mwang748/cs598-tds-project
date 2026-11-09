@@ -27,7 +27,7 @@ npm run sample   # regenerate the clearly marked test-data workbook
 
 1. Review the fictional example stimuli before research use. Replace them with your own study content.
 2. Open the app. Read the instructions and click **Start study**. The app generates an anonymous ID, without collecting identifying information.
-3. Read each scenario brief and click **Begin scenario**. For each **New task**, type a message and select **Send**. Choose an AI reply or select an option under **Do it yourself**, when available. Where a follow-up is provided, you can also write your own approach. **Next task** collapses the exchange. **Next scenario** introduces a fresh trip. The exports record selected options and written follow-up answers. The opening chat messages stay in memory for display.
+3. Read each scenario brief and click **Begin scenario**. Each **New task** shows its question and choices immediately; no opening message or waiting is required. Choose a chatbot approach or select an option under **Do it yourself**, when available. Where a follow-up is provided, you can also write your own approach. **Next task** collapses the previous response. **Next scenario** introduces a fresh trip. The exports record selected options and written follow-up answers.
 4. Use **Back** to review or change answers, if enabled in the JSON. Responses use stable IDs and exports retain the latest selection.
 5. At completion, click **Download responses** for a formatted `.xlsx`. CSV is available as a fallback. Check your browser’s download list and retain the file. Downloading does not clear answers or prove that a file was permanently saved.
 6. Click **Next participant**, download if needed, then click **Confirm reset**. This clears responses and returns to the welcome screen. The next **Start study** generates a new ID. Cancelling keeps the existing session.
@@ -76,8 +76,8 @@ src/styles.css             desktop layout and accessible interaction styles
 scripts/generate-sample.ts reproducible test-data workbook from the real exporter
 ```
 
-Tab moves between controls. In the message box, Enter sends and Shift+Enter inserts a line break. Arrow keys change the focused reply, Home/End jump within the reply group, and Space/Enter select. Native dialogs trap focus, support Escape, and restore focus on close. Motion respects the operating system’s reduced-motion preference.
+Tab moves between controls. Arrow keys change the focused choice, Home/End jump within the choice group, and Space/Enter select. Native dialogs trap focus, support Escape, and restore focus on close. Motion respects the operating system’s reduced-motion preference.
 
 ## Scope
 
-The Boston travel study uses four combinations of budget and schedule. Each scenario contains flight selection, reservation preparation, hotel selection, and room and rate selection in that order. Add further tasks for a condition to that scenario’s `checkpoints` array. Each task presents four fixed replies and a written follow-up. The demonstration study used by the sample workbook lives in `src/test/fixtures/study.example.json`.
+The Boston travel study uses four combinations of budget and schedule. It presents flight selection across all four conditions first (`settings.firstTaskId: "flight-selection"`), then the remaining reservation, hotel, and room/rate tasks in scenario order. The scenario reminder updates for the current task; no repeated scenario-start click is needed. Add further tasks for a condition to that scenario’s `checkpoints` array. Task IDs, factors, and export grouping remain tied to their original scenarios. Each task presents four fixed choices and a written follow-up. The demonstration study used by the sample workbook lives in `src/test/fixtures/study.example.json`.

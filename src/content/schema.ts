@@ -4,7 +4,7 @@ const text = z.string().refine(value => value.trim().length > 0, 'Required text 
 const id = text.refine(value => value.trim() === value, 'IDs cannot start or end with whitespace');
 
 export const blockSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('paragraph'), text }).strict(),
+  z.object({ type: z.literal('paragraph'), text, emphasis: z.boolean().optional() }).strict(),
   z.object({ type: z.literal('bullet-list'), items: z.array(text).min(1, 'Add at least one list item') }).strict(),
   z.object({ type: z.literal('table'), columns: z.array(text).min(1), rows: z.array(z.array(z.string())).min(1) }).strict(),
 ]);
@@ -44,7 +44,7 @@ export const studySchema = z.object({
       note: text.optional(),
     }).strict(),
   ]),
-  settings: z.object({ allowBackNavigation: z.boolean() }).strict(),
+  settings: z.object({ allowBackNavigation: z.boolean(), firstTaskId: id.optional() }).strict(),
   scenarios: z.array(scenarioSchema).min(1, 'A study needs at least one scenario'),
 }).strict().superRefine((study, ctx) => {
   const unique = (items: { id: string }[], path: (string | number)[]) => {
@@ -62,6 +62,9 @@ export const studySchema = z.object({
     });
   };
   unique(study.scenarios, ['scenarios']);
+  if (study.settings.firstTaskId && !study.scenarios.some(scenario => scenario.checkpoints.some(checkpoint => checkpoint.id === study.settings.firstTaskId))) {
+    ctx.addIssue({ code: 'custom', path: ['settings', 'firstTaskId'], message: 'Must match an existing checkpoint ID' });
+  }
   study.scenarios.forEach((scenario, si) => {
     unique(scenario.checkpoints, ['scenarios', si, 'checkpoints']);
     tables(scenario.introduction, ['scenarios', si, 'introduction']);

@@ -62,13 +62,38 @@ export function countAnswered(study: Study, session: ParticipantSession): number
 export const isComplete = (study: Study, session: ParticipantSession) => session.completed && countAnswered(study, session) === checkpointCount(study);
 export const hasUnexportedAnswers = (session: ParticipantSession | null) => !!session && session.revision > 0 && session.exportedRevision !== session.revision;
 
+/** Prioritize one task across conditions without changing response IDs or factor metadata. */
+export function orderedCheckpoints(study: Study): Extract<StudyRoute, { screen: 'checkpoint' }>[] {
+  const checkpoints = study.scenarios.flatMap((scenario, scenarioIndex) => scenario.checkpoints.map((_, checkpointIndex) => ({
+    screen: 'checkpoint' as const, scenarioIndex, checkpointIndex,
+  })));
+  const firstTaskId = study.settings.firstTaskId;
+  if (!firstTaskId) return checkpoints;
+  const isFirst = (route: typeof checkpoints[number]) => study.scenarios[route.scenarioIndex].checkpoints[route.checkpointIndex].id === firstTaskId;
+  return [...checkpoints.filter(isFirst), ...checkpoints.filter(route => !isFirst(route))];
+}
+
 export function nextCheckpoint(study: Study, si: number, ci: number): StudyRoute {
+  if (study.settings.firstTaskId) {
+    const order = orderedCheckpoints(study);
+    const index = order.findIndex(route => route.scenarioIndex === si && route.checkpointIndex === ci);
+    return order[index + 1] ?? { screen: 'complete' };
+  }
   if (ci + 1 < study.scenarios[si].checkpoints.length) return { screen: 'checkpoint', scenarioIndex: si, checkpointIndex: ci + 1 };
   if (si + 1 < study.scenarios.length) return { screen: 'intro', scenarioIndex: si + 1 };
   return { screen: 'complete' };
 }
 
 export function previousRoute(study: Study, route: StudyRoute): StudyRoute {
+  if (study.settings.firstTaskId) {
+    const order = orderedCheckpoints(study);
+    if (route.screen === 'complete') return order[order.length - 1];
+    if (route.screen === 'checkpoint') {
+      const index = order.findIndex(item => item.scenarioIndex === route.scenarioIndex && item.checkpointIndex === route.checkpointIndex);
+      return order[index - 1] ?? { screen: 'intro', scenarioIndex: order[0].scenarioIndex };
+    }
+    return route;
+  }
   if (route.screen === 'checkpoint') {
     if (route.checkpointIndex > 0) return { ...route, checkpointIndex: route.checkpointIndex - 1 };
     return { screen: 'intro', scenarioIndex: route.scenarioIndex };

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, ArrowDownToLine, ArrowLeft, ArrowRight, Bot, Check, CheckCircle2, ClipboardList, Compass, Download, FileCheck2, MapPin, Settings2 } from 'lucide-react';
 import { checkpointCount, validateStudy, type Study } from './content/schema';
-import { answerKey, chooseAnswer, countAnswered, createSession, hasUnexportedAnswers, nextCheckpoint, previousRoute, writeFollowUp, type ParticipantSession, type StudyRoute } from './session/session';
+import { answerKey, chooseAnswer, countAnswered, createSession, hasUnexportedAnswers, nextCheckpoint, orderedCheckpoints, previousRoute, writeFollowUp, type ParticipantSession, type StudyRoute } from './session/session';
 import { Blocks } from './components/Blocks';
 import { Modal } from './components/Modal';
 import { ResearcherPanel } from './components/ResearcherPanel';
@@ -14,7 +14,6 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const [study, setStudy] = useState<Study | null>(initialStudy ?? null);
   const [loadError, setLoadError] = useState('');
   const [session, setSession] = useState<ParticipantSession | null>(null);
-  const [messages, setMessages] = useState<Record<string, string>>({});
   const [route, setRoute] = useState<StudyRoute>({ screen: 'welcome' });
   const [researcherOpen, setResearcherOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
@@ -66,37 +65,31 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const answers = session?.answers;
   const followUps = session?.followUps;
   const taskKey = scenario && checkpoint ? answerKey(scenario.id, checkpoint.id) : undefined;
-  const message = taskKey ? messages[taskKey] : undefined;
   const selected = taskKey ? answers?.[taskKey] : undefined;
   const followUpAnswer = taskKey ? followUps?.[taskKey] ?? '' : '';
   const hasWrittenAnswer = !!(checkpoint?.followUp && followUpAnswer.trim());
-  const canAdvance = !!(message && (selected || hasWrittenAnswer));
+  const canAdvance = !!(selected || hasWrittenAnswer);
   const nextTask = route.screen === 'checkpoint' ? nextCheckpoint(study, route.scenarioIndex, route.checkpointIndex) : undefined;
   const advanceLabel = nextTask?.screen === 'intro' ? 'Next scenario' : nextTask?.screen === 'complete' ? 'Finish study' : 'Next task';
   const progress = Math.round(answered / total * 100);
 
   const start = () => {
     setSession(createSession());
-    setMessages({});
     setSubmissionStatus('idle');
     submissionKey.current = '';
     setExportNotice('');
     setExportError('');
-    setRoute({ screen: 'intro', scenarioIndex: 0 });
-  };
-  const sendMessage = (text: string) => {
-    if (!taskKey || message) return;
-    setMessages(current => ({ ...current, [taskKey]: text }));
+    setRoute({ screen: 'intro', scenarioIndex: orderedCheckpoints(study)[0].scenarioIndex });
   };
   const select = (optionId?: string) => {
-    if (!taskKey || !message) return;
+    if (!taskKey) return;
     if (session && route.screen === 'checkpoint') {
       setSession(chooseAnswer(session, study, route.scenarioIndex, route.checkpointIndex, optionId));
       setExportNotice('');
     }
   };
   const saveFollowUp = (value: string) => {
-    if (!taskKey || !checkpoint?.followUp || !message) return;
+    if (!taskKey || !checkpoint?.followUp) return;
     if (session) {
       setSession(writeFollowUp(session, taskKey, value));
       setExportNotice('');
@@ -140,7 +133,6 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const requestReset = () => setResetOpen(true);
   const reset = () => {
     if (busy || submitInFlight.current) return;
-    setMessages({});
     setSubmissionStatus('idle');
     submissionKey.current = '';
     setSession(null); setRoute({ screen: 'welcome' }); setResetOpen(false); setExportNotice(''); setExportError('');
@@ -160,7 +152,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
                 <ClipboardList size={18} aria-hidden="true" /> {Array.isArray(instructions) ? 'Study instructions' : 'About this study'}
               </h2>
               {Array.isArray(instructions) ? <>
-                <p className="instruction-callout"><strong>How each task works</strong> Send one message per task, then choose how you’d proceed. Each task starts a separate chat. Use the trip details for the current scenario. Your choices from earlier tasks don’t carry over.</p>
+                <p className="instruction-callout"><strong>How each task works</strong> Read the task and choose your preferred approach. You can also describe another approach. Treat each task independently.</p>
                 <ul>{instructions.map((instruction, index) => <li key={index}>{instruction}</li>)}</ul>
               </> : <>
                 <p>{instructions.introduction}</p>
@@ -180,19 +172,18 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
               <dl className="inline-trip-summary">
                 {scenario.summary.map((item, index) => <div key={index}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}
               </dl>
-              <p className="instruction-callout"><strong>For each task</strong> Use these trip details. Each task starts a separate chat. After you send a message, choose the AI reply you’d prefer or select the manual option below the replies when it’s available.</p>
+              <p className="instruction-callout"><strong>For each task</strong> Use these trip details and choose how you’d proceed—with the chatbot or on your own. No message is needed.</p>
             </section>
-            <div className="page-actions">{study.settings.allowBackNavigation && route.scenarioIndex > 0 ? <button className="button ghost" onClick={() => setRoute(previousRoute(study, route))}><ArrowLeft size={16} /> Back</button> : <span />}<button className="button primary" onClick={() => setRoute({ screen: 'checkpoint', scenarioIndex: route.scenarioIndex, checkpointIndex: 0 })}>Begin scenario <ArrowRight size={17} /></button></div>
+            <div className="page-actions">{study.settings.allowBackNavigation && route.scenarioIndex > 0 && !study.settings.firstTaskId ? <button className="button ghost" onClick={() => setRoute(previousRoute(study, route))}><ArrowLeft size={16} /> Back</button> : <span />}<button className="button primary" onClick={() => setRoute(study.settings.firstTaskId ? orderedCheckpoints(study)[0] : { screen: 'checkpoint', scenarioIndex: route.scenarioIndex, checkpointIndex: 0 })}>Begin scenario <ArrowRight size={17} /></button></div>
           </>}
           {route.screen === 'checkpoint' && scenario && checkpoint && <>
             {study.settings.allowBackNavigation && scenario.checkpoints.slice(0, route.checkpointIndex).map(previous => {
               const key = answerKey(scenario.id, previous.id);
               const reply = previous.options.find(option => option.id === answers?.[key]);
               const written = previous.followUp && followUps?.[key]?.trim();
-              if (!messages[key] || (!reply && !written)) return null;
+              if (!reply && !written) return null;
               return <details className="previous-task" key={key}>
                 <summary>Previous task · {previous.title}</summary>
-                <div className="traveler-message"><span>You</span><p>{messages[key]}</p></div>
                 {reply && <div className="previous-reply">
                   <span>{reply.kind === 'manual' ? 'Do it yourself' : 'Preferred reply'}</span>
                   <div className={reply.kind === 'manual' ? 'manual-answer' : 'reply-bubble'}><ReplyText text={reply.text} /></div>
@@ -203,10 +194,8 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
             <TaskChat
               checkpoint={checkpoint}
               headingRef={headingRef}
-              message={message}
               selected={selected}
               followUpAnswer={followUpAnswer}
-              onSend={sendMessage}
               onSelect={select}
               onFollowUp={saveFollowUp}
             />
@@ -215,7 +204,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
               {canAdvance && <span className="selection-hint"><Check size={14} /> {selected ? 'One response selected' : 'Written response added'}</span>}
               <button className="button primary" disabled={!canAdvance} onClick={continueCheckpoint}>{advanceLabel} <ArrowRight size={17} /></button>
             </div>
-            {message && <p className="keyboard-tip">Use <kbd>Tab</kbd> to focus choices, <kbd>↑</kbd> <kbd>↓</kbd> to select, and <kbd>Enter</kbd> or <kbd>Space</kbd> to choose.</p>}
+            <p className="keyboard-tip">Use <kbd>Tab</kbd> to focus choices, <kbd>↑</kbd> <kbd>↓</kbd> to select, and <kbd>Enter</kbd> or <kbd>Space</kbd> to choose.</p>
           </>}
           {route.screen === 'complete' && <div className="completion-content"><span className="completion-icon"><Bot size={28} /></span><h1 ref={headingRef} tabIndex={-1}>{submitting ? 'Finishing the study…' : 'Thanks, that’s everything!'}</h1><p className="welcome-lede">You’ve shared how you’d like a travel chatbot to help.</p>
             <div className="completion-card"><FileCheck2 size={26} /><div>

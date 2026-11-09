@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import boston from '../public/study.default.json';
@@ -7,17 +7,6 @@ import { studySchema } from './content/schema';
 import { App } from './App';
 
 const study = studySchema.parse(example);
-async function sendTaskMessage(user: ReturnType<typeof userEvent.setup>, message = 'Can you help?') {
-  await user.type(screen.getByRole('textbox', { name: 'Your message' }), message);
-  vi.useFakeTimers();
-  try {
-    fireEvent.click(screen.getByRole('button', { name: 'Send' }));
-    act(() => vi.advanceTimersByTime(3000));
-  } finally {
-    vi.useRealTimers();
-  }
-}
-
 async function begin(content = study) {
   const user = userEvent.setup();
   render(<App initialStudy={content} />);
@@ -41,7 +30,6 @@ describe('participant and researcher flows', () => {
       render(<App initialStudy={oneTask} />);
       await user.click(screen.getByRole('button', { name: 'Start Study' }));
       await user.click(screen.getByRole('button', { name: 'Begin scenario' }));
-      await sendTaskMessage(user, 'Could you help me pick a hotel?');
       await user.click(screen.getByRole('radio', { name: /I’d compare the hotels and make this choice myself/ }));
       expect(submit).not.toHaveBeenCalled();
       await user.click(screen.getByRole('button', { name: 'Finish study' }));
@@ -62,7 +50,7 @@ describe('participant and researcher flows', () => {
     }
   });
 
-  it('completes the flight and hotel tasks before changing scenario conditions', async () => {
+  it('shows all four flight-selection questions before reservation and hotel tasks', async () => {
     const fetchStudy = vi.fn(async () => new Response(JSON.stringify(boston)));
     vi.stubGlobal('fetch', fetchStudy);
     try {
@@ -78,15 +66,14 @@ describe('participant and researcher flows', () => {
       expect(screen.getByRole('heading', { name: 'Boston · Tight budget, tight schedule' })).toBeVisible();
       expect(screen.getByText('$350 total, including taxes and one checked bag')).toBeVisible();
       expect(screen.getByText('$600 maximum, including taxes and fees')).toBeVisible();
-      expect(screen.getByText(/choose the AI reply you’d prefer/)).toHaveTextContent('select the manual option below the replies');
+      expect(screen.getByText(/No message is needed/)).toBeVisible();
       await user.click(screen.getByRole('button', { name: 'Begin scenario' }));
       expect(screen.getByRole('heading', { name: 'Finding and choosing a flight' })).toBeVisible();
-      expect(screen.queryByText('HarborLink Airways HL 112')).not.toBeInTheDocument();
-      await sendTaskMessage(user);
+      expect(screen.getAllByText('HarborLink Airways HL 112')).toHaveLength(1);
       const replies = screen.getAllByRole('radio');
-      const comparison = screen.getByRole('radio', { name: /Here are all 2 nonstop flights/ });
-      const manual = screen.getByRole('radio', { name: /I’d search for flights/ });
-      const followUp = screen.getByRole('region', { name: 'Written follow-up' });
+      const comparison = screen.getByRole('radio', { name: /Chatbot searches; I choose/ });
+      const manual = screen.getByRole('radio', { name: /Search and choose myself/ });
+      const followUp = screen.getByRole('region', { name: 'Optional follow-up' });
       expect(replies).toHaveLength(4);
       expect(replies.at(-1)).toBe(manual);
       expect(screen.getByRole('heading', { name: 'Do it yourself' })).toBeVisible();
@@ -94,25 +81,70 @@ describe('participant and researcher flows', () => {
       expect(within(comparison).getByText('HarborLink Airways HL 112')).toBeVisible();
       expect(within(comparison).getByText('ORD 9:10 a.m. CT')).toBeVisible();
       expect(within(comparison).getByText('$320 total')).toBeVisible();
+      const recommendation = screen.getByRole('radio', { name: /Chatbot recommends a shortlist; I choose/ });
+      const automatic = screen.getByRole('radio', { name: /Chatbot chooses without asking me/ });
+      const flightDetails = (option: HTMLElement) => within(option).getAllByRole('listitem').map(item => item.textContent);
+      expect(flightDetails(comparison)).toHaveLength(2);
+      expect(flightDetails(recommendation)).toHaveLength(1);
+      expect(flightDetails(automatic)).toEqual(flightDetails(recommendation));
+      const reason = /it departs in your preferred time window and costs \$25 more than the earlier flight\./i;
+      expect(recommendation).toHaveTextContent(reason);
+      expect(automatic).toHaveTextContent(reason);
+      expect(recommendation).toHaveTextContent('You make the final choice, or keep looking.');
+      expect(recommendation).not.toHaveTextContent(/approve/i);
+      expect(automatic).toHaveTextContent('without asking for approval.');
       await user.click(comparison);
       await user.click(manual);
       expect(comparison).toHaveAttribute('aria-checked', 'false');
       expect(manual).toHaveAttribute('aria-checked', 'true');
       await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByRole('heading', { name: 'Finding and choosing a flight' })).toBeVisible();
+      expect(screen.getByText('Boston · Tight budget, flexible schedule')).toBeVisible();
+      const changedSchedule = screen.getByText('What changed: Your departure time is now flexible.');
+      expect(changedSchedule).toBeVisible();
+      expect(changedSchedule.tagName).toBe('STRONG');
+      expect(screen.getByText(/Your \$350 maximum budget is unchanged/)).toBeVisible();
+      expect(screen.queryByText('Consider the tradeoff between price and departure time.')).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'Preparing the reservation' })).not.toBeInTheDocument();
+      const secondComparison = screen.getByRole('radio', { name: /Chatbot searches; I choose/ });
+      const secondRecommendation = screen.getByRole('radio', { name: /Chatbot recommends a shortlist; I choose/ });
+      const secondAutomatic = screen.getByRole('radio', { name: /Chatbot chooses without asking me/ });
+      expect(flightDetails(secondComparison)).toHaveLength(6);
+      expect(flightDetails(secondRecommendation)).toHaveLength(3);
+      expect(secondRecommendation).toHaveTextContent('I found 6 flights that meet your requirements. Here are 3 I recommend comparing.');
+      expect(flightDetails(secondAutomatic)).toHaveLength(1);
+      expect(secondRecommendation).toHaveTextContent('For the lowest price, choose LF 214.');
+      expect(secondRecommendation).toHaveTextContent('You make the final choice.');
+      expect(secondRecommendation).not.toHaveTextContent(/approve|preferred window/i);
+      expect(secondAutomatic).toHaveTextContent('I selected HarborLink HL 120 ($310).');
+      expect(secondAutomatic).toHaveTextContent('costs $45 more than the cheapest flight.');
+      expect(secondAutomatic).toHaveTextContent('without asking for approval.');
+      await user.click(secondRecommendation);
+      await user.click(screen.getByRole('button', { name: /^Back$/ }));
+      expect(screen.getByRole('radio', { name: /Search and choose myself/ })).toHaveAttribute('aria-checked', 'true');
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByRole('radio', { name: /Chatbot recommends a shortlist; I choose/ })).toHaveAttribute('aria-checked', 'true');
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByText('Boston · Flexible budget, tight schedule')).toBeVisible();
+      expect(screen.getByRole('heading', { name: 'Finding and choosing a flight' })).toBeVisible();
+      await user.click(screen.getAllByRole('radio')[0]);
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByText('Boston · Flexible budget, flexible schedule')).toBeVisible();
+      expect(screen.getByRole('heading', { name: 'Finding and choosing a flight' })).toBeVisible();
+      await user.click(screen.getAllByRole('radio')[0]);
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
       expect(screen.getByRole('heading', { name: 'Preparing the reservation' })).toBeVisible();
       await user.click(screen.getByText('Previous task · Finding and choosing a flight'));
-      expect(screen.getByText('Do it yourself')).toBeVisible();
+      expect(screen.getByRole('heading', { name: 'Do it yourself' })).toBeVisible();
       expect(screen.getByText(/assume Lakefront Air LF 222 has already been selected/)).toBeVisible();
       expect(screen.getByText(/Do not enter your real information/)).toBeVisible();
-      await sendTaskMessage(user);
       await user.click(screen.getAllByRole('radio')[0]);
       await user.click(screen.getByRole('button', { name: 'Next task' }));
       expect(screen.getByRole('heading', { name: 'Finding and choosing a hotel' })).toBeVisible();
       expect(screen.getByText('Boston · Tight budget, tight schedule')).toBeVisible();
       const instructions = screen.getByRole('region', { name: 'Task instructions' });
-      expect(within(instructions).getByText('Which approach would you prefer?')).toBeVisible();
-      expect(within(instructions).getByText('Ask for help choosing a hotel.')).toBeVisible();
-      await sendTaskMessage(user);
+      expect(screen.getByRole('heading', { name: 'Which approach would you prefer?' })).toBeVisible();
+      expect(within(instructions).queryByText('Ask for help choosing a hotel.')).not.toBeInTheDocument();
       expect(screen.getAllByRole('radio')).toHaveLength(4);
       expect(screen.getByRole('radio', { name: /Here are all 5 eligible hotels/ })).toBeVisible();
       await user.click(screen.getAllByRole('radio')[0]);
@@ -125,45 +157,34 @@ describe('participant and researcher flows', () => {
       await user.click(screen.getByRole('button', { name: /^Back$/ }));
       expect(screen.getByRole('textbox', { name: /Why would you prefer this approach/ })).toHaveValue('I would ask for a map first.');
       await user.click(screen.getByRole('button', { name: 'Next task' }));
-      await sendTaskMessage(user);
       await user.click(screen.getAllByRole('radio')[0]);
-      await user.click(screen.getByRole('button', { name: 'Next scenario' }));
-      expect(screen.getByRole('heading', { name: 'Boston · Tight budget, flexible schedule' })).toBeVisible();
-      expect(screen.getByText('Friday · any time CT')).toBeVisible();
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByText('Boston · Tight budget, flexible schedule')).toBeVisible();
+      expect(screen.getByRole('heading', { name: 'Preparing the reservation' })).toBeVisible();
     } finally {
       vi.unstubAllGlobals();
     }
   }, 12000);
 
-  it('shows a thinking indicator before revealing the fixed replies under one prompt', async () => {
-    const user = await begin();
-    const composer = screen.getByRole('textbox', { name: 'Your message' });
+  it('shows the question and choices immediately without a message or artificial wait', async () => {
+    await begin();
     expect(screen.getByText('New task')).toBeVisible();
-    expect(screen.getByText('Ask for help choosing a hotel.')).toBeVisible();
-    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
-    await user.type(composer, '   ');
-    expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled();
-    await user.clear(composer);
-    await user.type(composer, 'I need a quiet place to stay.{Enter}');
-    expect(screen.getByText('I need a quiet place to stay.')).toBeVisible();
     expect(screen.queryByRole('textbox', { name: 'Your message' })).not.toBeInTheDocument();
-    expect(screen.getByRole('status')).toHaveTextContent('Preparing replies…');
-    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
-    await screen.findByRole('heading', { name: /^Choose the reply you’d prefer/ }, { timeout: 4000 });
+    expect(screen.queryByRole('button', { name: 'Send' })).not.toBeInTheDocument();
+    expect(screen.queryByText('What to send')).not.toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: study.scenarios[0].checkpoints[0].question })).toBeVisible();
     expect(screen.getByRole('radiogroup', { name: 'Choose an approach' })).toBeVisible();
     expect(screen.queryByText('Alternative responses')).not.toBeInTheDocument();
-    expect(screen.queryByText(study.scenarios[0].checkpoints[0].question)).not.toBeInTheDocument();
-    expect(screen.queryByRole('status')).not.toBeInTheDocument();
     const options = study.scenarios[0].checkpoints[0].options;
     expect(screen.getAllByRole('radio')).toHaveLength(options.length);
     options.forEach((option, index) => expect(screen.getAllByRole('radio')[index]).toHaveAccessibleName(option.text));
-  }, 10000);
+  });
 
   it('opens the current scenario from the hamburger without changing the selected reply', async () => {
     const user = await begin();
     expect(screen.queryByRole('banner')).not.toBeInTheDocument();
     expect(screen.queryByText('YOUR STUDY JOURNEY')).not.toBeInTheDocument();
-    await sendTaskMessage(user);
     await user.click(screen.getAllByRole('radio')[1]);
     await user.click(screen.getByRole('button', { name: 'Open travel scenario' }));
     const reminder = screen.getByRole('dialog', { name: 'Travel scenario' });
@@ -177,33 +198,26 @@ describe('participant and researcher flows', () => {
   it('retains latest answers on back navigation, presents independent stimuli and completes', async () => {
     const user = await begin();
     expect(screen.getByRole('button', { name: 'Next task' })).toBeDisabled();
-    await sendTaskMessage(user, 'Could you help me choose a room?');
     await user.click(screen.getAllByRole('radio')[1]);
     await user.click(screen.getByRole('button', { name: 'Next task' }));
     expect(screen.getByRole('heading', { name: 'When a plan needs a rethink' })).toBeVisible();
-    expect(screen.getByRole('textbox', { name: 'Your message' })).toHaveValue('');
-    expect(screen.getByText('Could you help me choose a room?')).not.toBeVisible();
+    expect(screen.queryByRole('textbox', { name: 'Your message' })).not.toBeInTheDocument();
     await user.click(screen.getByText('Previous task · Finding a place to stay'));
-    expect(screen.getByText('Could you help me choose a room?')).toBeVisible();
     const stimulus = screen.getByText(/In this independent example, Union Hotel/).textContent;
     await user.click(screen.getByRole('button', { name: /^Back$/ }));
-    expect(screen.getByText('Could you help me choose a room?')).toBeVisible();
     expect(screen.getAllByRole('radio')[1]).toHaveAttribute('aria-checked', 'true');
     await user.click(screen.getAllByRole('radio')[3]);
     await user.click(screen.getByRole('button', { name: 'Next task' }));
     expect(screen.getByText(/In this independent example, Union Hotel/).textContent).toBe(stimulus);
-    await sendTaskMessage(user);
     await user.click(screen.getAllByRole('radio')[0]);
     await user.click(screen.getByRole('button', { name: 'Next scenario' }));
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('A weekend by the coast');
     await user.click(screen.getByRole('button', { name: /Begin scenario/ }));
     expect(screen.queryByText('Previous task · Finding a place to stay')).not.toBeInTheDocument();
-    expect(screen.getByRole('textbox', { name: 'Your message' })).toHaveValue('');
-    await sendTaskMessage(user);
+    expect(screen.queryByRole('textbox', { name: 'Your message' })).not.toBeInTheDocument();
     expect(screen.getAllByRole('radio')).toHaveLength(3);
     await user.click(screen.getAllByRole('radio')[1]);
     await user.click(screen.getByRole('button', { name: 'Next task' }));
-    await sendTaskMessage(user);
     expect(screen.getAllByRole('radio')).toHaveLength(2);
     await user.click(screen.getAllByRole('radio')[0]);
     await user.click(screen.getByRole('button', { name: 'Finish study' }));
@@ -219,8 +233,7 @@ describe('participant and researcher flows', () => {
     expect(screen.getByRole('button', { name: /Start Study/ })).toBeVisible();
     await user.click(screen.getByRole('button', { name: /Start Study/ }));
     await user.click(screen.getByRole('button', { name: /Begin scenario/ }));
-    expect(screen.getByRole('textbox', { name: 'Your message' })).toHaveValue('');
-    await sendTaskMessage(user);
+    expect(screen.queryByRole('textbox', { name: 'Your message' })).not.toBeInTheDocument();
     expect(screen.getAllByRole('radio').every(radio => radio.getAttribute('aria-checked') === 'false')).toBe(true);
   });
   it('supports radio arrow keys, Enter selection and disabled back navigation', async () => {
@@ -230,7 +243,6 @@ describe('participant and researcher flows', () => {
     render(<App initialStudy={content} />);
     await user.click(screen.getByRole('button', { name: /Start Study/ }));
     await user.click(screen.getByRole('button', { name: /Begin scenario/ }));
-    await sendTaskMessage(user);
     const radios = screen.getAllByRole('radio');
     radios[0].focus();
     await user.keyboard('{ArrowDown}');
@@ -268,7 +280,6 @@ describe('participant and researcher flows', () => {
   });
   it('keeps an uploaded and validated study ready to activate after ending the current session', async () => {
     const user = await begin();
-    await sendTaskMessage(user, 'Participant message');
     await user.click(screen.getAllByRole('radio')[0]);
     await user.click(screen.getByRole('button', { name: /^Researcher/ }));
     const researcher = within(screen.getByRole('dialog', { name: 'Researcher workspace' }));

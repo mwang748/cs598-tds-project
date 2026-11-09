@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "studyId": "boston-travel-study",
-  "contentVersion": "draft-01",
+  "contentVersion": "draft-10",
   "title": "Travel Chatbot Study",
   "stimulusLabel": "Fictional study details",
   "instructions": {
@@ -19,10 +19,12 @@
         "title": "Completing the purchase:",
         "text": "This is where you decide how you’d want to pay for the trip."
       }
-    ]
+    ],
+    "note": "First, choose flights across four budget and schedule scenarios. Then complete the remaining tasks. All travel details are fictional; you and the chatbot can search the same options. Nothing is actually reserved or paid for. Treat each task independently. Choose a chatbot approach or the Do it yourself option, or describe another approach. Click Start Study to begin."
   },
   "settings": {
-    "allowBackNavigation": true
+    "allowBackNavigation": true,
+    "firstTaskId": "flight-selection"
   },
   "scenarios": [
     {
@@ -71,19 +73,19 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "You are flying alone from Chicago O’Hare (ORD) to Boston Logan (BOS) on Friday for a vacation. Your return flight is already arranged."
+              "text": "You’re flying alone from Chicago (ORD) to Boston (BOS) this Friday for a vacation. Your return flight is already arranged."
             },
             {
               "type": "paragraph",
-              "text": "You need a nonstop economy flight and one checked bag. Every fare includes taxes and the checked bag. All flights have the same cancellation terms, and the airlines are equally acceptable to you. Departure times are in Chicago local time (CT). Arrival times are in Boston local time (ET)."
+              "text": "All flights are nonstop economy. Prices include taxes and one checked bag. Airlines are equally acceptable, with the same cancellation terms. Times are local: CT for departure and ET for arrival."
             },
             {
               "type": "paragraph",
-              "text": "You prefer to save money, but you also prefer departing between 10 a.m. and noon when the price is reasonable. The chatbot can search the same flights you can. The airlines, flight numbers, schedules, and fares are fictional. You will first choose how to find a flight, then choose how to prepare a reservation draft. Submission and payment are outside this exercise."
+              "text": "Preference: Save money, but you would prefer departing between 10 a.m. and noon. Choosing a flight does not reserve or purchase it."
             },
             {
               "type": "paragraph",
-              "text": "You can spend up to $350. You must depart between 9 a.m. and noon on Friday."
+              "text": "Requirements: $350 maximum, including taxes and one checked bag. Depart Friday between 9 a.m. and noon CT."
             },
             {
               "type": "paragraph",
@@ -92,28 +94,28 @@
           ],
           "taskInstruction": "Ask for help finding and choosing a flight.",
           "question": "How would you prefer to find and choose your flight?",
-          "followUp": "Why would you choose that approach in this situation? If none fits, describe what you’d prefer.",
+          "followUp": "Why this approach? If none fits, what would you prefer?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "I’d search for flights, decide what to compare, and choose one myself."
+              "text": "Search and choose myself\n\nI search for flights, compare them, and choose one without the chatbot."
             },
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "I chose total fare and departure time as the criteria to compare. Here are all 2 nonstop flights that fit your budget and schedule, listed in departure order:\n\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nYou decide which flights to consider and which one to choose."
+              "text": "Chatbot searches; I choose\n\nHere are both flights that meet your requirements, in departure order:\n\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nCompare them and choose one. I have not ranked or recommended either flight."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "I compared total fare and departure time and narrowed 2 eligible flights to one option. Only one falls in your preferred departure window.\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nYou decide whether to choose it or keep looking."
+              "text": "Chatbot recommends a shortlist; I choose\n\nOf the 2 matching flights, I recommend this option for your preferred departure window:\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nIt departs in your preferred time window and costs $25 more than the earlier flight. You make the final choice, or keep looking."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "I compared total fare and departure time, narrowed the eligible flights, and selected this one:\n\nLakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nIt’s the only eligible flight in your preferred departure window and costs $25 more than the earlier flight. No ticket has been purchased."
+              "text": "Chatbot chooses without asking me\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nI selected Lakefront LF 222: it departs in your preferred time window and costs $25 more than the earlier flight. I make the selection without asking for approval. No reservation or payment is made."
             }
           ]
         },
@@ -305,49 +307,37 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "You are flying alone from Chicago O’Hare (ORD) to Boston Logan (BOS) on Friday for a vacation. Your return flight is already arranged."
+              "text": "What changed: Your departure time is now flexible.",
+              "emphasis": true
             },
             {
               "type": "paragraph",
-              "text": "You need a nonstop economy flight and one checked bag. Every fare includes taxes and the checked bag. All flights have the same cancellation terms, and the airlines are equally acceptable to you. Departure times are in Chicago local time (CT). Arrival times are in Boston local time (ET)."
-            },
-            {
-              "type": "paragraph",
-              "text": "You prefer to save money, but you also prefer departing between 10 a.m. and noon when the price is reasonable. The chatbot can search the same flights you can. The airlines, flight numbers, schedules, and fares are fictional. You will first choose how to find a flight, then choose how to prepare a reservation draft. Submission and payment are outside this exercise."
-            },
-            {
-              "type": "paragraph",
-              "text": "You can spend up to $350. You can depart at any time on Friday."
-            },
-            {
-              "type": "paragraph",
-              "text": "How would you prefer to find and choose your flight?"
+              "text": "You can depart at any time on Friday; you have no preferred departure time. Your $350 maximum budget is unchanged and includes taxes and one checked bag. All other trip details stay the same."
             }
           ],
-          "taskInstruction": "Ask for help finding and choosing a flight.",
           "question": "How would you prefer to find and choose your flight?",
-          "followUp": "Why would you choose that approach in this situation? If none fits, describe what you’d prefer.",
+          "followUp": "Why this approach? If none fits, what would you prefer?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "I’d search for flights, decide what to compare, and choose one myself."
+              "text": "Search and choose myself\n\nI search for flights, compare them, and choose one without the chatbot."
             },
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "I chose total fare and departure time as the criteria to compare. Here are all 6 nonstop flights that fit your budget and schedule, listed in departure order:\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Meridian Jet MJ 308 | ORD 7:15 a.m. CT → BOS 10:40 a.m. ET | $290 total\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n- HarborLink Airways HL 126 | ORD 8:00 p.m. CT → BOS 11:25 p.m. ET | $335 total\n\nYou decide which flights to consider and which one to choose."
+              "text": "Chatbot searches; I choose\n\nHere are all 6 matching flights, in departure order:\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Meridian Jet MJ 308 | ORD 7:15 a.m. CT → BOS 10:40 a.m. ET | $290 total\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n- HarborLink Airways HL 126 | ORD 8:00 p.m. CT → BOS 11:25 p.m. ET | $335 total\n\nCompare them and choose one. I have not ranked or recommended a flight."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "I compared total fare and departure time and narrowed 6 eligible flights to 3 options. These cover the lowest fare, a flight in your preferred departure window, and a lower-priced afternoon departure.\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nYou make the final choice."
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 6 flights that meet your requirements. Here are 3 I recommend comparing.\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nFor the lowest price, choose LF 214. For a late-morning departure, choose LF 222. For a lower-priced afternoon departure, choose HL 120. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "I compared total fare and departure time, narrowed the eligible flights, and selected this one:\n\nLakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nIt departs in your preferred window and costs $80 more than the earliest flight and $35 more than the afternoon flight on the shortlist. No ticket has been purchased."
+              "text": "Chatbot chooses without asking me\n\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nI selected HarborLink HL 120 ($310). It avoids an early-morning or late-evening departure and costs $45 more than the cheapest flight. I make the selection without asking for approval. No reservation or payment is made."
             }
           ]
         },
@@ -543,49 +533,45 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "You are flying alone from Chicago O’Hare (ORD) to Boston Logan (BOS) on Friday for a vacation. Your return flight is already arranged."
+              "text": "What changed: Your budget is higher, but your departure window is fixed.",
+              "emphasis": true
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "Budget: $700 maximum, including taxes and one checked bag.",
+                "Required departure: Friday, 9 a.m.–noon CT.",
+                "Preference: Save money, but prefer 10 a.m.–noon when the price is reasonable."
+              ]
             },
             {
               "type": "paragraph",
-              "text": "You need a nonstop economy flight and one checked bag. Every fare includes taxes and the checked bag. All flights have the same cancellation terms, and the airlines are equally acceptable to you. Departure times are in Chicago local time (CT). Arrival times are in Boston local time (ET)."
-            },
-            {
-              "type": "paragraph",
-              "text": "You prefer to save money, but you also prefer departing between 10 a.m. and noon when the price is reasonable. The chatbot can search the same flights you can. The airlines, flight numbers, schedules, and fares are fictional. You will first choose how to find a flight, then choose how to prepare a reservation draft. Submission and payment are outside this exercise."
-            },
-            {
-              "type": "paragraph",
-              "text": "You can spend up to $700. You must depart between 9 a.m. and noon on Friday."
-            },
-            {
-              "type": "paragraph",
-              "text": "How would you prefer to find and choose your flight?"
+              "text": "All other trip details remain unchanged. No reservation or payment is made."
             }
           ],
-          "taskInstruction": "Ask for help finding and choosing a flight.",
           "question": "How would you prefer to find and choose your flight?",
-          "followUp": "Why would you choose that approach in this situation? If none fits, describe what you’d prefer.",
+          "followUp": "Why this approach? If none fits, what would you prefer?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "I’d search for flights, decide what to compare, and choose one myself."
+              "text": "Search and choose myself\n\nI search for flights, compare them, and choose one without the chatbot."
             },
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "I chose total fare and departure time as the criteria to compare. Here are all 5 nonstop flights that fit your budget and schedule, listed in departure order:\n\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 218 | ORD 9:50 a.m. CT → BOS 1:15 p.m. ET | $410 total\n- Meridian Jet MJ 314 | ORD 10:30 a.m. CT → BOS 1:50 p.m. ET | $465 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 116 | ORD 11:50 a.m. CT → BOS 3:15 p.m. ET | $520 total\n\nYou decide which flights to consider and which one to choose."
+              "text": "Chatbot searches; I choose\n\nHere are all 5 matching flights, in departure order:\n\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 218 | ORD 9:50 a.m. CT → BOS 1:15 p.m. ET | $410 total\n- Meridian Jet MJ 314 | ORD 10:30 a.m. CT → BOS 1:50 p.m. ET | $465 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 116 | ORD 11:50 a.m. CT → BOS 3:15 p.m. ET | $520 total\n\nCompare them and choose one. I have not ranked or recommended a flight."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "I compared total fare and departure time and narrowed 5 eligible flights to 3 options. These cover the lowest fare and two departures in your preferred window.\n\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Meridian Jet MJ 314 | ORD 10:30 a.m. CT → BOS 1:50 p.m. ET | $465 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nYou make the final choice."
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 5 flights that meet your requirements. Here are 3 I recommend comparing:\n\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Meridian Jet MJ 314 | ORD 10:30 a.m. CT → BOS 1:50 p.m. ET | $465 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nHL 112 is cheapest. LF 222 is cheapest in your preferred window. MJ 314 leaves 50 minutes earlier than LF 222 but costs $120 more. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "I compared total fare and departure time, narrowed the eligible flights, and selected this one:\n\nLakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nIt’s the lowest fare in your preferred departure window and costs $25 more than the cheapest eligible flight. No ticket has been purchased."
+              "text": "Chatbot chooses without asking me\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nI selected Lakefront LF 222 ($345). It’s the cheapest flight in your preferred window and costs $25 more than the cheapest eligible flight. I make the selection without asking for approval. No reservation or payment is made."
             }
           ]
         },
@@ -777,49 +763,37 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "You are flying alone from Chicago O’Hare (ORD) to Boston Logan (BOS) on Friday for a vacation. Your return flight is already arranged."
+              "text": "What changed: Your departure time is now flexible.",
+              "emphasis": true
             },
             {
               "type": "paragraph",
-              "text": "You need a nonstop economy flight and one checked bag. Every fare includes taxes and the checked bag. All flights have the same cancellation terms, and the airlines are equally acceptable to you. Departure times are in Chicago local time (CT). Arrival times are in Boston local time (ET)."
-            },
-            {
-              "type": "paragraph",
-              "text": "You prefer to save money, but you also prefer departing between 10 a.m. and noon when the price is reasonable. The chatbot can search the same flights you can. The airlines, flight numbers, schedules, and fares are fictional. You will first choose how to find a flight, then choose how to prepare a reservation draft. Submission and payment are outside this exercise."
-            },
-            {
-              "type": "paragraph",
-              "text": "You can spend up to $700. You can depart at any time on Friday."
-            },
-            {
-              "type": "paragraph",
-              "text": "How would you prefer to find and choose your flight?"
+              "text": "You can depart at any time on Friday; you have no preferred departure time. Your $700 maximum budget is unchanged and includes taxes and one checked bag. All other trip details stay the same."
             }
           ],
-          "taskInstruction": "Ask for help finding and choosing a flight.",
           "question": "How would you prefer to find and choose your flight?",
-          "followUp": "Why would you choose that approach in this situation? If none fits, describe what you’d prefer.",
+          "followUp": "Why this approach? If none fits, what would you prefer?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "I’d search for flights, decide what to compare, and choose one myself."
+              "text": "Search and choose myself\n\nI search for flights, compare them, and choose one without the chatbot."
             },
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "I chose total fare and departure time as the criteria to compare. Here are all 12 nonstop flights that fit your budget and schedule, listed in departure order:\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Meridian Jet MJ 308 | ORD 7:15 a.m. CT → BOS 10:40 a.m. ET | $290 total\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 218 | ORD 9:50 a.m. CT → BOS 1:15 p.m. ET | $410 total\n- Meridian Jet MJ 314 | ORD 10:30 a.m. CT → BOS 1:50 p.m. ET | $465 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 116 | ORD 11:50 a.m. CT → BOS 3:15 p.m. ET | $520 total\n- Meridian Jet MJ 320 | ORD 1:10 p.m. CT → BOS 4:35 p.m. ET | $390 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n- Lakefront Air LF 228 | ORD 4:20 p.m. CT → BOS 7:45 p.m. ET | $480 total\n- Meridian Jet MJ 326 | ORD 6:40 p.m. CT → BOS 10:00 p.m. ET | $560 total\n- HarborLink Airways HL 126 | ORD 8:00 p.m. CT → BOS 11:25 p.m. ET | $335 total\n\nYou decide which flights to consider and which one to choose."
+              "text": "Chatbot searches; I choose\n\nHere are all 12 matching flights, in departure order:\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Meridian Jet MJ 308 | ORD 7:15 a.m. CT → BOS 10:40 a.m. ET | $290 total\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 218 | ORD 9:50 a.m. CT → BOS 1:15 p.m. ET | $410 total\n- Meridian Jet MJ 314 | ORD 10:30 a.m. CT → BOS 1:50 p.m. ET | $465 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 116 | ORD 11:50 a.m. CT → BOS 3:15 p.m. ET | $520 total\n- Meridian Jet MJ 320 | ORD 1:10 p.m. CT → BOS 4:35 p.m. ET | $390 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n- Lakefront Air LF 228 | ORD 4:20 p.m. CT → BOS 7:45 p.m. ET | $480 total\n- Meridian Jet MJ 326 | ORD 6:40 p.m. CT → BOS 10:00 p.m. ET | $560 total\n- HarborLink Airways HL 126 | ORD 8:00 p.m. CT → BOS 11:25 p.m. ET | $335 total\n\nCompare them and choose one. I have not ranked or recommended a flight."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "I compared total fare and departure time and narrowed 12 eligible flights to 3 options. These cover the lowest fare, the lowest fare in your preferred departure window, and a lower-priced afternoon departure.\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nYou make the final choice."
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 12 flights that meet your requirements. Here are 3 I recommend comparing.\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nFor the lowest price, choose LF 214. For a late-morning departure, choose LF 222. For a lower-priced afternoon departure, choose HL 120. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "I compared total fare and departure time, narrowed the eligible flights, and selected this one:\n\nLakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nIt’s the lowest fare in your preferred departure window. It costs $80 more than the earliest flight and $35 more than the afternoon flight on the shortlist. No ticket has been purchased."
+              "text": "Chatbot chooses without asking me\n\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nI selected HarborLink HL 120 ($310). It avoids an early-morning or late-evening departure and costs $45 more than the cheapest flight. I make the selection without asking for approval. No reservation or payment is made."
             }
           ]
         },

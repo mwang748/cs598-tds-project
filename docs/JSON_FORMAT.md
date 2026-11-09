@@ -13,6 +13,7 @@ The default configuration is `public/study.default.json`; start from `public/stu
 | `stimulusLabel` | string, optional | Optional participant-facing badge, e.g. `"Fictional draft stimuli"`. Change or omit it for your real stimuli. |
 | `instructions` | string array or object | Use a nonempty list of instructions, or an object with an `introduction` string, a nonempty `steps` array of `{title, text}` objects, and an optional `note` string. |
 | `settings.allowBackNavigation` | boolean | `true` enables reviewing earlier checkpoints; `false` disables Back and final review. |
+| `settings.firstTaskId` | string, optional | Show all occurrences of this checkpoint ID first, in scenario order, followed by the remaining tasks in authored order. Must match an existing checkpoint. This flow uses one initial scenario brief, then direct task-to-task navigation; the scenario reminder updates with each task. IDs, factors, and export grouping stay unchanged. Omit for the original scenario-by-scenario flow. |
 | `scenarios` | scenario array | At least one scenario. Rendered in array order. |
 
 Unknown fields are rejected outside `factors` and `researcherMetadata`. This catches misspelled field names rather than silently ignoring them. Required text must contain a non-whitespace character. Exact authored strings are retained, including spacing and line breaks. IDs cannot have leading/trailing whitespace. Unicode IDs are supported.
@@ -37,15 +38,15 @@ Scenario IDs must be unique. Summary labels need not correspond to any fixed cat
 | `id` | string | Unique within its scenario. May be reused in a different scenario. |
 | `title` | string | Nonblank. |
 | `context` | block array, optional | May be absent or empty. |
-| `taskInstruction` | string, optional | Short, neutral instruction above the message box. If omitted, the app asks the participant to request help with the task. |
-| `travelerMessage` | string, optional | Example wording shown below the instruction. The message box starts empty. |
-| `question` | string | Exact nonblank question wording, included in the export. |
+| `taskInstruction` | string, optional | Legacy field accepted for compatibility; not displayed in the direct-choice flow. |
+| `travelerMessage` | string, optional | Legacy field accepted for compatibility; not displayed. Participants do not enter an opening message. |
+| `question` | string | Exact nonblank question wording, displayed above choices and included in the export. An identical context paragraph is omitted from the screen to avoid repetition. |
 | `followUp` | string, optional | Written prompt shown below the replies. A participant can select a reply, submit a written approach, or do both. |
 | `responseType` | string | Exactly `"single-choice"`. Other types are rejected. |
 | `options` | option array | At least one. Any number is supported, in array order. |
 | `researcherMetadata` | object, optional | Any JSON keys/values, e.g. researchQuestions or construct. Hidden from participant screens; not included in response exports. |
 
-Each checkpoint appears as a separate chat task. After the participant sends one message, the app shows the authored alternatives in array order. The message is used for the in-memory chat display. Response exports record the selected option and any written follow-up. A written approach on its own counts as answered, with a blank option ID. Removing an optional field means removing its key, rather than setting it to `null`.
+Each checkpoint shows the context, question, and authored alternatives immediately, with no message-entry step or artificial delay. Chatbot choices appear first in their authored order, followed by manual choices. Response exports record the selected option and any written follow-up. A written approach on its own counts as answered, with a blank option ID. Removing an optional field means removing its key, rather than setting it to `null`.
 
 ## Option
 
@@ -64,6 +65,8 @@ Answers are stored against `[scenario ID, checkpoint ID]`, with the selected opt
 ```json
 {"type":"paragraph","text":"Imagine planning a three-night trip."}
 ```
+
+Add `"emphasis": true` to display a paragraph as a bold callout, for example to highlight what changed between scenarios.
 
 ### Bullet list
 

@@ -5,6 +5,54 @@ import template from '../../public/study.template.json';
 import { checkpointCount, validateStudy } from './schema';
 
 describe('researcher content validation', () => {
+  it('uses consistent headings and states the 12-to-3 shortlist in the fourth flight question', () => {
+    const task = boston.scenarios.find(scenario => scenario.id === 'flexible-flexible')!.checkpoints.find(checkpoint => checkpoint.id === 'flight-selection')!;
+    expect(task.options.find(option => option.id === 'A')!.text).toMatch(/^Search and choose myself\n\n/);
+    const search = task.options.find(option => option.id === 'B')!.text;
+    expect(search).toMatch(/^Chatbot searches; I choose\n\n/);
+    expect(search.split('\n').filter(line => line.startsWith('- '))).toHaveLength(12);
+    const recommendation = task.options.find(option => option.id === 'C')!.text;
+    expect(recommendation).toContain('I found 12 flights that meet your requirements. Here are 3 I recommend comparing.');
+    expect(recommendation.split('\n').filter(line => line.startsWith('- '))).toHaveLength(3);
+    expect(recommendation).toContain('You make the final choice.');
+  });
+  it('makes the higher-budget fixed-schedule conditions and shortlist tradeoffs explicit', () => {
+    const task = boston.scenarios.find(scenario => scenario.id === 'flexible-tight')!.checkpoints.find(checkpoint => checkpoint.id === 'flight-selection')!;
+    const context = JSON.stringify(task.context);
+    expect(context).toContain('Budget: $700 maximum, including taxes and one checked bag.');
+    expect(context).toContain('Required departure: Friday, 9 a.m.–noon CT.');
+    expect(context).toContain('prefer 10 a.m.–noon when the price is reasonable.');
+    expect(context).not.toContain('You will first choose');
+    const recommendation = task.options.find(option => option.id === 'C')!.text;
+    expect(recommendation).toContain('I found 5 flights that meet your requirements. Here are 3 I recommend comparing:');
+    expect(recommendation).toContain('MJ 314 leaves 50 minutes earlier than LF 222 but costs $120 more.');
+    expect(task.options.find(option => option.id === 'D')!.text).toContain('without asking for approval');
+  });
+  it('keeps flight recommendations as shortlists with the final choice left to the user', () => {
+    boston.scenarios.forEach((scenario, index) => {
+      const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'flight-selection')!;
+      const recommendation = task.options.find(option => option.id === 'C')!.text;
+      expect(recommendation).toContain('Chatbot recommends a shortlist; I choose');
+      expect(recommendation).toContain('You make the final choice');
+      expect(recommendation).not.toMatch(/approve|I selected/);
+      expect(recommendation.split('\n').filter(line => line.startsWith('- '))).toHaveLength([1, 3, 3, 3][index]);
+    });
+  });
+  it('does not assume a preferred departure window in flexible-schedule flight tasks', () => {
+    boston.scenarios.filter(scenario => scenario.factors.schedule === 'flexible').forEach(scenario => {
+      const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'flight-selection')!;
+      const context = JSON.stringify(task.context);
+      expect(context).toContain('you have no preferred departure time.');
+      expect(context).not.toContain('Consider the tradeoff');
+      expect(context).not.toContain('10 a.m.');
+      const recommendation = task.options.find(option => option.id === 'C')!.text;
+      const automatic = task.options.find(option => option.id === 'D')!.text;
+      expect(recommendation + automatic).not.toMatch(/preferred.*window/);
+      expect(automatic).toContain('I selected HarborLink HL 120 ($310).');
+      expect(automatic).toContain('without asking for approval');
+      expect(recommendation).toContain('HarborLink Airways HL 120');
+    });
+  });
   it('accepts the draft and the editable starter template', () => {
     expect(validateStudy(JSON.stringify(boston)).success).toBe(true);
     expect(validateStudy(JSON.stringify(example)).success).toBe(true);
@@ -37,6 +85,7 @@ describe('researcher content validation', () => {
     ['unsupported version', (c: any) => { c.schemaVersion = '2.0'; }, 'schemaVersion'],
     ['unsupported question type', (c: any) => { c.scenarios[0].checkpoints[0].responseType = 'multi-choice'; }, 'responseType'],
     ['empty options', (c: any) => { c.scenarios[0].checkpoints[0].options = []; }, 'options'],
+    ['unknown first task', (c: any) => { c.settings.firstTaskId = 'missing-task'; }, 'firstTaskId'],
   ])('rejects %s with a field path', (_name, mutate, message) => {
     const content = structuredClone(example);
     mutate(content);
