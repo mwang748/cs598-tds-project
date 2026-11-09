@@ -14,6 +14,12 @@ interface Props {
 }
 
 export function TaskChat({ checkpoint, headingRef, selected, followUpAnswer, onSelect, onFollowUp }: Props) {
+  const hasChatbotAndManualOptions = checkpoint.options.some(option => option.kind === 'chatbot')
+    && checkpoint.options.some(option => option.kind === 'manual');
+  const choiceInstruction = checkpoint.choiceInstruction ?? (checkpoint.optionLayout !== 'cards' && hasChatbotAndManualOptions
+    ? 'Focus on the kind of help each response offers. If you’d prefer to handle the task yourself, select the manual option.'
+    : undefined);
+
   return <>
     <div className="task-divider"><span>New task</span></div>
     <div className="checkpoint-heading"><h1 ref={headingRef} tabIndex={-1}>{checkpoint.title}</h1></div>
@@ -24,13 +30,13 @@ export function TaskChat({ checkpoint, headingRef, selected, followUpAnswer, onS
     <div className="question-section">
       <div className="question-heading">
         <h2>{checkpoint.question}</h2>
-        {checkpoint.optionLayout !== 'cards' && checkpoint.options.some(option => option.kind === 'chatbot') && checkpoint.options.some(option => option.kind === 'manual') && <p className="task-instruction">Choose your preferred chatbot response or select the manual human option</p>}
+        {choiceInstruction && <p className="task-instruction">{choiceInstruction}</p>}
       </div>
       <Choices checkpoint={checkpoint} selected={selected} onSelect={onSelect} />
       {checkpoint.followUp && <section className="instruction-panel follow-up" aria-labelledby="follow-up-heading">
         <h3 id="follow-up-heading" className="instruction-label">Optional follow-up</h3>
         <label htmlFor="task-follow-up" className="composer-label">{checkpoint.followUp}</label>
-        <p id="task-follow-up-help" className="task-instruction">Choose an option, describe another approach, or both.</p>
+        <p id="task-follow-up-help" className="task-instruction">A short answer is fine.</p>
         <textarea
           id="task-follow-up"
           aria-describedby="task-follow-up-help"

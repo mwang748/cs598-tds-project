@@ -33,16 +33,20 @@ describe('researcher content validation', () => {
     const recommendation = task.options.find(option => option.id === 'C')!.text;
     expect(recommendation).toContain('I found 5 flights that meet your requirements. Here are 3 I recommend comparing:');
     expect(recommendation).toContain('MJ 314 leaves 50 minutes earlier than LF 222 but costs $120 more.');
-    expect(task.options.find(option => option.id === 'D')!.text).toContain('without asking for approval');
+    expect(task.options.find(option => option.id === 'D')!.text).toContain('I recommend Lakefront LF 222 ($345).');
   });
-  it('keeps flight recommendations as shortlists with the final choice left to the user', () => {
+  it('distinguishes flight shortlists from single recommendations and leaves the final choice to the user', () => {
     flightScenarios.forEach((scenario, index) => {
       const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'flight-selection')!;
       const recommendation = task.options.find(option => option.id === 'C')!.text;
       expect(recommendation).toContain('Chatbot recommends a shortlist; I choose');
       expect(recommendation).toContain('You make the final choice');
       expect(recommendation).not.toMatch(/approve|I selected/);
-      expect(recommendation.split('\n').filter(line => line.startsWith('- '))).toHaveLength([1, 3, 3, 3][index]);
+      expect(recommendation.split('\n').filter(line => line.startsWith('- '))).toHaveLength([2, 3, 3, 3][index]);
+      const singleRecommendation = task.options.find(option => option.id === 'D')!.text;
+      expect(singleRecommendation).toMatch(/^Chatbot recommends one option\n\n/);
+      expect(singleRecommendation).toContain('You make the final choice.');
+      expect(singleRecommendation.split('\n').filter(line => line.startsWith('- '))).toHaveLength(1);
     });
   });
   it('does not assume a preferred departure window in flexible-schedule flight tasks', () => {
@@ -53,10 +57,9 @@ describe('researcher content validation', () => {
       expect(context).not.toContain('Consider the tradeoff');
       expect(context).not.toContain('10 a.m.');
       const recommendation = task.options.find(option => option.id === 'C')!.text;
-      const automatic = task.options.find(option => option.id === 'D')!.text;
-      expect(recommendation + automatic).not.toMatch(/preferred.*window/);
-      expect(automatic).toContain('I selected HarborLink HL 120 ($310).');
-      expect(automatic).toContain('without asking for approval');
+      const singleRecommendation = task.options.find(option => option.id === 'D')!.text;
+      expect(recommendation + singleRecommendation).not.toMatch(/preferred.*window/);
+      expect(singleRecommendation).toContain('I recommend HarborLink HL 120 ($310).');
       expect(recommendation).toContain('HarborLink Airways HL 120');
     });
   });

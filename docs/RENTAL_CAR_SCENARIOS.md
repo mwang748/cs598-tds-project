@@ -29,7 +29,7 @@ All rentals last 72 hours, with pickup and return at 10 a.m. ET at the same loca
 
 ## Conditions and choices
 
-| Condition | Budget | Eligible rentals / companies | Shortlist (C) | Selected rental (D) |
+| Condition | Budget | Eligible rentals / companies | Shortlist (C) | Single recommendation (D) |
 | --- | --- | --- | --- | --- |
 | Tight / fixed | $240 | 3 / 3 | Harbor Fri–Mon $210; City Fri–Mon $220 | City Fri–Mon $220 |
 | Tight / flexible | $240 | 7 / 3 | Harbor Thu–Sun $180; City Sat–Tue $200; West Thu–Sun $225 | City Sat–Tue $200 |
@@ -38,7 +38,7 @@ All rentals last 72 hours, with pickup and return at 10 a.m. ET at the same loca
 
 Fixed dates mean Friday–Monday. Flexible dates allow any listed rental period with no date preference. Whole-trip shifts cause no additional flight or hotel costs, and tasks are independent of earlier answers. Every rental still lasts 72 hours.
 
-A is manual search and choice. B lists every eligible rental, alphabetically grouped by company, without a recommendation. C recommends a shortlist and leaves the final decision to the participant. D selects without approval and displays both the selected package and any alternatives named in its comparison. Excluded companies are not introduced in surrounding text.
+A is manual search and choice. B lists every eligible rental, alphabetically grouped by company, without a recommendation. C recommends a shortlist. D recommends one package and explains the price and transfer tradeoff. The participant makes the final choice.
 
 The fixed-schedule budget contrast is now 3 versus 8 eligible rentals. Under $240 only downtown options qualify; under $450, airport and near-airport choices become available. No condition guarantees a different participant answer.
 
@@ -58,11 +58,13 @@ Company names are fictional. You qualify to rent; all cars are automatic and fit
 
 Independent of earlier flight/hotel answers; either location is reachable by pickup. Nothing is booked or paid.
 
-#### How would you prefer to find and choose your rental car?
+#### Which chatbot response would best help you choose a rental car?
+
+Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.
 
 ##### A. Search and choose myself
 
-I search rental websites, compare the cars, locations, and dates, and choose without the chatbot.
+I'd search rental websites, compare the cars, locations, and dates, and choose without the chatbot.
 
 ##### B. Chatbot searches; I choose
 
@@ -83,18 +85,17 @@ I found 3 matching rentals. Here are 2 I recommend comparing:
 
 City Rentals costs $10 more than Harbor Rentals but saves 10 minutes of shuttle time each way. You make the final choice.
 
-##### D. Chatbot chooses without asking me
-
-I selected City Rentals · Compact, Friday–Monday, for $220. Here are the compared packages:
+##### D. Chatbot recommends one option
 
 - City Rentals · Compact — Friday–Monday: $220 | Downtown Boston; 25-minute shuttle each way.
-- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.
 
-It costs $10 more than Harbor Rentals but saves 10 minutes of shuttle time each way. I make the selection without asking for approval. No reservation or payment is made.
+I recommend this package because it saves 10 minutes of shuttle time each way for $10 more than the cheapest rental. You make the final choice.
 
 #### Optional follow-up
 
-Why this approach? Did pickup/return convenience affect your choice?
+Why did you choose this approach?
+
+A short answer is fine.
 
 ### 2. Tight budget, flexible schedule
 
@@ -108,11 +109,13 @@ Why this approach? Did pickup/return convenience affect your choice?
 
 Independent of earlier flight/hotel answers. Your trip can shift without extra flight or hotel costs; either location is reachable by pickup. Other rental details stay the same. Nothing is booked or paid.
 
-#### How would you prefer to find and choose your rental car?
+#### Which chatbot response would best help you choose a rental car?
+
+Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.
 
 ##### A. Search and choose myself
 
-I search rental websites, compare the cars, locations, and dates, and choose without the chatbot.
+I'd search rental websites, compare the cars, locations, and dates, and choose without the chatbot.
 
 ##### B. Chatbot searches; I choose
 
@@ -134,18 +137,17 @@ I found 7 matching rentals. Here are 3 I recommend comparing:
 
 Harbor Rentals is cheapest. City Rentals costs $20 more and saves 10 minutes of shuttle time each way. West Rentals offers a midsize car for $45 more than Harbor Rentals, with the same transfer time. You make the final choice.
 
-##### D. Chatbot chooses without asking me
-
-I selected City Rentals · Compact, Saturday–Tuesday, for $200. Here are the compared packages:
+##### D. Chatbot recommends one option
 
 - City Rentals · Compact — Saturday–Tuesday: $200 | Downtown Boston; 25-minute shuttle each way.
-- Harbor Rentals · Compact — Thursday–Sunday: $180 | Downtown Boston; 35-minute shuttle each way.
 
-It costs $20 more than Harbor Rentals’ Thursday–Sunday rental but saves 10 minutes of shuttle time each way. I make the selection without asking for approval. No reservation or payment is made.
+I recommend this package because it saves 10 minutes of shuttle time each way for $20 more than the cheapest rental. You make the final choice.
 
 #### Optional follow-up
 
-Why this approach? Did pickup/return convenience affect your choice?
+Why did you choose this approach?
+
+A short answer is fine.
 
 ### 3. Flexible budget, tight schedule
 
@@ -159,11 +161,13 @@ Why this approach? Did pickup/return convenience affect your choice?
 
 Independent of earlier flight/hotel answers; either location is reachable by pickup. Nothing is booked or paid.
 
-#### How would you prefer to find and choose your rental car?
+#### Which chatbot response would best help you choose a rental car?
+
+Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.
 
 ##### A. Search and choose myself
 
-I search rental websites, compare the cars, locations, and dates, and choose without the chatbot.
+I'd search rental websites, compare the cars, locations, and dates, and choose without the chatbot.
 
 ##### B. Chatbot searches; I choose
 
@@ -190,18 +194,17 @@ I found 8 matching rentals. Here are 3 I recommend comparing:
 
 Beacon Rentals costs $60 more than Harbor Rentals but saves 25 minutes of shuttle time each way. Park Rentals offers a midsize car for another $30, with the same airport transfer. You make the final choice.
 
-##### D. Chatbot chooses without asking me
-
-I selected Beacon Rentals · Compact, Friday–Monday, for $270. Here are the compared packages:
+##### D. Chatbot recommends one option
 
 - Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.
-- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.
 
-It costs $60 more than Harbor Rentals but saves 25 minutes of shuttle time each way. I make the selection without asking for approval. No reservation or payment is made.
+I recommend this package because it saves 25 minutes of shuttle time each way for $60 more than the cheapest rental. You make the final choice.
 
 #### Optional follow-up
 
-Why this approach? Did pickup/return convenience affect your choice?
+Why did you choose this approach?
+
+A short answer is fine.
 
 ### 4. Flexible budget, flexible schedule
 
@@ -215,11 +218,13 @@ Why this approach? Did pickup/return convenience affect your choice?
 
 Independent of earlier flight/hotel answers. Your trip can shift without extra flight or hotel costs; either location is reachable by pickup. Other rental details stay the same. Nothing is booked or paid.
 
-#### How would you prefer to find and choose your rental car?
+#### Which chatbot response would best help you choose a rental car?
+
+Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.
 
 ##### A. Search and choose myself
 
-I search rental websites, compare the cars, locations, and dates, and choose without the chatbot.
+I'd search rental websites, compare the cars, locations, and dates, and choose without the chatbot.
 
 ##### B. Chatbot searches; I choose
 
@@ -246,15 +251,14 @@ I found 16 matching rentals. Here are 3 I recommend comparing:
 
 Harbor Rentals is cheapest. Beacon Rentals costs $90 more and saves 25 minutes of shuttle time each way. Park Rentals offers an airport midsize car for $20 more than Beacon Rentals. You make the final choice.
 
-##### D. Chatbot chooses without asking me
-
-I selected Beacon Rentals · Compact, Friday–Monday, for $270. Here are the compared packages:
+##### D. Chatbot recommends one option
 
 - Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.
-- Park Rentals · Midsize — Saturday–Tuesday: $290 | Logan airport rental center; 10-minute shuttle each way.
 
-It’s the cheapest matching airport rental-center package. Park Rentals offers a larger car for $20 more, but a larger car is not required. I make the selection without asking for approval. No reservation or payment is made.
+I recommend this package because it’s the cheapest match at the airport rental center. A midsize car at the same location costs $20 more. You make the final choice.
 
 #### Optional follow-up
 
-Why this approach? Did pickup/return convenience affect your choice?
+Why did you choose this approach?
+
+A short answer is fine.

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import boston from '../../public/study.default.json';
 import example from '../test/fixtures/study.example.json';
 import { studySchema } from '../content/schema';
-import { answerKey, chooseAnswer, countAnswered, createSession, hasUnexportedAnswers, nextCheckpoint, orderedCheckpoints, previousRoute, writeFollowUp } from '../session/session';
+import { answerKey, chooseAnswer, countAnswered, createSession, hasUnexportedAnswers, nextRoute, orderedCheckpoints, previousRoute, writeFollowUp } from '../session/session';
 import { buildCsv, buildWorkbook, exportFilename, responseData, safeCsvCell } from './responses';
 
 const study = studySchema.parse(example);
@@ -44,10 +44,10 @@ describe('state and export integrity', () => {
     expect(hasUnexportedAnswers(session)).toBe(true);
   });
   it('calculates authored transitions for arbitrary content and back navigation', () => {
-    expect(nextCheckpoint(study, 0, 0)).toEqual({ screen: 'checkpoint', scenarioIndex: 0, checkpointIndex: 1 });
-    expect(nextCheckpoint(study, 0, 1)).toEqual({ screen: 'intro', scenarioIndex: 1 });
+    expect(nextRoute(study, { screen: 'checkpoint', scenarioIndex: 0, checkpointIndex: 0 })).toEqual({ screen: 'checkpoint', scenarioIndex: 0, checkpointIndex: 1 });
+    expect(nextRoute(study, { screen: 'checkpoint', scenarioIndex: 0, checkpointIndex: 1 })).toEqual({ screen: 'intro', scenarioIndex: 1 });
     expect(previousRoute(study, { screen: 'intro', scenarioIndex: 1 })).toEqual({ screen: 'checkpoint', scenarioIndex: 0, checkpointIndex: 1 });
-    expect(nextCheckpoint(study, 1, 1)).toEqual({ screen: 'complete' });
+    expect(nextRoute(study, { screen: 'checkpoint', scenarioIndex: 1, checkpointIndex: 1 })).toEqual({ screen: 'complete' });
   });
   it('visits selection, reservation preparation and payment with recovery after the relevant tasks', () => {
     const content = studySchema.parse(boston);
@@ -59,10 +59,15 @@ describe('state and export integrity', () => {
       .toEqual(['flight-reservation-draft', 'hotel-reservation-draft', 'reservation-recovery', 'rental-car-reservation-draft', 'complete-payment', 'payment-recovery']);
     expect(order).toHaveLength(18);
     expect(new Set(order.map(route => answerKey(content.scenarios[route.scenarioIndex].id, content.scenarios[route.scenarioIndex].checkpoints[route.checkpointIndex].id))).size).toBe(18);
+    const briefs = new Map([4, 8, 12, 16].map(index => [index, { ...order[index], screen: 'intro' as const }]));
+    for (const [index, brief] of briefs) {
+      expect(previousRoute(content, brief)).toEqual(order[index - 1]);
+      expect(nextRoute(content, brief)).toEqual(order[index]);
+    }
     let session = createSession();
     order.forEach((route, index) => {
-      expect(nextCheckpoint(content, route.scenarioIndex, route.checkpointIndex)).toEqual(order[index + 1] ?? { screen: 'complete' });
-      expect(previousRoute(content, route)).toEqual(order[index - 1] ?? { screen: 'intro', scenarioIndex: 0 });
+      expect(nextRoute(content, route)).toEqual(briefs.get(index + 1) ?? order[index + 1] ?? { screen: 'complete' });
+      expect(previousRoute(content, route)).toEqual(briefs.get(index) ?? order[index - 1] ?? { screen: 'intro', scenarioIndex: 0 });
       const checkpoint = content.scenarios[route.scenarioIndex].checkpoints[route.checkpointIndex];
       session = chooseAnswer(session, content, route.scenarioIndex, route.checkpointIndex, checkpoint.options[0].id);
     });

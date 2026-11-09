@@ -1,33 +1,124 @@
 {
   "schemaVersion": "1.0",
   "studyId": "boston-travel-study",
-  "contentVersion": "draft-22",
-  "title": "Travel Chatbot Study",
-  "stimulusLabel": "Fictional study details",
+  "contentVersion": "draft-26",
+  "title": "AI Travel Assistant Study",
+  "stimulusLabel": "Study details",
+  "openingBrief": {
+    "title": "A Trip from Chicago to Boston",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "You’re planning a solo trip from Chicago O’Hare (ORD) to Boston Logan (BOS). You’ll start by comparing ways the chatbot could help you choose a flight across four scenarios that vary by budget and departure flexibility. Then you’ll move on to hotels. All flight budgets include taxes and one checked bag."
+      },
+      {
+        "type": "table",
+        "columns": ["Flight scenario", "Maximum budget", "Friday departure (CT)"],
+        "rows": [
+          ["1. Tight budget, tight schedule", "$350", "9 a.m.–noon"],
+          ["2. Tight budget, flexible schedule", "$350", "Any time"],
+          ["3. Flexible budget, tight schedule", "$700", "9 a.m.–noon"],
+          ["4. Flexible budget, flexible schedule", "$700", "Any time"]
+        ]
+      }
+    ]
+  },
+  "taskBriefs": {
+    "hotel-selection": {
+      "title": "Hotel scenarios",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "You’ll compare ways the chatbot could help you choose a hotel, room, and rate for a three-night stay in Boston. The four scenarios vary by budget and stay dates. All hotel budgets cover the full stay, including taxes and fees. Your flight answers don’t affect these tasks."
+        },
+        {
+          "type": "table",
+          "columns": ["Hotel scenario", "Maximum budget", "Stay dates"],
+          "rows": [
+            ["1. Tight budget, tight schedule", "$600", "Friday–Monday"],
+            ["2. Tight budget, flexible schedule", "$600", "Thursday–Sunday, Friday–Monday, or Saturday–Tuesday"],
+            ["3. Flexible budget, tight schedule", "$1,050", "Friday–Monday"],
+            ["4. Flexible budget, flexible schedule", "$1,050", "Thursday–Sunday, Friday–Monday, or Saturday–Tuesday"]
+          ]
+        }
+      ]
+    },
+    "rental-car-selection": {
+      "title": "Rental car scenarios",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "You’ll compare ways the chatbot could help you choose a rental car, pickup location, and dates for a three-day rental in Boston. The four scenarios vary by budget and rental dates. All budgets cover the full rental, including taxes and mandatory fees."
+        },
+        {
+          "type": "table",
+          "columns": ["Rental car scenario", "Maximum budget", "Rental dates"],
+          "rows": [
+            ["1. Tight budget, tight schedule", "$240", "Friday–Monday"],
+            ["2. Tight budget, flexible schedule", "$240", "Thursday–Sunday, Friday–Monday, or Saturday–Tuesday"],
+            ["3. Flexible budget, tight schedule", "$450", "Friday–Monday"],
+            ["4. Flexible budget, flexible schedule", "$450", "Thursday–Sunday, Friday–Monday, or Saturday–Tuesday"]
+          ]
+        }
+      ]
+    },
+    "flight-reservation-draft": {
+      "title": "Preparing your reservations",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "For this part, a flight, hotel, and rental car have already been picked for you. You’ll decide how to get each reservation ready for checkout."
+        },
+        {
+          "type": "paragraph",
+          "text": "For example, once you’ve picked a flight, the airline’s booking page might ask for your passenger details, your seat choice, and how many bags you’ll check. You could fill in those details yourself, ask the assistant to fill them in for you to review, or let the assistant handle the setup on its own."
+        },
+        {
+          "type": "paragraph",
+          "text": "You’ll also decide what to do if the assistant runs into a problem while preparing a reservation."
+        }
+      ]
+    },
+    "complete-payment": {
+      "title": "Completing the payment",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Imagine you’ve reviewed your reservation and the total, and you’re ready to pay. You’ll decide who should submit the payment and when you’d want to confirm it. You’ll also decide what to do if the assistant runs into an error at checkout."
+        }
+      ]
+    }
+  },
   "instructions": {
-    "introduction": "Imagine you’re planning and booking a trip with an AI assistant. We’re studying which parts of the process you’d want the assistant to handle, how you want the assistant to handle them, and which parts you’d prefer to do yourself. (The AI assistant isn’t perfect and it may break sometimes…how would you like that handled?) For each task, we’ll give you the trip details and tell you what you need to prioritize, and you choose the AI response you’d prefer in that situation. The study will be broken down into three portions:",
+    "introduction": "Imagine you’re planning and booking a trip with an AI assistant that can compare flights, hotels, and rental cars, set up reservations, and pay for you. We’re interested in which parts you’d want help with, how you’d want the assistant to help, and which parts you’d do yourself. We’re also interested in what you’d do if the assistant couldn’t complete a task.\n\nYou’ll work through scenarios based on common travel booking tasks. Use the budget, schedule flexibility, and travel preferences in each scenario to decide what kind of help would work best for you. The study has three parts.",
     "steps": [
       {
         "title": "Planning your trip:",
-        "text": "Choose how you’d find and select flights, hotel/room/rate packages, and rental-car packages. Complete all flight scenarios, then all hotel scenarios, then all rental-car scenarios."
+        "text": "Compare ways the assistant could help you choose a flight, hotel package, or rental car. You’ll see four scenarios for each booking type, with varying budgets and schedule flexibility."
       },
       {
         "title": "Preparing your reservations:",
-        "text": "Choose how to prepare a draft for a preselected flight, hotel, and rental car. Nothing is booked or paid for."
+        "text": "Decide how much help you’d want setting up each reservation before checkout. For a flight, that could include entering passenger details, choosing a seat, and adding checked bags."
       },
       {
         "title": "Completing the purchase:",
-        "text": "This is where you decide how you’d want to pay for the trip."
+        "text": "Decide who you’d want to submit payment and when you’d want to confirm it."
       }
     ],
-    "note": "Complete the flight, hotel, and rental-car selection scenarios, then prepare one draft reservation for each service and answer one payment question. The hotel reservation and payment questions are each followed by a question about recovering from a chatbot failure. All travel details are fictional. Nothing is actually reserved or paid for. Treat each task independently. Click Start Study to begin."
+    "note": "For each scenario, imagine the travel preferences described are your own. Choose the response that best matches how you’d want the assistant to help."
   },
   "settings": {
     "allowBackNavigation": true,
     "taskOrder": [
       "flight-selection",
       "hotel-selection",
-      "rental-car-selection"
+      "rental-car-selection",
+      "flight-reservation-draft",
+      "hotel-reservation-draft",
+      "reservation-recovery",
+      "rental-car-reservation-draft",
+      "complete-payment",
+      "payment-recovery"
     ]
   },
   "scenarios": [
@@ -80,8 +171,13 @@
               "text": "You’re flying alone from Chicago (ORD) to Boston (BOS) this Friday for a vacation. Your return flight is already arranged."
             },
             {
-              "type": "paragraph",
-              "text": "All flights are nonstop economy. Prices include taxes and one checked bag. Airlines are equally acceptable, with the same cancellation terms. Times are local: CT for departure and ET for arrival."
+              "type": "bullet-list",
+              "items": [
+                "All flights are nonstop economy.",
+                "Prices include taxes and one checked bag.",
+                "Airlines are equally acceptable, with the same cancellation terms.",
+                "Times are local: CT for departure and ET for arrival."
+              ]
             },
             {
               "type": "paragraph",
@@ -93,18 +189,19 @@
             },
             {
               "type": "paragraph",
-              "text": "How would you prefer to find and choose your flight?"
+              "text": "Which chatbot response would best help you choose a flight?"
             }
           ],
           "taskInstruction": "Ask for help finding and choosing a flight.",
-          "question": "How would you prefer to find and choose your flight?",
-          "followUp": "Why this approach? If none fits, what would you prefer?",
+          "question": "Which chatbot response would best help you choose a flight?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search for flights, compare them, and choose one without the chatbot."
+              "text": "Search and choose myself\n\nI'd search for flights, compare them, and choose one without the chatbot."
             },
             {
               "id": "B",
@@ -114,12 +211,12 @@
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Chatbot recommends a shortlist; I choose\n\nOf the 2 matching flights, I recommend this option for your preferred departure window:\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nIt departs in your preferred time window and costs $25 more than the earlier flight. You make the final choice, or keep looking."
+              "text": "Chatbot recommends a shortlist; I choose\n\nI recommend comparing these 2 flights based on price and departure time.\n\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nHL 112 saves $25. LF 222 departs in your preferred time window. You make the final choice, or keep looking."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nI selected Lakefront LF 222: it departs in your preferred time window and costs $25 more than the earlier flight. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nI recommend Lakefront LF 222 because it departs in your preferred time window and only costs $25 more than the earlier flight. You make the final choice."
             }
           ]
         },
@@ -145,17 +242,18 @@
             },
             {
               "type": "paragraph",
-              "text": "This hotel task is independent of your flight answers. All details are fictional. No reservation or payment is made."
+              "text": "This hotel task is independent of your flight answers."
             }
           ],
-          "question": "How would you prefer to find and choose your hotel, room, rate, and stay dates?",
-          "followUp": "Why this approach? Would you want different chatbot involvement for choosing the hotel versus its room/rate?",
+          "question": "Which chatbot response would best help you choose a hotel, room, and rate?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
+              "text": "Search and choose myself\n\nI'd search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
             },
             {
               "id": "B",
@@ -170,7 +268,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n\nI selected Common Street · Standard Queen, Friday–Monday, for $570.\n\nIt fits your budget and is a 10-minute walk to Boston Common. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n\nI recommend this package because it fits your budget and is a 10-minute walk to Boston Common. You make the final choice."
             }
           ],
           "researcherMetadata": {
@@ -226,21 +324,22 @@
             },
             {
               "type": "paragraph",
-              "text": "Company names are fictional. You qualify to rent; all cars are automatic and fit you and your luggage. Companies are equally acceptable; coverage and rental terms are identical. Shuttles are free; times include waiting."
+              "text": "You qualify to rent; all cars are automatic and fit you and your luggage. Companies are equally acceptable; coverage and rental terms are identical. Shuttles are free; times include waiting."
             },
             {
               "type": "paragraph",
               "text": "Independent of earlier flight/hotel answers; either location is reachable by pickup. Nothing is booked or paid."
             }
           ],
-          "question": "How would you prefer to find and choose your rental car?",
-          "followUp": "Why this approach? Did pickup/return convenience affect your choice?",
+          "question": "Which chatbot response would best help you choose a rental car?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
+              "text": "Search and choose myself\n\nI'd search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
             },
             {
               "id": "B",
@@ -255,7 +354,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\nI selected City Rentals · Compact, Friday–Monday, for $220. Here are the compared packages:\n\n- City Rentals · Compact — Friday–Monday: $220 | Downtown Boston; 25-minute shuttle each way.\n- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.\n\nIt costs $10 more than Harbor Rentals but saves 10 minutes of shuttle time each way. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- City Rentals · Compact — Friday–Monday: $220 | Downtown Boston; 25-minute shuttle each way.\n\nI recommend this package because it saves 10 minutes of shuttle time each way for $10 more than the cheapest rental. You make the final choice."
             }
           ],
           "researcherMetadata": {
@@ -362,14 +461,15 @@
               "text": "You can depart at any time on Friday; you have no preferred departure time. Your $350 maximum budget is unchanged and includes taxes and one checked bag. All other trip details stay the same."
             }
           ],
-          "question": "How would you prefer to find and choose your flight?",
-          "followUp": "Why this approach? If none fits, what would you prefer?",
+          "question": "Which chatbot response would best help you choose a flight?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search for flights, compare them, and choose one without the chatbot."
+              "text": "Search and choose myself\n\nI'd search for flights, compare them, and choose one without the chatbot."
             },
             {
               "id": "B",
@@ -384,7 +484,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nI selected HarborLink HL 120 ($310). It avoids an early-morning or late-evening departure and costs $45 more than the cheapest flight. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nI recommend HarborLink HL 120 ($310). It avoids an early-morning or late-evening departure and costs $45 more than the cheapest flight. You make the final choice."
             }
           ]
         },
@@ -410,14 +510,15 @@
               "text": "This hotel task is independent of your flight answers. Your whole trip, including transportation, can shift to any listed stay at no extra cost. “Unavailable” means no room for those dates. No reservation or payment is made."
             }
           ],
-          "question": "How would you prefer to find and choose your hotel, room, rate, and stay dates?",
-          "followUp": "Why this approach? Would you want different chatbot involvement for choosing the hotel versus its room/rate?",
+          "question": "Which chatbot response would best help you choose a hotel, room, and rate?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
+              "text": "Search and choose myself\n\nI'd search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
             },
             {
               "id": "B",
@@ -432,7 +533,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen — Saturday–Tuesday: $510 | 10-minute walk to Boston Common.\n\nI selected Common Street · Standard Queen, Saturday–Tuesday, for $510.\n\nIt’s the cheapest matching package and a 10-minute walk to Boston Common. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- Common Street · Standard Queen — Saturday–Tuesday: $510 | 10-minute walk to Boston Common.\n\nI recommend this package because it’s the cheapest match and is a 10-minute walk to Boston Common. You make the final choice."
             }
           ],
           "researcherMetadata": {
@@ -532,14 +633,15 @@
               "text": "Independent of earlier flight/hotel answers. Your trip can shift without extra flight or hotel costs; either location is reachable by pickup. Other rental details stay the same. Nothing is booked or paid."
             }
           ],
-          "question": "How would you prefer to find and choose your rental car?",
-          "followUp": "Why this approach? Did pickup/return convenience affect your choice?",
+          "question": "Which chatbot response would best help you choose a rental car?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
+              "text": "Search and choose myself\n\nI'd search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
             },
             {
               "id": "B",
@@ -554,7 +656,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\nI selected City Rentals · Compact, Saturday–Tuesday, for $200. Here are the compared packages:\n\n- City Rentals · Compact — Saturday–Tuesday: $200 | Downtown Boston; 25-minute shuttle each way.\n- Harbor Rentals · Compact — Thursday–Sunday: $180 | Downtown Boston; 35-minute shuttle each way.\n\nIt costs $20 more than Harbor Rentals’ Thursday–Sunday rental but saves 10 minutes of shuttle time each way. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- City Rentals · Compact — Saturday–Tuesday: $200 | Downtown Boston; 25-minute shuttle each way.\n\nI recommend this package because it saves 10 minutes of shuttle time each way for $20 more than the cheapest rental. You make the final choice."
             }
           ],
           "researcherMetadata": {
@@ -714,14 +816,15 @@
               "text": "All other trip details remain unchanged. No reservation or payment is made."
             }
           ],
-          "question": "How would you prefer to find and choose your flight?",
-          "followUp": "Why this approach? If none fits, what would you prefer?",
+          "question": "Which chatbot response would best help you choose a flight?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search for flights, compare them, and choose one without the chatbot."
+              "text": "Search and choose myself\n\nI'd search for flights, compare them, and choose one without the chatbot."
             },
             {
               "id": "B",
@@ -736,7 +839,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nI selected Lakefront LF 222 ($345). It’s the cheapest flight in your preferred window and costs $25 more than the cheapest eligible flight. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nI recommend Lakefront LF 222 ($345). It’s the cheapest flight in your preferred window and costs $25 more than the cheapest eligible flight. You make the final choice."
             }
           ]
         },
@@ -759,17 +862,18 @@
             },
             {
               "type": "paragraph",
-              "text": "This hotel task is independent of your flight answers. All details are fictional. No reservation or payment is made."
+              "text": "This hotel task is independent of your flight answers."
             }
           ],
-          "question": "How would you prefer to find and choose your hotel, room, rate, and stay dates?",
-          "followUp": "Why this approach? Would you want different chatbot involvement for choosing the hotel versus its room/rate?",
+          "question": "Which chatbot response would best help you choose a hotel, room, and rate?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
+              "text": "Search and choose myself\n\nI'd search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
             },
             {
               "id": "B",
@@ -784,7 +888,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n\nI selected Common Street · Standard Queen, Friday–Monday, for $570.\n\nIt fits your budget and is a 10-minute walk to Boston Common. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n\nI recommend this package because it fits your budget and is a 10-minute walk to Boston Common. You make the final choice."
             }
           ],
           "researcherMetadata": {
@@ -852,14 +956,15 @@
               "text": "Independent of earlier flight/hotel answers; either location is reachable by pickup. Nothing is booked or paid."
             }
           ],
-          "question": "How would you prefer to find and choose your rental car?",
-          "followUp": "Why this approach? Did pickup/return convenience affect your choice?",
+          "question": "Which chatbot response would best help you choose a rental car?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
+              "text": "Search and choose myself\n\nI'd search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
             },
             {
               "id": "B",
@@ -874,7 +979,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\nI selected Beacon Rentals · Compact, Friday–Monday, for $270. Here are the compared packages:\n\n- Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.\n- Harbor Rentals · Compact — Friday–Monday: $210 | Downtown Boston; 35-minute shuttle each way.\n\nIt costs $60 more than Harbor Rentals but saves 25 minutes of shuttle time each way. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.\n\nI recommend this package because it saves 25 minutes of shuttle time each way for $60 more than the cheapest rental. You make the final choice."
             }
           ],
           "researcherMetadata": {
@@ -1037,14 +1142,15 @@
               "text": "You can depart at any time on Friday; you have no preferred departure time. Your $700 maximum budget is unchanged and includes taxes and one checked bag. All other trip details stay the same."
             }
           ],
-          "question": "How would you prefer to find and choose your flight?",
-          "followUp": "Why this approach? If none fits, what would you prefer?",
+          "question": "Which chatbot response would best help you choose a flight?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search for flights, compare them, and choose one without the chatbot."
+              "text": "Search and choose myself\n\nI'd search for flights, compare them, and choose one without the chatbot."
             },
             {
               "id": "B",
@@ -1059,7 +1165,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nI selected HarborLink HL 120 ($310). It avoids an early-morning or late-evening departure and costs $45 more than the cheapest flight. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nI recommend HarborLink HL 120 ($310). It avoids an early-morning or late-evening departure and costs $45 more than the cheapest flight. You make the final choice."
             }
           ]
         },
@@ -1069,7 +1175,7 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "What changed: Your hotel stay dates are now flexible; you also have a budget.",
+              "text": "What changed: Your hotel stay dates are now flexible; you also have a looser budget.",
               "emphasis": true
             },
             {
@@ -1085,14 +1191,15 @@
               "text": "This hotel task is independent of your flight answers. Your whole trip, including transportation, can shift to any listed stay at no extra cost. “Unavailable” means no room for those dates. No reservation or payment is made."
             }
           ],
-          "question": "How would you prefer to find and choose your hotel, room, rate, and stay dates?",
-          "followUp": "Why this approach? Would you want different chatbot involvement for choosing the hotel versus its room/rate?",
+          "question": "Which chatbot response would best help you choose a hotel, room, and rate?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
+              "text": "Search and choose myself\n\nI'd search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
             },
             {
               "id": "B",
@@ -1107,7 +1214,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen — Saturday–Tuesday: $510 | 10-minute walk to Boston Common.\n\nI selected Common Street · Standard Queen, Saturday–Tuesday, for $510.\n\nIt’s the cheapest matching package and a 10-minute walk to Boston Common. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- Common Street · Standard Queen — Saturday–Tuesday: $510 | 10-minute walk to Boston Common.\n\nI recommend this package because it’s the cheapest match and is a 10-minute walk to Boston Common. You make the final choice."
             }
           ],
           "researcherMetadata": {
@@ -1216,7 +1323,7 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "What changed: Your rental dates are now flexible.",
+              "text": "What changed: Your rental dates are now flexible; you also have a larger budget.",
               "emphasis": true
             },
             {
@@ -1232,14 +1339,15 @@
               "text": "Independent of earlier flight/hotel answers. Your trip can shift without extra flight or hotel costs; either location is reachable by pickup. Other rental details stay the same. Nothing is booked or paid."
             }
           ],
-          "question": "How would you prefer to find and choose your rental car?",
-          "followUp": "Why this approach? Did pickup/return convenience affect your choice?",
+          "question": "Which chatbot response would best help you choose a rental car?",
+          "choiceInstruction": "Focus on how the chatbot presents the options and helps you decide. If you’d prefer to search and choose on your own, select the manual option.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "Search and choose myself\n\nI search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
+              "text": "Search and choose myself\n\nI'd search rental websites, compare the cars, locations, and dates, and choose without the chatbot."
             },
             {
               "id": "B",
@@ -1254,7 +1362,7 @@
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\nI selected Beacon Rentals · Compact, Friday–Monday, for $270. Here are the compared packages:\n\n- Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.\n- Park Rentals · Midsize — Saturday–Tuesday: $290 | Logan airport rental center; 10-minute shuttle each way.\n\nIt’s the cheapest matching airport rental-center package. Park Rentals offers a larger car for $20 more, but a larger car is not required. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot recommends one option\n\n- Beacon Rentals · Compact — Friday–Monday: $270 | Logan airport rental center; 10-minute shuttle each way.\n\nI recommend this package because it’s the cheapest match at the airport rental center. A midsize car at the same location costs $20 more. You make the final choice."
             }
           ],
           "researcherMetadata": {
@@ -1457,7 +1565,7 @@
       "introduction": [
         {
           "type": "paragraph",
-          "text": "These are separate tasks with preselected options. Use the fictional profile, not real personal information."
+          "text": "These are separate tasks with preselected options. Use the profile, not real personal information."
         }
       ],
       "summary": [
@@ -1480,8 +1588,9 @@
               "text": "Nothing will be booked or paid for."
             }
           ],
-          "question": "How would you prefer to prepare the draft?",
-          "followUp": "Why this approach?",
+          "question": "How would you want the chatbot to help you set up this reservation?",
+          "choiceInstruction": "Focus on how much of the setup you’d want to handle yourself and whether you’d want to review the chatbot’s work.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
@@ -1507,15 +1616,16 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "A Standard Queen room at Common Street is already selected for Saturday–Tuesday ($510 total). Your fictional profile has the guest’s name and contact details. You want to add a note that you’ll arrive around 9 p.m."
+              "text": "A Standard Queen room at Common Street is already selected for Saturday–Tuesday ($510 total). Your profile has the guest’s name and contact details. You want to add a note that you’ll arrive around 9 p.m."
             },
             {
               "type": "paragraph",
               "text": "Nothing will be booked or paid for."
             }
           ],
-          "question": "How would you prefer to prepare the draft?",
-          "followUp": "Why this approach?",
+          "question": "How would you want the chatbot to help you set up this reservation?",
+          "choiceInstruction": "Focus on how much of the setup you’d want to handle yourself and whether you’d want to review the chatbot’s work.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
@@ -1544,8 +1654,8 @@
               "text": "Imagine you asked the chatbot to prepare the Common Street hotel reservation draft using your saved guest details. The chatbot understood your request, but a temporary error prevented it from preparing the draft. Your details are saved. No reservation was submitted."
             }
           ],
-          "question": "What would you do next? Choose the option you’d try first.",
-          "followUp": "What made you choose that option?",
+          "question": "What would you try first if the chatbot couldn’t set up the reservation?",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "optionLayout": "cards",
           "options": [
@@ -1584,8 +1694,9 @@
               "text": "Nothing will be booked or paid for."
             }
           ],
-          "question": "How would you prefer to prepare the draft?",
-          "followUp": "Why this approach?",
+          "question": "How would you want the chatbot to help you set up this reservation?",
+          "choiceInstruction": "Focus on how much of the setup you’d want to handle yourself and whether you’d want to review the chatbot’s work.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
@@ -1636,8 +1747,9 @@
               "text": "In all three options, you complete any required bank or payment-account authentication yourself. If the chatbot is handling payment and the price or reservation changes, it asks for your approval before paying."
             }
           ],
-          "question": "How would you prefer to complete the payment?",
-          "followUp": "What is the main reason for your choice?",
+          "question": "How would you want the chatbot to help at checkout?",
+          "choiceInstruction": "Focus on who you’d want to submit the payment and when you’d want to confirm it.",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "options": [
             {
@@ -1666,8 +1778,8 @@
               "text": "Imagine you’ve reviewed the trip total and authorized the chatbot to submit payment. The chatbot understood your request, but a temporary error prevented it from submitting the payment. Your checkout is saved. No payment was submitted."
             }
           ],
-          "question": "What would you do next? Choose the option you’d try first.",
-          "followUp": "What made you choose that option?",
+          "question": "What would you try first if the chatbot couldn’t submit the payment?",
+          "followUp": "Why did you choose this approach?",
           "responseType": "single-choice",
           "optionLayout": "cards",
           "options": [

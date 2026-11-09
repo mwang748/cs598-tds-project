@@ -56,10 +56,12 @@ describe('combined accommodation scenarios', () => {
     expect(recommendation).not.toMatch(/approve|I selected/);
     const selected = packages.find(item => item.id === metadata.selectedPackageId)!;
     expect(shortlistIds).toContain(selected.id);
-    const automatic = task.options.find(option => option.id === 'D')!.text;
-    expect(automatic).toContain(`${selected.dates}: $${selected.total}`);
-    expect(automatic).toContain('without asking for approval');
-    expect(automatic).toContain('No reservation or payment is made.');
+    const singleRecommendation = task.options.find(option => option.id === 'D')!.text;
+    expect(singleRecommendation).toMatch(/^Chatbot recommends one option\n\n/);
+    expect(singleRecommendation.split('\n').filter(line => line.startsWith('- '))).toEqual([
+      expect.stringContaining(`${selected.hotel} · ${selected.room} — ${selected.dates}: $${selected.total}`),
+    ]);
+    expect(singleRecommendation).toContain('You make the final choice.');
     for (const option of task.options) {
       expect(option.text).not.toMatch(/refund|free cancellation|pay now|pay at hotel| · (Saver|Flexible)/i);
     }

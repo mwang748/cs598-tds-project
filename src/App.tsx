@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, ArrowDownToLine, ArrowLeft, ArrowRight, Bot, Check, CheckCircle2, ClipboardList, Compass, Download, FileCheck2, MapPin, Settings2 } from 'lucide-react';
 import { checkpointCount, validateStudy, type Study } from './content/schema';
-import { answerKey, chooseAnswer, countAnswered, createSession, hasUnexportedAnswers, nextCheckpoint, orderedCheckpoints, previousRoute, writeFollowUp, type ParticipantSession, type StudyRoute } from './session/session';
+import { answerKey, chooseAnswer, countAnswered, createSession, hasUnexportedAnswers, nextRoute, orderedCheckpoints, previousRoute, routeKey, writeFollowUp, type ParticipantSession, type StudyRoute } from './session/session';
 import { Blocks } from './components/Blocks';
 import { Modal } from './components/Modal';
 import { ResearcherPanel } from './components/ResearcherPanel';
-import { ResponseCard } from './components/ResponseCard';
 import { ScenarioMenu } from './components/ScenarioMenu';
 import { TaskChat } from './components/TaskChat';
 import { submitResponses } from './results/client';
@@ -50,7 +49,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
     return () => window.removeEventListener('beforeunload', warn);
   }, [session, submitted]);
 
-  const routeIdentity = route.screen + ('scenarioIndex' in route ? `-${route.scenarioIndex}` : '') + ('checkpointIndex' in route ? `-${route.checkpointIndex}` : '');
+  const routeIdentity = routeKey(route);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
     headingRef.current?.focus();
@@ -60,6 +59,10 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const { instructions } = study;
   const total = checkpointCount(study);
   const scenario = 'scenarioIndex' in route ? study.scenarios[route.scenarioIndex] : undefined;
+  const openingBrief = study.openingBrief && route.screen === 'intro' && route.checkpointIndex === undefined && route.scenarioIndex === orderedCheckpoints(study)[0].scenarioIndex
+    ? study.openingBrief : undefined;
+  const brief = route.screen === 'intro' && route.checkpointIndex !== undefined
+    ? study.taskBriefs?.[scenario!.checkpoints[route.checkpointIndex].id] : openingBrief;
   const checkpoint = route.screen === 'checkpoint' ? scenario!.checkpoints[route.checkpointIndex] : undefined;
   const answered = session ? countAnswered(study, session) : 0;
   const answers = session?.answers;
@@ -69,8 +72,10 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const followUpAnswer = taskKey ? followUps?.[taskKey] ?? '' : '';
   const hasWrittenAnswer = !!(checkpoint?.followUp && followUpAnswer.trim());
   const canAdvance = !!(selected || hasWrittenAnswer);
-  const nextTask = route.screen === 'checkpoint' ? nextCheckpoint(study, route.scenarioIndex, route.checkpointIndex) : undefined;
-  const advanceLabel = nextTask?.screen === 'intro' ? 'Next scenario' : nextTask?.screen === 'complete' ? 'Finish study' : 'Next task';
+  const next = nextRoute(study, route);
+  const previousIntro = route.screen === 'intro' && study.settings.allowBackNavigation ? previousRoute(study, route) : undefined;
+  const advanceLabel = next.screen === 'intro' ? (next.checkpointIndex === undefined ? 'Next scenario' : 'Next section')
+    : next.screen === 'complete' ? 'Finish study' : 'Next task';
   const progress = Math.round(answered / total * 100);
 
   const start = () => {
@@ -79,7 +84,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
     submissionKey.current = '';
     setExportNotice('');
     setExportError('');
-    setRoute({ screen: 'intro', scenarioIndex: orderedCheckpoints(study)[0].scenarioIndex });
+    setRoute(next);
   };
   const select = (optionId?: string) => {
     if (!taskKey) return;
@@ -110,13 +115,13 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
     }
   };
   const continueCheckpoint = () => {
-    if (!canAdvance || !nextTask) return;
-    if (session && nextTask.screen === 'complete') {
+    if (!canAdvance) return;
+    if (session && next.screen === 'complete') {
       const completed = { ...session, completed: true };
       setSession(completed);
       if (saveToServer) void submitCompletedStudy(completed);
     }
-    setRoute(nextTask);
+    setRoute(next);
   };
   const exportResults = async (format: 'xlsx' | 'csv') => {
     if (!session || !study || busy || submitInFlight.current) return;
@@ -140,10 +145,10 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
 
   return <div className="app-shell">
     <a className="skip-link" href="#study-content">Skip to study content</a>
-    {scenario && <ScenarioMenu scenario={scenario} />}
+    {scenario && !brief && <ScenarioMenu scenario={scenario} />}
     <div className="study-layout">
       <main className="main-panel" id="study-content" ref={contentRef}>
-        {route.screen !== 'welcome' && <div className="progress-area"><div><span>{scenario?.title ?? 'Travel chat'}</span><span>{answered} of {total} answered</span></div><div className="progress-track" role="progressbar" aria-label="Study progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}><span style={{ width: `${progress}%` }} /></div></div>}
+        {route.screen !== 'welcome' && <div className="progress-area"><div><span>{brief?.title ?? scenario?.title ?? 'Travel chat'}</span><span>{answered} of {total} answered</span></div><div className="progress-track" role="progressbar" aria-label="Study progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}><span style={{ width: `${progress}%` }} /></div></div>}
         <div className={`study-page page-${route.screen}`} key={routeIdentity}>
           {route.screen === 'welcome' && <>
             <h1 className="welcome-heading" ref={headingRef} tabIndex={-1}>{study.title}</h1>
@@ -155,7 +160,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
                 <p className="instruction-callout"><strong>How each task works</strong> Read the task and choose your preferred approach. You can also describe another approach. Treat each task independently.</p>
                 <ul>{instructions.map((instruction, index) => <li key={index}>{instruction}</li>)}</ul>
               </> : <>
-                <p>{instructions.introduction}</p>
+                <p className="welcome-introduction">{instructions.introduction}</p>
                 <ol>{instructions.steps.map(({ title, text }, index) => (
                   <li key={index}><strong>{title}</strong> {text}</li>
                 ))}</ol>
@@ -166,31 +171,20 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
           </>}
           {route.screen === 'intro' && scenario && <>
             <section className="instruction-panel scenario-brief" aria-labelledby="scenario-title">
-              <p className="instruction-label"><MapPin size={18} aria-hidden="true" /> Trip scenario</p>
-              <h1 id="scenario-title" ref={headingRef} tabIndex={-1}>{scenario.title}</h1>
-              <Blocks blocks={scenario.introduction} />
-              <dl className="inline-trip-summary">
+              <p className="instruction-label"><MapPin size={18} aria-hidden="true" /> {brief ? 'Scenario overview' : 'Trip scenario'}</p>
+              <h1 id="scenario-title" ref={headingRef} tabIndex={-1}>{brief?.title ?? scenario.title}</h1>
+              <Blocks blocks={brief?.blocks ?? scenario.introduction} />
+              {!brief && <dl className="inline-trip-summary">
                 {scenario.summary.map((item, index) => <div key={index}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}
-              </dl>
-              <p className="instruction-callout">Choose a chatbot response or select a manual option.</p>
+              </dl>}
+              <p className="instruction-callout">Choose the response that best matches how you’d want the chatbot to help. You can also choose to handle the task yourself.</p>
             </section>
-            <div className="page-actions">{study.settings.allowBackNavigation && route.scenarioIndex > 0 && !study.settings.firstTaskId && !study.settings.taskOrder?.length ? <button className="button ghost" onClick={() => setRoute(previousRoute(study, route))}><ArrowLeft size={16} /> Back</button> : <span />}<button className="button primary" onClick={() => setRoute(study.settings.firstTaskId || study.settings.taskOrder?.length ? orderedCheckpoints(study)[0] : { screen: 'checkpoint', scenarioIndex: route.scenarioIndex, checkpointIndex: 0 })}>Begin scenario <ArrowRight size={17} /></button></div>
+            <div className="page-actions">
+              {previousIntro?.screen === 'checkpoint' ? <button className="button ghost" onClick={() => setRoute(previousIntro)}><ArrowLeft size={16} /> Back</button> : <span />}
+              <button className="button primary" onClick={() => setRoute(next)}>{brief ? 'Begin scenarios' : 'Begin scenario'} <ArrowRight size={17} /></button>
+            </div>
           </>}
           {route.screen === 'checkpoint' && scenario && checkpoint && <>
-            {study.settings.allowBackNavigation && scenario.checkpoints.slice(0, route.checkpointIndex).map(previous => {
-              const key = answerKey(scenario.id, previous.id);
-              const reply = previous.options.find(option => option.id === answers?.[key]);
-              const written = previous.followUp && followUps?.[key]?.trim();
-              if (!reply && !written) return null;
-              return <details className="previous-task" key={key}>
-                <summary>Previous task · {previous.title}</summary>
-                {reply && <div className="previous-reply">
-                  <span>Selected response</span>
-                  <ResponseCard text={reply.text} action={previous.optionLayout === 'cards' || reply.kind === 'manual'} />
-                </div>}
-                {written && <div className="previous-reply"><span>Written response</span><p>{written}</p></div>}
-              </details>;
-            })}
             <TaskChat
               checkpoint={checkpoint}
               headingRef={headingRef}

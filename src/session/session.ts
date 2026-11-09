@@ -14,11 +14,13 @@ export interface ParticipantSession {
 
 export type StudyRoute =
   | { screen: 'welcome' }
-  | { screen: 'intro'; scenarioIndex: number }
+  | { screen: 'intro'; scenarioIndex: number; checkpointIndex?: number }
   | { screen: 'checkpoint'; scenarioIndex: number; checkpointIndex: number }
   | { screen: 'complete' };
 
 export const answerKey = (scenarioId: string, checkpointId: string) => JSON.stringify([scenarioId, checkpointId]);
+export const routeKey = (route: StudyRoute) => 'scenarioIndex' in route
+  ? `${route.screen}-${route.scenarioIndex}-${route.checkpointIndex ?? ''}` : route.screen;
 export function createSession(): ParticipantSession {
   return {
     id: `P-${crypto.randomUUID().replaceAll('-', '').slice(0, 12)}`,
@@ -73,37 +75,31 @@ export function orderedCheckpoints(study: Study): Extract<StudyRoute, { screen: 
   return [...taskOrder.flatMap(id => checkpoints.filter(route => matches(route, id))), ...checkpoints.filter(route => !taskOrder.some(id => matches(route, id)))];
 }
 
-export function nextCheckpoint(study: Study, si: number, ci: number): StudyRoute {
-  if (study.settings.firstTaskId || study.settings.taskOrder?.length) {
-    const order = orderedCheckpoints(study);
-    const index = order.findIndex(route => route.scenarioIndex === si && route.checkpointIndex === ci);
-    return order[index + 1] ?? { screen: 'complete' };
+function participantRoutes(study: Study): StudyRoute[] {
+  const grouped = study.settings.firstTaskId || study.settings.taskOrder?.length;
+  const routes: StudyRoute[] = [{ screen: 'welcome' }];
+  let previousTaskId: string | undefined;
+  for (const checkpoint of orderedCheckpoints(study)) {
+    const { scenarioIndex, checkpointIndex } = checkpoint;
+    const taskId = study.scenarios[scenarioIndex].checkpoints[checkpointIndex].id;
+    if (taskId !== previousTaskId && study.taskBriefs && Object.hasOwn(study.taskBriefs, taskId)) {
+      routes.push({ screen: 'intro', scenarioIndex, checkpointIndex });
+    } else if (previousTaskId === undefined || (!grouped && checkpointIndex === 0)) {
+      routes.push({ screen: 'intro', scenarioIndex });
+    }
+    routes.push(checkpoint);
+    previousTaskId = taskId;
   }
-  if (ci + 1 < study.scenarios[si].checkpoints.length) return { screen: 'checkpoint', scenarioIndex: si, checkpointIndex: ci + 1 };
-  if (si + 1 < study.scenarios.length) return { screen: 'intro', scenarioIndex: si + 1 };
-  return { screen: 'complete' };
+  routes.push({ screen: 'complete' });
+  return routes;
 }
 
-export function previousRoute(study: Study, route: StudyRoute): StudyRoute {
-  if (study.settings.firstTaskId || study.settings.taskOrder?.length) {
-    const order = orderedCheckpoints(study);
-    if (route.screen === 'complete') return order[order.length - 1];
-    if (route.screen === 'checkpoint') {
-      const index = order.findIndex(item => item.scenarioIndex === route.scenarioIndex && item.checkpointIndex === route.checkpointIndex);
-      return order[index - 1] ?? { screen: 'intro', scenarioIndex: order[0].scenarioIndex };
-    }
-    return route;
-  }
-  if (route.screen === 'checkpoint') {
-    if (route.checkpointIndex > 0) return { ...route, checkpointIndex: route.checkpointIndex - 1 };
-    return { screen: 'intro', scenarioIndex: route.scenarioIndex };
-  }
-  if (route.screen === 'intro' && route.scenarioIndex > 0) {
-    return { screen: 'checkpoint', scenarioIndex: route.scenarioIndex - 1, checkpointIndex: study.scenarios[route.scenarioIndex - 1].checkpoints.length - 1 };
-  }
-  if (route.screen === 'complete') {
-    const si = study.scenarios.length - 1;
-    return { screen: 'checkpoint', scenarioIndex: si, checkpointIndex: study.scenarios[si].checkpoints.length - 1 };
-  }
-  return route;
+function adjacentRoute(study: Study, route: StudyRoute, direction: -1 | 1): StudyRoute {
+  const routes = participantRoutes(study);
+  const key = routeKey(route);
+  const index = routes.findIndex(item => routeKey(item) === key);
+  return index < 0 ? route : routes[index + direction] ?? route;
 }
+
+export const nextRoute = (study: Study, route: StudyRoute) => adjacentRoute(study, route, 1);
+export const previousRoute = (study: Study, route: StudyRoute) => adjacentRoute(study, route, -1);

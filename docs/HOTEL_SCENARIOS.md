@@ -28,14 +28,14 @@ Hotel, room, and rate are one package; each allowed stay creates a distinct hote
 
 ## Conditions and authored chatbot choices
 
-| Condition | Budget | Dates | Matching packages / hotels | Recommended shortlist (C) | Autonomous choice (D) |
+| Condition | Budget | Dates | Matching packages / hotels | Recommended shortlist (C) | Single recommendation (D) |
 | --- | --- | --- | --- | --- | --- |
 | Tight / fixed | $600 | Fri–Mon | 3 / 3 | Common Street $570; Harbor Point $550 | Common Street, Fri–Mon, $570 |
 | Tight / flexible | $600 | Any listed stay | 8 / 4 | Common Street Sat–Tue $510; Beacon Court Fri–Mon $600 | Common Street, Sat–Tue, $510 |
 | Higher / fixed | $1,050 | Fri–Mon | 4 / 4 | Common Street $570; Parkside Grand $990 | Common Street, Fri–Mon, $570 |
 | Higher / flexible | $1,050 | Any listed stay | 11 / 5 | Common Street Sat–Tue $510; Beacon Court Fri–Mon $600; Parkside Grand Thu–Sun $900 | Common Street, Sat–Tue, $510 |
 
-A is independent manual search and choice. B lists every eligible package without a recommendation, grouped alphabetically by hotel to reduce repetition. C shows only the recommended shortlist and leaves the final choice to the participant. D selects a package and dates without approval, with an explanation. No option reserves or purchases anything.
+A is independent manual search and choice. B lists every eligible package without a recommendation, grouped alphabetically by hotel to reduce repetition. C recommends a shortlist. D recommends one package and explains the recommendation. The participant makes the final choice.
 
 ## Fixed assumptions
 
@@ -48,4 +48,4 @@ A is independent manual search and choice. B lists every eligible package withou
 
 The `eligiblePackages`, `recommendedPackageIds`, and `selectedPackageId` fields in each question's hidden researcher metadata support consistency checks; they are not participant-visible choices.
 
-Each response names only hotels displayed in that response. Excluded hotels are not introduced in surrounding prose. Automatic-choice explanations describe the selected package without referring to unseen alternatives.
+Each response names only hotels displayed in that response. The single-option explanation focuses on the recommended package.

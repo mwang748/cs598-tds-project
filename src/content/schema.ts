@@ -9,6 +9,8 @@ export const blockSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('table'), columns: z.array(text).min(1), rows: z.array(z.array(z.string())).min(1) }).strict(),
 ]);
 
+const briefSchema = z.object({ title: text, blocks: z.array(blockSchema).min(1) }).strict();
+
 const optionSchema = z.object({ id, kind: z.enum(['manual', 'chatbot']), text }).strict();
 const checkpointSchema = z.object({
   id, title: text,
@@ -16,6 +18,7 @@ const checkpointSchema = z.object({
   taskInstruction: text.optional(),
   travelerMessage: text.optional(),
   question: text,
+  choiceInstruction: text.optional(),
   followUp: text.optional(),
   responseType: z.literal('single-choice'),
   optionLayout: z.literal('cards').optional(),
@@ -39,6 +42,8 @@ export const studySchema = z.object({
   contentVersion: text,
   title: text,
   stimulusLabel: text.optional(),
+  openingBrief: briefSchema.optional(),
+  taskBriefs: z.record(id, briefSchema).optional(),
   instructions: z.union([
     z.array(text).min(1, 'Add at least one instruction'),
     z.object({
@@ -65,6 +70,14 @@ export const studySchema = z.object({
     });
   };
   unique(study.scenarios, ['scenarios']);
+  tables(study.openingBrief?.blocks, ['openingBrief', 'blocks']);
+  const groupedTaskIds = study.settings.taskOrder ?? (study.settings.firstTaskId ? [study.settings.firstTaskId] : []);
+  Object.entries(study.taskBriefs ?? {}).forEach(([taskId, brief]) => {
+    if (!groupedTaskIds.includes(taskId)) {
+      ctx.addIssue({ code: 'custom', path: ['taskBriefs', taskId], message: 'Must match a grouped checkpoint ID' });
+    }
+    tables(brief.blocks, ['taskBriefs', taskId, 'blocks']);
+  });
   study.settings.taskOrder?.forEach((taskId, index, taskOrder) => {
     if (taskOrder.indexOf(taskId) !== index) ctx.addIssue({ code: 'custom', path: ['settings', 'taskOrder', index], message: 'Task order cannot contain duplicate IDs' });
     if (!study.scenarios.some(scenario => scenario.checkpoints.some(checkpoint => checkpoint.id === taskId))) {

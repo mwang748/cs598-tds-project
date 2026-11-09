@@ -27,7 +27,7 @@ npm run sample   # regenerate the clearly marked test-data workbook
 
 1. Review the fictional example stimuli before research use. Replace them with your own study content.
 2. Open the app. Read the instructions and click **Start study**. The app generates an anonymous ID, without collecting identifying information.
-3. Read each scenario brief and click **Begin scenario**. Each **New task** shows its question and choices immediately; no opening message or waiting is required. Choose a response from the list. Manual options use flat cards with radio circles. Where a follow-up is provided, you can also write your own approach. **Next task** collapses the previous response. **Next scenario** introduces a fresh trip. The exports record selected options and written follow-up answers.
+3. Read the brief and begin the scenarios. Each **New task** shows its question and choices immediately. Choose a response from the list. Manual options use flat cards with radio circles. Where a follow-up is provided, you can also write your own approach. Use **Back** to review earlier answers when enabled. The exports record selected options and written follow-up answers.
 4. Use **Back** to review or change answers, if enabled in the JSON. Responses use stable IDs and exports retain the latest selection.
 5. At completion, click **Download responses** for a formatted `.xlsx`. CSV is available as a fallback. Check your browser’s download list and retain the file. Downloading does not clear answers or prove that a file was permanently saved.
 6. Click **Next participant**, download if needed, then click **Confirm reset**. This clears responses and returns to the welcome screen. The next **Start study** generates a new ID. Cancelling keeps the existing session.

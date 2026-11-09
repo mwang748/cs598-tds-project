@@ -149,17 +149,12 @@ describe('rental-car selection scenarios', () => {
     expect(recommendation).not.toMatch(/approve|I selected/);
     const selected = packages.find(item => item.id === metadata.selectedPackageId)!;
     expect(shortlistIds).toContain(selected.id);
-    const automatic = task.options.find(option => option.id === 'D')!.text;
-    expect(automatic).toContain(`${selected.provider} · ${selected.car} — ${selected.dates}: $${selected.total}`);
-    const comparisonIds = metadata.comparisonPackageIds as string[];
-    expect(comparisonIds).toContain(selected.id);
-    comparisonIds.forEach(id => {
-      const item = packages.find(item => item.id === id)!;
-      expect(item).toBeDefined();
-      expect(automatic).toContain(`${item.provider} · ${item.car} — ${item.dates}: $${item.total}`);
-    });
-    expect(automatic).toContain('without asking for approval');
-    expect(automatic).toContain('No reservation or payment is made.');
+    const singleRecommendation = task.options.find(option => option.id === 'D')!.text;
+    expect(singleRecommendation).toMatch(/^Chatbot recommends one option\n\n/);
+    expect(singleRecommendation.split('\n').filter(line => line.startsWith('- '))).toEqual([
+      expect.stringContaining(`${selected.provider} · ${selected.car} — ${selected.dates}: $${selected.total}`),
+    ]);
+    expect(singleRecommendation).toContain('You make the final choice.');
     const context = JSON.stringify(task.context);
     expect(context).toContain('Independent of earlier flight/hotel answers');
     expect(context).toContain('72 hours');

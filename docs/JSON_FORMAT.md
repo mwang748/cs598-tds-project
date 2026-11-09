@@ -11,10 +11,12 @@ The default configuration is `public/study.default.json`; start from `public/stu
 | `contentVersion` | string | Nonblank researcher-managed content version; increment when wording changes. |
 | `title` | string | Nonblank study title. |
 | `stimulusLabel` | string, optional | Optional participant-facing badge, e.g. `"Fictional draft stimuli"`. Change or omit it for your real stimuli. |
+| `openingBrief` | object, optional | An opening overview with a `title` string and a nonempty `blocks` array. Replaces the first scenario brief and leaves later task navigation as configured. |
+| `taskBriefs` | object, optional | Briefs keyed by checkpoint ID from `settings.taskOrder` or `settings.firstTaskId`. Each brief has a `title` string and a nonempty `blocks` array and appears once before that group of tasks. A brief for the first group takes precedence over `openingBrief`. |
 | `instructions` | string array or object | Use a nonempty list of instructions, or an object with an `introduction` string, a nonempty `steps` array of `{title, text}` objects, and an optional `note` string. |
 | `settings.allowBackNavigation` | boolean | `true` enables reviewing earlier checkpoints; `false` disables Back and final review. |
 | `settings.firstTaskId` | string, optional | Show all occurrences of this checkpoint ID first, in scenario order, followed by the remaining tasks in authored order. Must match an existing checkpoint. This flow uses one initial scenario brief, then direct task-to-task navigation; the scenario reminder updates with each task. IDs, factors, and export grouping stay unchanged. Omit for the original scenario-by-scenario flow. |
-| `settings.taskOrder` | string array, optional | Group these checkpoint IDs in the listed order, each across all scenarios. Remaining tasks follow in authored order. IDs must exist and cannot repeat. Takes precedence over `firstTaskId`. Example: `["flight-selection", "hotel-selection"]` gives all flights, then all hotels, then the remaining tasks. Uses direct navigation after the initial brief. |
+| `settings.taskOrder` | string array, optional | Group these checkpoint IDs in the listed order, each across all scenarios. Remaining tasks follow in authored order. IDs must exist and cannot repeat. Takes precedence over `firstTaskId`. Example: `["flight-selection", "hotel-selection"]` gives all flights, then all hotels, then the remaining tasks. Use `taskBriefs` to add an overview before a group. |
 | `scenarios` | scenario array | At least one scenario. Rendered in array order. |
 
 Unknown fields are rejected outside `factors` and `researcherMetadata`. This catches misspelled field names rather than silently ignoring them. Required text must contain a non-whitespace character. Exact authored strings are retained, including spacing and line breaks. IDs cannot have leading/trailing whitespace. Unicode IDs are supported.
@@ -42,6 +44,7 @@ Scenario IDs must be unique. Summary labels need not correspond to any fixed cat
 | `taskInstruction` | string, optional | Legacy field accepted for compatibility; not displayed in the direct-choice flow. |
 | `travelerMessage` | string, optional | Legacy field accepted for compatibility; not displayed. Participants do not enter an opening message. |
 | `question` | string | Exact nonblank question wording, displayed above choices and included in the export. An identical context paragraph is omitted from the screen to avoid repetition. |
+| `choiceInstruction` | string, optional | Guidance shown between the question and its choices. When omitted, mixed chatbot and manual choices in the chat layout show a default instruction. |
 | `followUp` | string, optional | Written prompt shown below the replies. A participant can select a reply, submit a written approach, or do both. |
 | `responseType` | string | Exactly `"single-choice"`. Other types are rejected. |
 | `optionLayout` | string, optional | Use `"cards"` to show every option as a flat action card. The legacy `optionAvatar: "human"` setting also uses cards. |

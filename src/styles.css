@@ -90,6 +90,7 @@ h1 { font-size: 23px; font-weight: 600; line-height: 1.4; letter-spacing: -.5px;
 }
 .instruction-callout strong { display: block; margin-bottom: 4px; }
 .welcome-instructions > p:not(.instruction-callout) { font-size: 14px; line-height: 1.75; }
+.welcome-introduction { white-space: pre-line; }
 .welcome-instructions ul, .welcome-instructions ol { padding-left: 20px; margin: 16px 0 0; font-size: 14px; line-height: 1.75; }
 .welcome-instructions ol li::marker { font-weight: 700; }
 .welcome-note { margin-top: 16px; }
@@ -115,14 +116,6 @@ td { padding: 12px 13px; border-top: 1px solid #ededf1; overflow-wrap: anywhere;
 .checkpoint-heading h1 { font-size: 20px; font-weight: 500; }
 .task-divider { display: flex; align-items: center; gap: 12px; margin: 0 0 14px 44px; color: #6c707d; font-size: 11px; }
 .task-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
-.previous-task { margin: 0 0 11px 44px; border: 1px solid var(--line); border-radius: 12px; padding: 10px 13px; }
-.previous-task:last-of-type { margin-bottom: 23px; }
-.previous-task summary { cursor: pointer; color: #686d7b; font-size: 12px; }
-.previous-task summary:focus-visible { outline: 3px solid #9099e7; outline-offset: 4px; }
-.previous-task .traveler-message { margin-top: 16px; }
-.previous-reply { margin-top: 12px; }
-.previous-reply > span { display: block; margin: 0 5px 5px; color: #717582; font-size: 11px; }
-.previous-reply p { background: var(--bubble); border-radius: 4px 15px 15px 15px; padding: 13px 16px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
 .task-composer { margin: 26px 0 0 44px; }
 .composer-label { display: block; font-size: 14px; font-weight: 600; }
 .task-instruction, .task-message-example { margin-top: 7px; color: #555c6d; font-size: 13px; line-height: 1.6; }
