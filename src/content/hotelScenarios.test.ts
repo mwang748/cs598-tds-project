@@ -11,7 +11,7 @@ const inventory = [
   { key: 'harbor', hotel: 'Harbor Point', prices: [null, 550, 520] },
   { key: 'parkside', hotel: 'Parkside Grand', prices: [900, 990, 930] },
 ];
-type Package = { id: string; hotel: string; room: string; rate: string; dates: string; total: number; walk: number; terms: string };
+type Package = { id: string; hotel: string; room: string; dates: string; total: number; walk: number };
 
 describe('combined accommodation scenarios', () => {
   it('mentions only hotels actually displayed within each response', () => {
@@ -41,7 +41,7 @@ describe('combined accommodation scenarios', () => {
     expect(search.match(/\$\d+/g)).toHaveLength(packages.length);
     packages.forEach(item => {
       expect(search).toContain(`${item.dates}: $${item.total}`);
-      expect(search).toContain(`${item.hotel} · ${item.room} · ${item.rate}`);
+      expect(search).toContain(`${item.hotel} · ${item.room} — ${item.dates}: $${item.total}`);
     });
     const shortlistIds = metadata.recommendedPackageIds as string[];
     const recommendation = task.options.find(option => option.id === 'C')!.text;
@@ -49,7 +49,7 @@ describe('combined accommodation scenarios', () => {
     shortlistIds.forEach(id => {
       const item = packages.find(item => item.id === id);
       expect(item).toBeDefined();
-      expect(recommendation).toContain(`${item!.hotel} · ${item!.room} · ${item!.rate} — ${item!.dates}: $${item!.total}`);
+      expect(recommendation).toContain(`${item!.hotel} · ${item!.room} — ${item!.dates}: $${item!.total}`);
     });
     expect(recommendation).toContain('You make the final choice.');
     expect(recommendation).not.toMatch(/approve|I selected/);
@@ -59,15 +59,24 @@ describe('combined accommodation scenarios', () => {
     expect(automatic).toContain(`${selected.dates}: $${selected.total}`);
     expect(automatic).toContain('without asking for approval');
     expect(automatic).toContain('No reservation or payment is made.');
+    for (const option of task.options) {
+      expect(option.text).not.toMatch(/refund|free cancellation|pay now|pay at hotel| · (Saver|Flexible)/i);
+    }
+    if (scenario.factors?.schedule === 'flexible') {
+      expect(selected.id).toBe('common-2');
+      expect(shortlistIds).toContain('beacon-1');
+    }
     expect(scenario.checkpoints.some(checkpoint => checkpoint.id === 'room-and-rate')).toBe(false);
   });
 
-  it('keeps room, rate, walking distance and cancellation terms constant across dates and budgets', () => {
+  it('keeps room and walking distance constant across dates and budgets', () => {
     const properties = new Map<string, string>();
     study.scenarios.forEach(scenario => {
       const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'hotel-selection')!;
       (task.researcherMetadata!.eligiblePackages as Package[]).forEach(item => {
-        const attributes = JSON.stringify([item.room, item.rate, item.walk, item.terms]);
+        const attributes = JSON.stringify([item.room, item.walk]);
+        expect(item).not.toHaveProperty('terms');
+        expect(item).not.toHaveProperty('rate');
         if (properties.has(item.hotel)) expect(attributes).toBe(properties.get(item.hotel));
         properties.set(item.hotel, attributes);
       });

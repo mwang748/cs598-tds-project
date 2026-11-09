@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "studyId": "boston-travel-study",
-  "contentVersion": "draft-17",
+  "contentVersion": "draft-18",
   "title": "Travel Chatbot Study",
   "stimulusLabel": "Fictional study details",
   "instructions": {
@@ -178,7 +178,7 @@
             },
             {
               "type": "paragraph",
-              "text": "You’re visiting Boston alone for three nights. You need a private room and bathroom. Prefer staying near Boston Common and having free cancellation, but consider giving these up to save money. All packages meet your basic room requirements; prices cover the whole stay, including taxes and fees."
+              "text": "You’re visiting Boston alone for three nights. You need a private room and bathroom. Prefer a shorter walk to Boston Common, but consider staying farther away to save money. All options have the same cancellation and payment terms. All packages meet your basic room requirements; prices cover the whole stay, including taxes and fees."
             },
             {
               "type": "bullet-list",
@@ -204,17 +204,17 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot searches; I choose\n\nI found 3 matching hotel/room/date packages across 3 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
+              "text": "Chatbot searches; I choose\n\nI found 3 matching hotel/room/date packages across 3 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen — Friday–Monday: $600 | 5-minute walk to Boston Common.\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n- Harbor Point · Standard Queen — Friday–Monday: $550 | 20-minute walk to Boston Common.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Chatbot recommends a shortlist; I choose\n\nI found 3 matching hotel/room/date packages. Here are 2 I recommend comparing:\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n\nHarbor Point saves $20. Common Street is ten minutes closer to Boston Common. Both are nonrefundable. You make the final choice."
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 3 matching hotel/room/date packages. Here are 2 I recommend comparing:\n\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n- Harbor Point · Standard Queen — Friday–Monday: $550 | 20-minute walk to Boston Common.\n\nHarbor Point saves $20. Common Street is ten minutes closer to Boston Common. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n\nI selected Common Street · Standard Queen · Saver, Friday–Monday, for $570.\n\nIt fits your budget and is a 10-minute walk to Boston Common. This rate is nonrefundable. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n\nI selected Common Street · Standard Queen, Friday–Monday, for $570.\n\nIt fits your budget and is a 10-minute walk to Boston Common. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
           "researcherMetadata": {
@@ -224,31 +224,25 @@
                 "id": "beacon-1",
                 "hotel": "Beacon Court",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 600,
-                "walk": 5,
-                "terms": "Pay now; nonrefundable."
+                "walk": 5
               },
               {
                 "id": "common-1",
                 "hotel": "Common Street",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 570,
-                "walk": 10,
-                "terms": "Pay now; nonrefundable."
+                "walk": 10
               },
               {
                 "id": "harbor-1",
                 "hotel": "Harbor Point",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 550,
-                "walk": 20,
-                "terms": "Pay now; nonrefundable."
+                "walk": 20
               }
             ],
             "recommendedPackageIds": [
@@ -496,7 +490,7 @@
               "items": [
                 "Budget: $600 maximum for all three nights.",
                 "Stay dates: Thursday–Sunday, Friday–Monday, or Saturday–Tuesday. No preferred dates.",
-                "The same private-room requirements and location/cancellation preferences apply."
+                "The same private-room requirements and location preferences apply."
               ]
             },
             {
@@ -516,17 +510,17 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot searches; I choose\n\nI found 8 matching hotel/room/date packages across 4 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Thursday–Sunday: $540 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n- Garden Square · Standard Queen · Flexible — Saturday–Tuesday: $580 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Saturday–Tuesday: $520 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
+              "text": "Chatbot searches; I choose\n\nI found 8 matching hotel/room/date packages across 4 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen — Friday–Monday: $600 | 5-minute walk to Boston Common.\n- Common Street · Standard Queen — Thursday–Sunday: $540 | 10-minute walk to Boston Common.\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n- Common Street · Standard Queen — Saturday–Tuesday: $510 | 10-minute walk to Boston Common.\n- Garden Square · Standard Queen — Thursday–Sunday: $550 | 15-minute walk to Boston Common.\n- Garden Square · Standard Queen — Saturday–Tuesday: $580 | 15-minute walk to Boston Common.\n- Harbor Point · Standard Queen — Friday–Monday: $550 | 20-minute walk to Boston Common.\n- Harbor Point · Standard Queen — Saturday–Tuesday: $520 | 20-minute walk to Boston Common.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Chatbot recommends a shortlist; I choose\n\nI found 8 matching hotel/room/date packages. Here are 2 I recommend comparing:\n\n- Common Street · Standard Queen · Saver — Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n\nCommon Street is cheapest. Garden Square costs $40 more, adds five minutes to the walk, and offers free cancellation. You make the final choice."
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 8 matching hotel/room/date packages. Here are 2 I recommend comparing:\n\n- Common Street · Standard Queen — Saturday–Tuesday: $510 | 10-minute walk to Boston Common.\n- Beacon Court · Standard Queen — Friday–Monday: $600 | 5-minute walk to Boston Common.\n\nCommon Street is cheapest. Beacon Court costs $90 more and shortens the walk from ten minutes to five. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n\nI selected Garden Square · Standard Queen · Flexible, Thursday–Sunday, for $550.\n\nIt offers free cancellation and payment at the hotel, with a 15-minute walk to Boston Common. Thursday–Sunday is this hotel’s cheapest available stay. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen — Saturday–Tuesday: $510 | 10-minute walk to Boston Common.\n\nI selected Common Street · Standard Queen, Saturday–Tuesday, for $510.\n\nIt’s the cheapest matching package and a 10-minute walk to Boston Common. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
           "researcherMetadata": {
@@ -536,88 +530,72 @@
                 "id": "beacon-1",
                 "hotel": "Beacon Court",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 600,
-                "walk": 5,
-                "terms": "Pay now; nonrefundable."
+                "walk": 5
               },
               {
                 "id": "common-0",
                 "hotel": "Common Street",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Thursday–Sunday",
                 "total": 540,
-                "walk": 10,
-                "terms": "Pay now; nonrefundable."
+                "walk": 10
               },
               {
                 "id": "common-1",
                 "hotel": "Common Street",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 570,
-                "walk": 10,
-                "terms": "Pay now; nonrefundable."
+                "walk": 10
               },
               {
                 "id": "common-2",
                 "hotel": "Common Street",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Saturday–Tuesday",
                 "total": 510,
-                "walk": 10,
-                "terms": "Pay now; nonrefundable."
+                "walk": 10
               },
               {
                 "id": "garden-0",
                 "hotel": "Garden Square",
                 "room": "Standard Queen",
-                "rate": "Flexible",
                 "dates": "Thursday–Sunday",
                 "total": 550,
-                "walk": 15,
-                "terms": "Pay at hotel; free cancellation until 48 hours before check-in."
+                "walk": 15
               },
               {
                 "id": "garden-2",
                 "hotel": "Garden Square",
                 "room": "Standard Queen",
-                "rate": "Flexible",
                 "dates": "Saturday–Tuesday",
                 "total": 580,
-                "walk": 15,
-                "terms": "Pay at hotel; free cancellation until 48 hours before check-in."
+                "walk": 15
               },
               {
                 "id": "harbor-1",
                 "hotel": "Harbor Point",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 550,
-                "walk": 20,
-                "terms": "Pay now; nonrefundable."
+                "walk": 20
               },
               {
                 "id": "harbor-2",
                 "hotel": "Harbor Point",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Saturday–Tuesday",
                 "total": 520,
-                "walk": 20,
-                "terms": "Pay now; nonrefundable."
+                "walk": 20
               }
             ],
             "recommendedPackageIds": [
               "common-2",
-              "garden-0"
+              "beacon-1"
             ],
-            "selectedPackageId": "garden-0"
+            "selectedPackageId": "common-2"
           }
         },
         {
@@ -908,7 +886,7 @@
               "items": [
                 "Budget: $1,050 maximum for all three nights.",
                 "Required stay: Friday–Monday.",
-                "The same private-room requirements and location/cancellation preferences apply."
+                "The same private-room requirements and location preferences apply."
               ]
             },
             {
@@ -928,17 +906,17 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot searches; I choose\n\nI found 4 matching hotel/room/date packages across 4 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Friday–Monday: $990 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
+              "text": "Chatbot searches; I choose\n\nI found 4 matching hotel/room/date packages across 4 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen — Friday–Monday: $600 | 5-minute walk to Boston Common.\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n- Harbor Point · Standard Queen — Friday–Monday: $550 | 20-minute walk to Boston Common.\n- Parkside Grand · Deluxe King — Friday–Monday: $990 | 2-minute walk to Boston Common.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Chatbot recommends a shortlist; I choose\n\nI found 4 matching hotel/room/date packages. Here are 2 I recommend comparing:\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Friday–Monday: $990 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nCommon Street saves $420. Parkside Grand reduces the walk from ten minutes to two. Both are nonrefundable. You make the final choice."
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 4 matching hotel/room/date packages. Here are 2 I recommend comparing:\n\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n- Parkside Grand · Deluxe King — Friday–Monday: $990 | 2-minute walk to Boston Common.\n\nCommon Street saves $420. Parkside Grand reduces the walk from ten minutes to two. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n\nI selected Common Street · Standard Queen · Saver, Friday–Monday, for $570.\n\nIt fits your budget and is a 10-minute walk to Boston Common. This rate is nonrefundable. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n\nI selected Common Street · Standard Queen, Friday–Monday, for $570.\n\nIt fits your budget and is a 10-minute walk to Boston Common. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
           "researcherMetadata": {
@@ -948,41 +926,33 @@
                 "id": "beacon-1",
                 "hotel": "Beacon Court",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 600,
-                "walk": 5,
-                "terms": "Pay now; nonrefundable."
+                "walk": 5
               },
               {
                 "id": "common-1",
                 "hotel": "Common Street",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 570,
-                "walk": 10,
-                "terms": "Pay now; nonrefundable."
+                "walk": 10
               },
               {
                 "id": "harbor-1",
                 "hotel": "Harbor Point",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 550,
-                "walk": 20,
-                "terms": "Pay now; nonrefundable."
+                "walk": 20
               },
               {
                 "id": "parkside-1",
                 "hotel": "Parkside Grand",
                 "room": "Deluxe King",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 990,
-                "walk": 2,
-                "terms": "Pay now; nonrefundable."
+                "walk": 2
               }
             ],
             "recommendedPackageIds": [
@@ -1283,7 +1253,7 @@
               "items": [
                 "Budget: $1,050 maximum for all three nights.",
                 "Stay dates: Thursday–Sunday, Friday–Monday, or Saturday–Tuesday. No preferred dates.",
-                "The same private-room requirements and location/cancellation preferences apply."
+                "The same private-room requirements and location preferences apply."
               ]
             },
             {
@@ -1303,17 +1273,17 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot searches; I choose\n\nI found 11 matching hotel/room/date packages across 5 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Thursday–Sunday: $540 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n- Garden Square · Standard Queen · Flexible — Saturday–Tuesday: $580 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Saturday–Tuesday: $520 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Thursday–Sunday: $900 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Friday–Monday: $990 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Saturday–Tuesday: $930 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
+              "text": "Chatbot searches; I choose\n\nI found 11 matching hotel/room/date packages across 5 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen — Friday–Monday: $600 | 5-minute walk to Boston Common.\n- Common Street · Standard Queen — Thursday–Sunday: $540 | 10-minute walk to Boston Common.\n- Common Street · Standard Queen — Friday–Monday: $570 | 10-minute walk to Boston Common.\n- Common Street · Standard Queen — Saturday–Tuesday: $510 | 10-minute walk to Boston Common.\n- Garden Square · Standard Queen — Thursday–Sunday: $550 | 15-minute walk to Boston Common.\n- Garden Square · Standard Queen — Saturday–Tuesday: $580 | 15-minute walk to Boston Common.\n- Harbor Point · Standard Queen — Friday–Monday: $550 | 20-minute walk to Boston Common.\n- Harbor Point · Standard Queen — Saturday–Tuesday: $520 | 20-minute walk to Boston Common.\n- Parkside Grand · Deluxe King — Thursday–Sunday: $900 | 2-minute walk to Boston Common.\n- Parkside Grand · Deluxe King — Friday–Monday: $990 | 2-minute walk to Boston Common.\n- Parkside Grand · Deluxe King — Saturday–Tuesday: $930 | 2-minute walk to Boston Common.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Chatbot recommends a shortlist; I choose\n\nI found 11 matching hotel/room/date packages. Here are 3 I recommend comparing:\n\n- Common Street · Standard Queen · Saver — Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n- Parkside Grand · Deluxe King · Saver — Thursday–Sunday: $900 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nCommon Street is cheapest. Garden Square costs $40 more, adds five minutes to the walk, and offers free cancellation. Parkside Grand has the shortest walk but costs $390 more than Common Street. You make the final choice."
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 11 matching hotel/room/date packages. Here are 3 I recommend comparing:\n\n- Common Street · Standard Queen — Saturday–Tuesday: $510 | 10-minute walk to Boston Common.\n- Beacon Court · Standard Queen — Friday–Monday: $600 | 5-minute walk to Boston Common.\n- Parkside Grand · Deluxe King — Thursday–Sunday: $900 | 2-minute walk to Boston Common.\n\nCommon Street is cheapest. Beacon Court costs $90 more and shortens the walk from ten minutes to five. Parkside Grand offers a Deluxe King and the shortest walk, but costs $390 more than Common Street. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "Chatbot chooses without asking me\n\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n\nI selected Garden Square · Standard Queen · Flexible, Thursday–Sunday, for $550.\n\nIt offers free cancellation and payment at the hotel, with a 15-minute walk to Boston Common. Thursday–Sunday is this hotel’s cheapest available stay. I make the selection without asking for approval. No reservation or payment is made."
+              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen — Saturday–Tuesday: $510 | 10-minute walk to Boston Common.\n\nI selected Common Street · Standard Queen, Saturday–Tuesday, for $510.\n\nIt’s the cheapest matching package and a 10-minute walk to Boston Common. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
           "researcherMetadata": {
@@ -1323,119 +1293,97 @@
                 "id": "beacon-1",
                 "hotel": "Beacon Court",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 600,
-                "walk": 5,
-                "terms": "Pay now; nonrefundable."
+                "walk": 5
               },
               {
                 "id": "common-0",
                 "hotel": "Common Street",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Thursday–Sunday",
                 "total": 540,
-                "walk": 10,
-                "terms": "Pay now; nonrefundable."
+                "walk": 10
               },
               {
                 "id": "common-1",
                 "hotel": "Common Street",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 570,
-                "walk": 10,
-                "terms": "Pay now; nonrefundable."
+                "walk": 10
               },
               {
                 "id": "common-2",
                 "hotel": "Common Street",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Saturday–Tuesday",
                 "total": 510,
-                "walk": 10,
-                "terms": "Pay now; nonrefundable."
+                "walk": 10
               },
               {
                 "id": "garden-0",
                 "hotel": "Garden Square",
                 "room": "Standard Queen",
-                "rate": "Flexible",
                 "dates": "Thursday–Sunday",
                 "total": 550,
-                "walk": 15,
-                "terms": "Pay at hotel; free cancellation until 48 hours before check-in."
+                "walk": 15
               },
               {
                 "id": "garden-2",
                 "hotel": "Garden Square",
                 "room": "Standard Queen",
-                "rate": "Flexible",
                 "dates": "Saturday–Tuesday",
                 "total": 580,
-                "walk": 15,
-                "terms": "Pay at hotel; free cancellation until 48 hours before check-in."
+                "walk": 15
               },
               {
                 "id": "harbor-1",
                 "hotel": "Harbor Point",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 550,
-                "walk": 20,
-                "terms": "Pay now; nonrefundable."
+                "walk": 20
               },
               {
                 "id": "harbor-2",
                 "hotel": "Harbor Point",
                 "room": "Standard Queen",
-                "rate": "Saver",
                 "dates": "Saturday–Tuesday",
                 "total": 520,
-                "walk": 20,
-                "terms": "Pay now; nonrefundable."
+                "walk": 20
               },
               {
                 "id": "parkside-0",
                 "hotel": "Parkside Grand",
                 "room": "Deluxe King",
-                "rate": "Saver",
                 "dates": "Thursday–Sunday",
                 "total": 900,
-                "walk": 2,
-                "terms": "Pay now; nonrefundable."
+                "walk": 2
               },
               {
                 "id": "parkside-1",
                 "hotel": "Parkside Grand",
                 "room": "Deluxe King",
-                "rate": "Saver",
                 "dates": "Friday–Monday",
                 "total": 990,
-                "walk": 2,
-                "terms": "Pay now; nonrefundable."
+                "walk": 2
               },
               {
                 "id": "parkside-2",
                 "hotel": "Parkside Grand",
                 "room": "Deluxe King",
-                "rate": "Saver",
                 "dates": "Saturday–Tuesday",
                 "total": 930,
-                "walk": 2,
-                "terms": "Pay now; nonrefundable."
+                "walk": 2
               }
             ],
             "recommendedPackageIds": [
               "common-2",
-              "garden-0",
+              "beacon-1",
               "parkside-0"
             ],
-            "selectedPackageId": "garden-0"
+            "selectedPackageId": "common-2"
           }
         },
         {
