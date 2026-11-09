@@ -2,14 +2,25 @@ import ExcelJS from 'exceljs';
 import type { Study } from '../content/schema';
 import { answerKey, countAnswered, isComplete, type ParticipantSession } from '../session/session';
 import { checkpointCount } from '../content/schema';
+import type { ResultRecord } from '../results/record';
 
 /** One rectangular record per checkpoint, in authored order. */
 export function responseData(study: Study, session: ParticipantSession) {
   const factorKeys = [...new Set(study.scenarios.flatMap(scenario => Object.keys(scenario.factors ?? {})))];
-  const headers = ['Scenario position', 'Scenario ID', 'Scenario title', ...factorKeys.map(key => `Factor: ${key}`), 'Checkpoint position', 'Checkpoint ID', 'Checkpoint title', 'Question', 'Selected option ID', 'Selected response text', 'Status'];
+  const includeFollowUps = study.scenarios.some(scenario => scenario.checkpoints.some(checkpoint => checkpoint.followUp));
+  const followUpHeaders = includeFollowUps ? ['Follow-up question', 'Follow-up response'] : [];
+  const headers = ['Scenario position', 'Scenario ID', 'Scenario title', ...factorKeys.map(key => `Factor: ${key}`), 'Checkpoint position', 'Checkpoint ID', 'Checkpoint title', 'Question', 'Selected option ID', 'Selected response text', ...followUpHeaders, 'Status'];
   const rows = study.scenarios.flatMap((scenario, si) => scenario.checkpoints.map((checkpoint, ci) => {
-    const selected = checkpoint.options.find(option => option.id === session.answers[answerKey(scenario.id, checkpoint.id)]);
-    return [si + 1, scenario.id, scenario.title, ...factorKeys.map(key => Object.hasOwn(scenario.factors ?? {}, key) ? scenario.factors![key] : ''), ci + 1, checkpoint.id, checkpoint.title, checkpoint.question, selected?.id ?? '', selected?.text ?? '', selected ? 'Answered' : 'Unanswered'];
+    const key = answerKey(scenario.id, checkpoint.id);
+    const selected = checkpoint.options.find(option => option.id === session.answers[key]);
+    const written = checkpoint.followUp ? session.followUps?.[key]?.trim() ?? '' : '';
+    const followUpCells = includeFollowUps ? [checkpoint.followUp ?? '', written] : [];
+    return [
+      si + 1, scenario.id, scenario.title,
+      ...factorKeys.map(key => Object.hasOwn(scenario.factors ?? {}, key) ? scenario.factors![key] : ''),
+      ci + 1, checkpoint.id, checkpoint.title, checkpoint.question, selected?.id ?? '', selected?.text ?? '',
+      ...followUpCells, selected || written ? 'Answered' : 'Unanswered',
+    ];
   }));
   return { headers, rows };
 }
@@ -33,12 +44,16 @@ export async function buildWorkbook(study: Study, session: ParticipantSession, e
     ['Export date/time', zonedTime(exportedAt.toISOString(), session.timezone)],
     ['Status', isComplete(study, session) ? 'Complete' : 'Partial'],
     ['Answered checkpoints', countAnswered(study, session)], ['Total checkpoints', checkpointCount(study)],
-    ['Collection note', 'Browser download only. Retain this file locally. No server copy is stored.'],
+    ['Collection note', 'This workbook is a browser-generated copy of the participant’s responses.'],
   ]);
   summary.autoFilter = 'A1:B11';
   const data = responseData(study, session);
   const responses = workbook.addWorksheet('Responses', { views: [{ state: 'frozen', ySplit: 1 }] });
-  responses.columns = data.headers.map(header => ({ width: header === 'Selected response text' ? 78 : header === 'Question' ? 58 : header.endsWith('title') ? 34 : header.includes('position') ? 16 : 24 }));
+  responses.columns = data.headers.map(header => ({
+    width: header === 'Selected response text' || header === 'Follow-up response' ? 78
+      : header === 'Question' || header === 'Follow-up question' ? 58
+      : header.endsWith('title') ? 34 : header.includes('position') ? 16 : 24,
+  }));
   responses.addRow(data.headers);
   responses.addRows(data.rows);
   responses.autoFilter = { from: { row: 1, column: 1 }, to: { row: data.rows.length + 1, column: data.headers.length } };
@@ -91,6 +106,17 @@ function download(blob: Blob, filename: string) {
   link.href = url; link.download = filename;
   document.body.append(link); link.click(); link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 30_000);
+}
+
+export function downloadStoredResults(records: ResultRecord[]) {
+  const headers = ['Participant ID', 'Study ID', 'Content version', 'Saved at (UTC)', 'Scenario ID', 'Scenario', 'Budget', 'Schedule', 'Task ID', 'Task', 'Selected option ID', 'Selected response', 'Written follow-up'];
+  const rows = records.flatMap(record => record.responses.map(response => [
+    record.participantId, record.studyId, record.contentVersion, record.savedAt,
+    response.scenarioId, response.scenarioTitle, response.budget, response.schedule, response.taskId, response.taskTitle,
+    response.optionId, response.optionText, response.followUp,
+  ]));
+  const csv = '\uFEFF' + [headers, ...rows].map(row => row.map(safeCsvCell).join(',')).join('\r\n');
+  download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), 'travel-study-results.csv');
 }
 export async function downloadResponses(study: Study, session: ParticipantSession, format: 'xlsx' | 'csv') {
   if (format === 'csv') download(new Blob([buildCsv(study, session)], { type: 'text/csv;charset=utf-8' }), exportFilename(session, format));

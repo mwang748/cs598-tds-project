@@ -1,5 +1,5 @@
 import { mkdir } from 'node:fs/promises';
-import example from '../public/study.default.json';
+import example from '../src/test/fixtures/study.example.json';
 import { studySchema } from '../src/content/schema';
 import { chooseAnswer, type ParticipantSession } from '../src/session/session';
 import { buildWorkbook } from '../src/export/responses';

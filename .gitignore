@@ -4,3 +4,10 @@ dist/
 *.tsbuildinfo
 .vite/
 test-results/
+.env
+.env.*
+!.env.example
+.vercel/
+/qualtrics-survey.txt
+.vercel
+.env*

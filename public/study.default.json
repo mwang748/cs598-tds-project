@@ -1,111 +1,959 @@
 {
   "schemaVersion": "1.0",
-  "studyId": "travel-chatbot-preferences",
-  "contentVersion": "fictional-draft-01",
-  "title": "Travel Planning Study",
-  "stimulusLabel": "Fictional draft stimuli",
+  "studyId": "boston-travel-study",
+  "contentVersion": "draft-01",
+  "title": "Boston Travel Study",
+  "stimulusLabel": "Fictional study details",
   "instructions": [
-    "Imagine yourself in each travel scenario. We’ll give you the details you need.",
-    "Compare the alternative chatbot responses and choose the approach you would prefer. There are no right or wrong answers.",
-    "Treat every checkpoint as a fresh example. Your choices do not change what happens next."
+    "Complete the flight and hotel tasks for one budget and schedule before moving to the next scenario.",
+    "The details in the study are fictional. Choose the approach you would prefer for each task. Nothing is actually reserved or paid for.",
+    "Some tasks give you a flight or hotel that has already been chosen for the exercise. Use the details stated in that task."
   ],
-  "settings": { "allowBackNavigation": true },
+  "settings": {
+    "allowBackNavigation": true
+  },
   "scenarios": [
     {
-      "id": "city-fixed",
-      "title": "A few days in Washington, DC",
-      "factors": { "budget": "comfortable", "schedule": "fixed" },
+      "id": "tight-tight",
+      "title": "Boston · Tight budget, tight schedule",
+      "factors": {
+        "budget": "tight",
+        "schedule": "tight"
+      },
       "introduction": [
-        { "type": "paragraph", "text": "Imagine a solo, three-night trip to Washington, DC. You’re looking forward to neighborhood walks, museums, and a little time to explore." },
-        { "type": "paragraph", "text": "Your travel dates are fixed, and you have $2,400 for the trip. You’re considering how a travel assistant could help you plan." }
+        {
+          "type": "paragraph",
+          "text": "Imagine planning a solo trip to Boston. Use the budget and schedule for the part of the trip you are answering about."
+        }
       ],
       "summary": [
-        { "label": "Destination", "value": "Washington, DC" },
-        { "label": "Trip budget", "value": "$2,400 total" },
-        { "label": "Dates", "value": "June 10–13, 2027 · fixed" },
-        { "label": "Travel party", "value": "Just you · 3 nights" }
+        {
+          "label": "Route",
+          "value": "Chicago O’Hare (ORD) → Boston Logan (BOS)"
+        },
+        {
+          "label": "Flight budget",
+          "value": "$350 total, including taxes and one checked bag"
+        },
+        {
+          "label": "Flight departure",
+          "value": "Friday · 9 a.m.–noon CT"
+        },
+        {
+          "label": "Hotel budget",
+          "value": "$600 maximum, including taxes and fees"
+        },
+        {
+          "label": "Hotel stay dates",
+          "value": "Friday–Monday"
+        },
+        {
+          "label": "Travel party",
+          "value": "One adult · three nights"
+        }
       ],
       "checkpoints": [
         {
-          "id": "hotel-selection",
-          "title": "Finding a place to stay",
+          "id": "flight-selection",
+          "title": "Finding and choosing a flight",
           "context": [
-            { "type": "paragraph", "text": "You need a private room for three nights. These two fictional hotels are available for your dates." },
-            { "type": "table", "columns": ["Hotel", "Three-night total", "Walk to transit"], "rows": [["Park Hotel", "$600", "12 minutes"], ["Union Hotel", "$660", "5 minutes"]] }
+            {
+              "type": "paragraph",
+              "text": "You are flying alone from Chicago O’Hare (ORD) to Boston Logan (BOS) on Friday for a vacation. Your return flight is already arranged."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a nonstop economy flight and one checked bag. Every fare includes taxes and the checked bag. All flights have the same cancellation terms, and the airlines are equally acceptable to you. Departure times are in Chicago local time (CT). Arrival times are in Boston local time (ET)."
+            },
+            {
+              "type": "paragraph",
+              "text": "You prefer to save money, but you also prefer departing between 10 a.m. and noon when the price is reasonable. The chatbot can search the same flights you can. The airlines, flight numbers, schedules, and fares are fictional. You will first choose how to find a flight, then choose how to prepare a reservation draft. Submission and payment are outside this exercise."
+            },
+            {
+              "type": "paragraph",
+              "text": "You can spend up to $350. You must depart between 9 a.m. and noon on Friday."
+            },
+            {
+              "type": "paragraph",
+              "text": "How would you prefer to find and choose your flight?"
+            }
           ],
-          "travelerMessage": "Can you help me choose a hotel?",
-          "question": "How would you like to approach this choice?",
+          "taskInstruction": "Ask for help finding and choosing a flight.",
+          "question": "How would you prefer to find and choose your flight?",
+          "followUp": "Why would you choose that approach in this situation? If none fits, describe what you’d prefer.",
           "responseType": "single-choice",
           "options": [
-            { "id": "compare", "kind": "chatbot", "text": "Here’s a comparison of price and location for both hotels. You can decide which one you’d like to add to your itinerary." },
-            { "id": "recommend", "kind": "chatbot", "text": "I recommend Union Hotel because it’s closer to transit. Would you like me to add it to your draft itinerary?" },
-            { "id": "draft-selection", "kind": "chatbot", "text": "I’ve added Union Hotel to your draft itinerary for its convenient transit access. You can change it. Nothing has been booked." },
-            { "id": "manual", "kind": "manual", "text": "I’d compare the hotels and make this choice myself, without chatbot assistance." }
-          ],
-          "researcherMetadata": { "researchQuestions": ["RQ1", "RQ2"], "construct": "Preferred hotel-selection authority" }
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I’d search for flights, decide what to compare, and choose one myself."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I chose total fare and departure time as the criteria to compare. Here are all 2 nonstop flights that fit your budget and schedule, listed in departure order:\n\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nYou decide which flights to consider and which one to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "I compared total fare and departure time and narrowed 2 eligible flights to one option. Only one falls in your preferred departure window.\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nYou decide whether to choose it or keep looking."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "I compared total fare and departure time, narrowed the eligible flights, and selected this one:\n\nLakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nIt’s the only eligible flight in your preferred departure window and costs $25 more than the earlier flight. No ticket has been purchased."
+            }
+          ]
         },
         {
-          "id": "hotel-recovery",
-          "title": "When a plan needs a rethink",
+          "id": "reservation-draft",
+          "title": "Preparing the reservation",
           "context": [
-            { "type": "paragraph", "text": "In this independent example, Union Hotel was on a draft itinerary, but the room is no longer available. Nothing has been booked, and Park Hotel is still available for $600." }
+            {
+              "type": "paragraph",
+              "text": "For this question, assume Lakefront Air LF 222 has already been selected, regardless of your previous answer. It departs Chicago O’Hare at 11:20 a.m. CT and arrives at Boston Logan at 2:40 p.m. ET. The $345 fare includes one checked bag."
+            },
+            {
+              "type": "paragraph",
+              "text": "The reservation form asks for your legal name, date of birth, contact information, optional frequent-flyer number, checked-bag count, and seat selection. For this exercise, imagine you have these details saved in a travel profile, including a Lakefront Air frequent-flyer number and an aisle-seat preference. Seats 14A (window) and 14C (aisle) are both available at no extra cost. Use the fictional profile for this exercise. Do not enter your real information."
+            },
+            {
+              "type": "paragraph",
+              "text": "How would you prefer to prepare the reservation?"
+            }
           ],
-          "travelerMessage": "The hotel is unavailable. What should we do?",
-          "question": "Which response would you prefer now?",
+          "taskInstruction": "Ask for help preparing a reservation draft using the fictional profile.",
+          "question": "How would you prefer to prepare the reservation?",
+          "followUp": "Why would you choose that approach for preparing the reservation? If none fits, describe what you’d prefer.",
           "responseType": "single-choice",
           "options": [
-            { "id": "ask-priorities", "kind": "chatbot", "text": "That room is no longer available. Would you rather keep the lower price or stay close to transit? I can look for another option based on what matters to you." },
-            { "id": "suggest-alternative", "kind": "chatbot", "text": "That room is no longer available. Park Hotel is still available for $600. I suggest it as an alternative. Shall I update your draft itinerary?" },
-            { "id": "manual", "kind": "manual", "text": "I’d take over the hotel search and work out an alternative myself." }
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I’d enter my passenger, contact, and frequent-flyer details, confirm one checked bag, and choose a seat myself."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "The form asks for your legal name, date of birth, email, and phone. You can also add your Lakefront Air frequent-flyer number. Confirm one checked bag, then choose between 14A (window) and 14C (aisle). Both seats are included in the fare. You fill out the form and choose your seat."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve also set the checked-bag count to one. Choose 14A (window) or 14C (aisle), then review the draft. Both seats are included in the fare."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve set the checked-bag count to one and selected 14C because you prefer an aisle seat. The seat adds $0, so the total is still $345. The draft is ready for you to review and edit."
+            }
+          ]
+        },
+        {
+          "id": "hotel-selection",
+          "title": "Finding and choosing a hotel",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "All hotel names, prices, walking times, availability, and booking terms are fictional study details. Each price is the total for three nights for one adult, including taxes and mandatory fees. All rooms have a private bathroom."
+            },
+            {
+              "type": "paragraph",
+              "text": "You are visiting Boston alone for three nights. Your hotel budget is $600 maximum, including taxes and fees."
+            },
+            {
+              "type": "paragraph",
+              "text": "Your travel arrangements are fixed. You must check in Friday and check out Monday; these dates cannot change."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a private room and bathroom. You prefer staying near Boston Common, but would consider staying farther away to save money."
+            },
+            {
+              "type": "paragraph",
+              "text": "Which approach would you prefer?"
+            }
           ],
-          "researcherMetadata": { "researchQuestions": ["RQ3"], "construct": "Preferred recovery approach" }
+          "taskInstruction": "Ask for help choosing a hotel.",
+          "question": "Which approach would you prefer?",
+          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I would search hotel websites, compare the options, and choose a hotel myself without chatbot assistance."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I’ve selected total price, walking distance to Boston Common, and cancellation terms as the criteria to compare. Here are all 5 eligible hotels, listed alphabetically. All meet your room requirements.\n\n- Beacon Court Hotel — Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Friday–Monday: $570; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- Garden Square Inn — Friday–Monday: $585; 15-minute walk to Boston Common | Pay at hotel. Free cancellation until 48 hours before check-in.\n- Harbor Point Inn — Friday–Monday: $550; 20-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Friday–Monday: $510; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nYou decide which hotels to shortlist and which hotel to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Using total price, walking distance to Boston Common, and cancellation terms, I’ve narrowed 5 eligible hotels to these 3. These give you a closer option, a middle ground, and a lower-cost option.\n\n- Beacon Court Hotel — Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Friday–Monday: $570; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Friday–Monday: $510; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nWhich hotel would you choose?"
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "After comparing total price, walking distance to Boston Common, and cancellation terms, I shortlisted the options and selected Common Street Hotel for Friday–Monday: $570 total, with a private room and bathroom, a 10-minute walk from Boston Common. This starting rate requires payment now and is nonrefundable.\n\nIt balances your location preference with savings. Compared with Beacon Court’s $600 rate, it saves $30 for a walk that is five minutes longer.\n\nThis is the final selection. No reservation or payment has been made."
+            }
+          ]
+        },
+        {
+          "id": "room-and-rate",
+          "title": "Finding and choosing a room and rate",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "For this question, assume Common Street Hotel has been selected. Your stay is Friday–Monday. Your $600 maximum hotel budget is unchanged."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a private room and bathroom. You prefer free cancellation and paying at the hotel, but would consider a nonrefundable rate to save money. A larger room would be nice, but is not required."
+            },
+            {
+              "type": "paragraph",
+              "text": "Which approach would you prefer?"
+            }
+          ],
+          "taskInstruction": "Ask for help choosing a room and rate.",
+          "question": "Which approach would you prefer?",
+          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I would search the hotel’s room-and-rate options, compare them, and choose a package myself without chatbot assistance."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I’ve selected total price, room size and bed type, and payment and cancellation terms as the criteria to compare. Here are all 3 eligible room-and-rate packages, listed alphabetically. All meet your room requirements.\n\n- Compact Double — Saver — Friday–Monday: $555; double bed; smaller room; pay now; nonrefundable.\n- Standard Queen — Flexible — Friday–Monday: $600; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Friday–Monday: $570; queen bed; compact room; pay now; nonrefundable.\n\nYou decide which room-and-rate packages to shortlist and which package to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Using total price, room size and bed type, and payment and cancellation terms, I’ve narrowed 3 eligible room-and-rate packages to these 2. These give you two rates for the same queen room, so you can trade a lower price for free cancellation.\n\n- Standard Queen — Flexible — Friday–Monday: $600; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Friday–Monday: $570; queen bed; compact room; pay now; nonrefundable.\n\nWhich package would you choose?"
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "After comparing total price, room size and bed type, and payment and cancellation terms, I shortlisted the options and selected the Standard Queen — Flexible package for Friday–Monday at $600 total. It has a queen bed and private bathroom in a compact room. You pay at the hotel and can cancel free until 48 hours before check-in.\n\nIt meets your preference for cancellation flexibility and payment at the hotel for $30 more than the Saver rate for the same room and dates.\n\nThis is the final selection. No reservation or payment has been made."
+            }
+          ]
         }
       ]
     },
     {
-      "id": "coast-flexible",
-      "title": "A weekend by the coast",
-      "factors": { "budget": "tight", "schedule": "flexible" },
+      "id": "tight-flexible",
+      "title": "Boston · Tight budget, flexible schedule",
+      "factors": {
+        "budget": "tight",
+        "schedule": "flexible"
+      },
       "introduction": [
-        { "type": "paragraph", "text": "Now imagine a different trip: a relaxed two-night visit to the coast with a friend. You’re sharing a total budget of $700." },
-        { "type": "bullet-list", "items": ["You can travel on any weekend in September 2027.", "You’d like time outdoors and one local activity.", "Treat this as a fresh scenario, independent of your earlier choices."] }
+        {
+          "type": "paragraph",
+          "text": "Imagine planning a solo trip to Boston. Use the budget and schedule for the part of the trip you are answering about."
+        }
       ],
       "summary": [
-        { "label": "Destination", "value": "The coast" },
-        { "label": "Trip budget", "value": "$700 shared total" },
-        { "label": "Dates", "value": "September 2027 · flexible" },
-        { "label": "Travel party", "value": "You + a friend · 2 nights" }
+        {
+          "label": "Route",
+          "value": "Chicago O’Hare (ORD) → Boston Logan (BOS)"
+        },
+        {
+          "label": "Flight budget",
+          "value": "$350 total, including taxes and one checked bag"
+        },
+        {
+          "label": "Flight departure",
+          "value": "Friday · any time CT"
+        },
+        {
+          "label": "Hotel budget",
+          "value": "$600 maximum, including taxes and fees"
+        },
+        {
+          "label": "Hotel stay dates",
+          "value": "Thursday–Sunday, Friday–Monday, or Saturday–Tuesday"
+        },
+        {
+          "label": "Travel party",
+          "value": "One adult · three nights"
+        }
       ],
       "checkpoints": [
         {
-          "id": "ground-transport",
-          "title": "Getting there together",
+          "id": "flight-selection",
+          "title": "Finding and choosing a flight",
           "context": [
-            { "type": "paragraph", "text": "A return train journey costs $120 for two people and takes three hours each way. A return coach journey costs $70 for two people and takes four hours each way. Both fit your possible weekends." }
+            {
+              "type": "paragraph",
+              "text": "You are flying alone from Chicago O’Hare (ORD) to Boston Logan (BOS) on Friday for a vacation. Your return flight is already arranged."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a nonstop economy flight and one checked bag. Every fare includes taxes and the checked bag. All flights have the same cancellation terms, and the airlines are equally acceptable to you. Departure times are in Chicago local time (CT). Arrival times are in Boston local time (ET)."
+            },
+            {
+              "type": "paragraph",
+              "text": "You prefer to save money, but you also prefer departing between 10 a.m. and noon when the price is reasonable. The chatbot can search the same flights you can. The airlines, flight numbers, schedules, and fares are fictional. You will first choose how to find a flight, then choose how to prepare a reservation draft. Submission and payment are outside this exercise."
+            },
+            {
+              "type": "paragraph",
+              "text": "You can spend up to $350. You can depart at any time on Friday."
+            },
+            {
+              "type": "paragraph",
+              "text": "How would you prefer to find and choose your flight?"
+            }
           ],
-          "question": "How much help would you like with transportation?",
+          "taskInstruction": "Ask for help finding and choosing a flight.",
+          "question": "How would you prefer to find and choose your flight?",
+          "followUp": "Why would you choose that approach in this situation? If none fits, describe what you’d prefer.",
           "responseType": "single-choice",
           "options": [
-            { "id": "compare", "kind": "chatbot", "text": "The coach saves $50, while the train saves an hour each way. Here are the details so you can choose the best fit." },
-            { "id": "draft-selection", "kind": "chatbot", "text": "I’ve added the coach to your draft itinerary to leave more of your budget for the weekend. You can change it. No tickets have been bought." },
-            { "id": "manual", "kind": "manual", "text": "I’d compare transportation and choose it myself, without chatbot assistance." }
-          ],
-          "researcherMetadata": { "researchQuestions": ["RQ1", "RQ2"] }
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I’d search for flights, decide what to compare, and choose one myself."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I chose total fare and departure time as the criteria to compare. Here are all 6 nonstop flights that fit your budget and schedule, listed in departure order:\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Meridian Jet MJ 308 | ORD 7:15 a.m. CT → BOS 10:40 a.m. ET | $290 total\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n- HarborLink Airways HL 126 | ORD 8:00 p.m. CT → BOS 11:25 p.m. ET | $335 total\n\nYou decide which flights to consider and which one to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "I compared total fare and departure time and narrowed 6 eligible flights to 3 options. These cover the lowest fare, a flight in your preferred departure window, and a lower-priced afternoon departure.\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nYou make the final choice."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "I compared total fare and departure time, narrowed the eligible flights, and selected this one:\n\nLakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nIt departs in your preferred window and costs $80 more than the earliest flight and $35 more than the afternoon flight on the shortlist. No ticket has been purchased."
+            }
+          ]
         },
         {
-          "id": "activity-planning",
-          "title": "Making room for a little exploring",
+          "id": "reservation-draft",
+          "title": "Preparing the reservation",
           "context": [
-            { "type": "paragraph", "text": "In this independent example, your accommodation and transport are already arranged. You have $90 left for activities for both of you. A guided coastal walk costs $50 for two; exploring a public beach is free." }
+            {
+              "type": "paragraph",
+              "text": "For this question, assume Lakefront Air LF 222 has already been selected, regardless of your previous answer. It departs Chicago O’Hare at 11:20 a.m. CT and arrives at Boston Logan at 2:40 p.m. ET. The $345 fare includes one checked bag."
+            },
+            {
+              "type": "paragraph",
+              "text": "The reservation form asks for your legal name, date of birth, contact information, optional frequent-flyer number, checked-bag count, and seat selection. For this exercise, imagine you have these details saved in a travel profile, including a Lakefront Air frequent-flyer number and an aisle-seat preference. Seats 14A (window) and 14C (aisle) are both available at no extra cost. Use the fictional profile for this exercise. Do not enter your real information."
+            },
+            {
+              "type": "paragraph",
+              "text": "How would you prefer to prepare the reservation?"
+            }
           ],
-          "travelerMessage": "Help us plan an afternoon outdoors.",
-          "question": "Which approach would you prefer?",
+          "taskInstruction": "Ask for help preparing a reservation draft using the fictional profile.",
+          "question": "How would you prefer to prepare the reservation?",
+          "followUp": "Why would you choose that approach for preparing the reservation? If none fits, describe what you’d prefer.",
           "responseType": "single-choice",
           "options": [
-            { "id": "recommend", "kind": "chatbot", "text": "I suggest the guided coastal walk for $50, leaving $40 of your activity budget. Would you like to add it to the plan?" },
-            { "id": "manual", "kind": "manual", "text": "We’d decide how to spend the afternoon ourselves, without chatbot assistance." }
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I’d enter my passenger, contact, and frequent-flyer details, confirm one checked bag, and choose a seat myself."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "The form asks for your legal name, date of birth, email, and phone. You can also add your Lakefront Air frequent-flyer number. Confirm one checked bag, then choose between 14A (window) and 14C (aisle). Both seats are included in the fare. You fill out the form and choose your seat."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve also set the checked-bag count to one. Choose 14A (window) or 14C (aisle), then review the draft. Both seats are included in the fare."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve set the checked-bag count to one and selected 14C because you prefer an aisle seat. The seat adds $0, so the total is still $345. The draft is ready for you to review and edit."
+            }
+          ]
+        },
+        {
+          "id": "hotel-selection",
+          "title": "Finding and choosing a hotel",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "All hotel names, prices, walking times, availability, and booking terms are fictional study details. Each price is the total for three nights for one adult, including taxes and mandatory fees. All rooms have a private bathroom."
+            },
+            {
+              "type": "paragraph",
+              "text": "You are visiting Boston alone for three nights. Your hotel budget is $600 maximum, including taxes and fees."
+            },
+            {
+              "type": "paragraph",
+              "text": "You can stay Thursday–Sunday, Friday–Monday, or Saturday–Tuesday. Changing between these stays has no other cost or scheduling penalty. You have no preference between these dates."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a private room and bathroom. You prefer staying near Boston Common, but would consider staying farther away to save money."
+            },
+            {
+              "type": "paragraph",
+              "text": "When choosing a hotel or room package, the stay dates are part of the option."
+            },
+            {
+              "type": "paragraph",
+              "text": "Which approach would you prefer for choosing your hotel and stay dates?"
+            }
           ],
-          "researcherMetadata": { "researchQuestions": ["RQ1", "RQ2"] }
+          "taskInstruction": "Ask for help choosing a hotel and stay dates.",
+          "question": "Which approach would you prefer for choosing your hotel and stay dates?",
+          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I would search hotel websites, compare the options, and choose a hotel and stay dates myself without chatbot assistance."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I’ve selected total price, walking distance to Boston Common, and cancellation terms as the criteria to compare. Here are all 5 eligible hotels, listed alphabetically. All meet your room requirements.\n\n- Beacon Court Hotel — Thursday–Sunday: $590; Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- Garden Square Inn — Thursday–Sunday: $575; Friday–Monday: $585; Saturday–Tuesday: $560; 15-minute walk to Boston Common | Pay at hotel. Free cancellation until 48 hours before check-in.\n- Harbor Point Inn — Thursday–Sunday: $570; Friday–Monday: $550; Saturday–Tuesday: $585; 20-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Thursday–Sunday: $480; Friday–Monday: $510; Saturday–Tuesday: $450; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nYou decide which hotels to shortlist and which hotel and dates to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Using total price, walking distance to Boston Common, and cancellation terms, I’ve narrowed 5 eligible hotels to these 3. These give you a closer option, a middle ground, and a lower-cost option.\n\n- Beacon Court Hotel — Thursday–Sunday: $590; Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Thursday–Sunday: $480; Friday–Monday: $510; Saturday–Tuesday: $450; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nWhich hotel and dates would you choose?"
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "After comparing total price, walking distance to Boston Common, and cancellation terms, I shortlisted the options and selected Common Street Hotel for Saturday–Tuesday: $510 total, with a private room and bathroom, a 10-minute walk from Boston Common. This starting rate requires payment now and is nonrefundable.\n\nIt balances your location preference with savings. Compared with Beacon Court’s Thursday–Sunday rate of $590, it saves $80 for a walk that is five minutes longer.\n\nThis is the final selection. No reservation or payment has been made."
+            }
+          ]
+        },
+        {
+          "id": "room-and-rate",
+          "title": "Finding and choosing a room and rate",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "For this question, assume Common Street Hotel has been selected. Your stay dates have not yet been selected and remain flexible within the same three options. Your $600 maximum hotel budget is unchanged."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a private room and bathroom. You prefer free cancellation and paying at the hotel, but would consider a nonrefundable rate to save money. A larger room would be nice, but is not required."
+            },
+            {
+              "type": "paragraph",
+              "text": "Which approach would you prefer for choosing your room, rate, and stay dates?"
+            }
+          ],
+          "taskInstruction": "Ask for help choosing a room, rate, and stay dates.",
+          "question": "Which approach would you prefer for choosing your room, rate, and stay dates?",
+          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I would search the hotel’s room-and-rate options, compare them, and choose a package and stay dates myself without chatbot assistance."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I’ve selected total price, room size and bed type, and payment and cancellation terms as the criteria to compare. Here are all 4 eligible room-and-rate packages, listed alphabetically. All meet your room requirements.\n\n- Compact Double — Saver — Thursday–Sunday: $525; Friday–Monday: $555; Saturday–Tuesday: $495; double bed; smaller room; pay now; nonrefundable.\n- Deluxe King — Saver — Thursday–Sunday: $600; Saturday–Tuesday: $585; king bed; larger room; pay now; nonrefundable.\n- Standard Queen — Flexible — Thursday–Sunday: $570; Friday–Monday: $600; Saturday–Tuesday: $540; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; queen bed; compact room; pay now; nonrefundable.\n\nYou decide which room-and-rate packages to shortlist and which package and dates to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Using total price, room size and bed type, and payment and cancellation terms, I’ve narrowed 4 eligible room-and-rate packages to these 2. These give you two rates for the same queen room, so you can trade a lower price for free cancellation.\n\n- Standard Queen — Flexible — Thursday–Sunday: $570; Friday–Monday: $600; Saturday–Tuesday: $540; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; queen bed; compact room; pay now; nonrefundable.\n\nWhich package and dates would you choose?"
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "After comparing total price, room size and bed type, and payment and cancellation terms, I shortlisted the options and selected the Standard Queen — Flexible package for Saturday–Tuesday at $540 total. It has a queen bed and private bathroom in a compact room. You pay at the hotel and can cancel free until 48 hours before check-in.\n\nIt meets your preference for cancellation flexibility and payment at the hotel for $30 more than the Saver rate for the same room and dates.\n\nThis is the final selection. No reservation or payment has been made."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "flexible-tight",
+      "title": "Boston · Flexible budget, tight schedule",
+      "factors": {
+        "budget": "flexible",
+        "schedule": "tight"
+      },
+      "introduction": [
+        {
+          "type": "paragraph",
+          "text": "Imagine planning a solo trip to Boston. Use the budget and schedule for the part of the trip you are answering about."
+        }
+      ],
+      "summary": [
+        {
+          "label": "Route",
+          "value": "Chicago O’Hare (ORD) → Boston Logan (BOS)"
+        },
+        {
+          "label": "Flight budget",
+          "value": "$700 total, including taxes and one checked bag"
+        },
+        {
+          "label": "Flight departure",
+          "value": "Friday · 9 a.m.–noon CT"
+        },
+        {
+          "label": "Hotel budget",
+          "value": "$1,050 maximum, including taxes and fees"
+        },
+        {
+          "label": "Hotel stay dates",
+          "value": "Friday–Monday"
+        },
+        {
+          "label": "Travel party",
+          "value": "One adult · three nights"
+        }
+      ],
+      "checkpoints": [
+        {
+          "id": "flight-selection",
+          "title": "Finding and choosing a flight",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "You are flying alone from Chicago O’Hare (ORD) to Boston Logan (BOS) on Friday for a vacation. Your return flight is already arranged."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a nonstop economy flight and one checked bag. Every fare includes taxes and the checked bag. All flights have the same cancellation terms, and the airlines are equally acceptable to you. Departure times are in Chicago local time (CT). Arrival times are in Boston local time (ET)."
+            },
+            {
+              "type": "paragraph",
+              "text": "You prefer to save money, but you also prefer departing between 10 a.m. and noon when the price is reasonable. The chatbot can search the same flights you can. The airlines, flight numbers, schedules, and fares are fictional. You will first choose how to find a flight, then choose how to prepare a reservation draft. Submission and payment are outside this exercise."
+            },
+            {
+              "type": "paragraph",
+              "text": "You can spend up to $700. You must depart between 9 a.m. and noon on Friday."
+            },
+            {
+              "type": "paragraph",
+              "text": "How would you prefer to find and choose your flight?"
+            }
+          ],
+          "taskInstruction": "Ask for help finding and choosing a flight.",
+          "question": "How would you prefer to find and choose your flight?",
+          "followUp": "Why would you choose that approach in this situation? If none fits, describe what you’d prefer.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I’d search for flights, decide what to compare, and choose one myself."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I chose total fare and departure time as the criteria to compare. Here are all 5 nonstop flights that fit your budget and schedule, listed in departure order:\n\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 218 | ORD 9:50 a.m. CT → BOS 1:15 p.m. ET | $410 total\n- Meridian Jet MJ 314 | ORD 10:30 a.m. CT → BOS 1:50 p.m. ET | $465 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 116 | ORD 11:50 a.m. CT → BOS 3:15 p.m. ET | $520 total\n\nYou decide which flights to consider and which one to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "I compared total fare and departure time and narrowed 5 eligible flights to 3 options. These cover the lowest fare and two departures in your preferred window.\n\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Meridian Jet MJ 314 | ORD 10:30 a.m. CT → BOS 1:50 p.m. ET | $465 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nYou make the final choice."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "I compared total fare and departure time, narrowed the eligible flights, and selected this one:\n\nLakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nIt’s the lowest fare in your preferred departure window and costs $25 more than the cheapest eligible flight. No ticket has been purchased."
+            }
+          ]
+        },
+        {
+          "id": "reservation-draft",
+          "title": "Preparing the reservation",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "For this question, assume Lakefront Air LF 222 has already been selected, regardless of your previous answer. It departs Chicago O’Hare at 11:20 a.m. CT and arrives at Boston Logan at 2:40 p.m. ET. The $345 fare includes one checked bag."
+            },
+            {
+              "type": "paragraph",
+              "text": "The reservation form asks for your legal name, date of birth, contact information, optional frequent-flyer number, checked-bag count, and seat selection. For this exercise, imagine you have these details saved in a travel profile, including a Lakefront Air frequent-flyer number and an aisle-seat preference. Seats 14A (window) and 14C (aisle) are both available at no extra cost. Use the fictional profile for this exercise. Do not enter your real information."
+            },
+            {
+              "type": "paragraph",
+              "text": "How would you prefer to prepare the reservation?"
+            }
+          ],
+          "taskInstruction": "Ask for help preparing a reservation draft using the fictional profile.",
+          "question": "How would you prefer to prepare the reservation?",
+          "followUp": "Why would you choose that approach for preparing the reservation? If none fits, describe what you’d prefer.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I’d enter my passenger, contact, and frequent-flyer details, confirm one checked bag, and choose a seat myself."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "The form asks for your legal name, date of birth, email, and phone. You can also add your Lakefront Air frequent-flyer number. Confirm one checked bag, then choose between 14A (window) and 14C (aisle). Both seats are included in the fare. You fill out the form and choose your seat."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve also set the checked-bag count to one. Choose 14A (window) or 14C (aisle), then review the draft. Both seats are included in the fare."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve set the checked-bag count to one and selected 14C because you prefer an aisle seat. The seat adds $0, so the total is still $345. The draft is ready for you to review and edit."
+            }
+          ]
+        },
+        {
+          "id": "hotel-selection",
+          "title": "Finding and choosing a hotel",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "All hotel names, prices, walking times, availability, and booking terms are fictional study details. Each price is the total for three nights for one adult, including taxes and mandatory fees. All rooms have a private bathroom."
+            },
+            {
+              "type": "paragraph",
+              "text": "You are visiting Boston alone for three nights. Your hotel budget is $1,050 maximum, including taxes and fees. You do not need to spend the full budget."
+            },
+            {
+              "type": "paragraph",
+              "text": "Your travel arrangements are fixed. You must check in Friday and check out Monday; these dates cannot change."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a private room and bathroom. You prefer staying near Boston Common, but would consider staying farther away to save money."
+            },
+            {
+              "type": "paragraph",
+              "text": "Which approach would you prefer?"
+            }
+          ],
+          "taskInstruction": "Ask for help choosing a hotel.",
+          "question": "Which approach would you prefer?",
+          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I would search hotel websites, compare the options, and choose a hotel myself without chatbot assistance."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I’ve selected total price, walking distance to Boston Common, and cancellation terms as the criteria to compare. Here are all 7 eligible hotels, listed alphabetically. All meet your room requirements.\n\n- Back Bay House — Friday–Monday: $840; 15-minute walk to Boston Common | Pay now. Nonrefundable.\n- Beacon Court Hotel — Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Friday–Monday: $570; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- Garden Square Inn — Friday–Monday: $585; 15-minute walk to Boston Common | Pay at hotel. Free cancellation until 48 hours before check-in.\n- Harbor Point Inn — Friday–Monday: $550; 20-minute walk to Boston Common | Pay now. Nonrefundable.\n- Parkside Grand — Friday–Monday: $990; 2-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Friday–Monday: $510; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nYou decide which hotels to shortlist and which hotel to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Using total price, walking distance to Boston Common, and cancellation terms, I’ve narrowed 7 eligible hotels to these 3. These give you a closer option, a middle ground, and a lower-cost option.\n\n- Beacon Court Hotel — Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Friday–Monday: $570; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Friday–Monday: $510; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nWhich hotel would you choose?"
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "After comparing total price, walking distance to Boston Common, and cancellation terms, I shortlisted the options and selected Common Street Hotel for Friday–Monday: $570 total, with a private room and bathroom, a 10-minute walk from Boston Common. This starting rate requires payment now and is nonrefundable.\n\nIt balances your location preference with savings. Compared with Beacon Court’s $600 rate, it saves $30 for a walk that is five minutes longer.\n\nThis is the final selection. No reservation or payment has been made."
+            }
+          ]
+        },
+        {
+          "id": "room-and-rate",
+          "title": "Finding and choosing a room and rate",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "For this question, assume Common Street Hotel has been selected. Your stay is Friday–Monday. Your $1,050 maximum hotel budget is unchanged."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a private room and bathroom. You prefer free cancellation and paying at the hotel, but would consider a nonrefundable rate to save money. A larger room would be nice, but is not required."
+            },
+            {
+              "type": "paragraph",
+              "text": "Which approach would you prefer?"
+            }
+          ],
+          "taskInstruction": "Ask for help choosing a room and rate.",
+          "question": "Which approach would you prefer?",
+          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I would search the hotel’s room-and-rate options, compare them, and choose a package myself without chatbot assistance."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I’ve selected total price, room size and bed type, and payment and cancellation terms as the criteria to compare. Here are all 5 eligible room-and-rate packages, listed alphabetically. All meet your room requirements.\n\n- Compact Double — Saver — Friday–Monday: $555; double bed; smaller room; pay now; nonrefundable.\n- Deluxe King — Flexible — Friday–Monday: $720; king bed; larger room; pay at hotel; free cancellation until 48 hours before check-in.\n- Deluxe King — Saver — Friday–Monday: $660; king bed; larger room; pay now; nonrefundable.\n- Standard Queen — Flexible — Friday–Monday: $600; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Friday–Monday: $570; queen bed; compact room; pay now; nonrefundable.\n\nYou decide which room-and-rate packages to shortlist and which package to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Using total price, room size and bed type, and payment and cancellation terms, I’ve narrowed 5 eligible room-and-rate packages to these 2. These give you two rates for the same queen room, so you can trade a lower price for free cancellation.\n\n- Standard Queen — Flexible — Friday–Monday: $600; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Friday–Monday: $570; queen bed; compact room; pay now; nonrefundable.\n\nWhich package would you choose?"
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "After comparing total price, room size and bed type, and payment and cancellation terms, I shortlisted the options and selected the Standard Queen — Flexible package for Friday–Monday at $600 total. It has a queen bed and private bathroom in a compact room. You pay at the hotel and can cancel free until 48 hours before check-in.\n\nIt meets your preference for cancellation flexibility and payment at the hotel for $30 more than the Saver rate for the same room and dates.\n\nThis is the final selection. No reservation or payment has been made."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "flexible-flexible",
+      "title": "Boston · Flexible budget, flexible schedule",
+      "factors": {
+        "budget": "flexible",
+        "schedule": "flexible"
+      },
+      "introduction": [
+        {
+          "type": "paragraph",
+          "text": "Imagine planning a solo trip to Boston. Use the budget and schedule for the part of the trip you are answering about."
+        }
+      ],
+      "summary": [
+        {
+          "label": "Route",
+          "value": "Chicago O’Hare (ORD) → Boston Logan (BOS)"
+        },
+        {
+          "label": "Flight budget",
+          "value": "$700 total, including taxes and one checked bag"
+        },
+        {
+          "label": "Flight departure",
+          "value": "Friday · any time CT"
+        },
+        {
+          "label": "Hotel budget",
+          "value": "$1,050 maximum, including taxes and fees"
+        },
+        {
+          "label": "Hotel stay dates",
+          "value": "Thursday–Sunday, Friday–Monday, or Saturday–Tuesday"
+        },
+        {
+          "label": "Travel party",
+          "value": "One adult · three nights"
+        }
+      ],
+      "checkpoints": [
+        {
+          "id": "flight-selection",
+          "title": "Finding and choosing a flight",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "You are flying alone from Chicago O’Hare (ORD) to Boston Logan (BOS) on Friday for a vacation. Your return flight is already arranged."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a nonstop economy flight and one checked bag. Every fare includes taxes and the checked bag. All flights have the same cancellation terms, and the airlines are equally acceptable to you. Departure times are in Chicago local time (CT). Arrival times are in Boston local time (ET)."
+            },
+            {
+              "type": "paragraph",
+              "text": "You prefer to save money, but you also prefer departing between 10 a.m. and noon when the price is reasonable. The chatbot can search the same flights you can. The airlines, flight numbers, schedules, and fares are fictional. You will first choose how to find a flight, then choose how to prepare a reservation draft. Submission and payment are outside this exercise."
+            },
+            {
+              "type": "paragraph",
+              "text": "You can spend up to $700. You can depart at any time on Friday."
+            },
+            {
+              "type": "paragraph",
+              "text": "How would you prefer to find and choose your flight?"
+            }
+          ],
+          "taskInstruction": "Ask for help finding and choosing a flight.",
+          "question": "How would you prefer to find and choose your flight?",
+          "followUp": "Why would you choose that approach in this situation? If none fits, describe what you’d prefer.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I’d search for flights, decide what to compare, and choose one myself."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I chose total fare and departure time as the criteria to compare. Here are all 12 nonstop flights that fit your budget and schedule, listed in departure order:\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Meridian Jet MJ 308 | ORD 7:15 a.m. CT → BOS 10:40 a.m. ET | $290 total\n- HarborLink Airways HL 112 | ORD 9:10 a.m. CT → BOS 12:30 p.m. ET | $320 total\n- Lakefront Air LF 218 | ORD 9:50 a.m. CT → BOS 1:15 p.m. ET | $410 total\n- Meridian Jet MJ 314 | ORD 10:30 a.m. CT → BOS 1:50 p.m. ET | $465 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 116 | ORD 11:50 a.m. CT → BOS 3:15 p.m. ET | $520 total\n- Meridian Jet MJ 320 | ORD 1:10 p.m. CT → BOS 4:35 p.m. ET | $390 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n- Lakefront Air LF 228 | ORD 4:20 p.m. CT → BOS 7:45 p.m. ET | $480 total\n- Meridian Jet MJ 326 | ORD 6:40 p.m. CT → BOS 10:00 p.m. ET | $560 total\n- HarborLink Airways HL 126 | ORD 8:00 p.m. CT → BOS 11:25 p.m. ET | $335 total\n\nYou decide which flights to consider and which one to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "I compared total fare and departure time and narrowed 12 eligible flights to 3 options. These cover the lowest fare, the lowest fare in your preferred departure window, and a lower-priced afternoon departure.\n\n- Lakefront Air LF 214 | ORD 6:10 a.m. CT → BOS 9:30 a.m. ET | $265 total\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nYou make the final choice."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "I compared total fare and departure time, narrowed the eligible flights, and selected this one:\n\nLakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nIt’s the lowest fare in your preferred departure window. It costs $80 more than the earliest flight and $35 more than the afternoon flight on the shortlist. No ticket has been purchased."
+            }
+          ]
+        },
+        {
+          "id": "reservation-draft",
+          "title": "Preparing the reservation",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "For this question, assume Lakefront Air LF 222 has already been selected, regardless of your previous answer. It departs Chicago O’Hare at 11:20 a.m. CT and arrives at Boston Logan at 2:40 p.m. ET. The $345 fare includes one checked bag."
+            },
+            {
+              "type": "paragraph",
+              "text": "The reservation form asks for your legal name, date of birth, contact information, optional frequent-flyer number, checked-bag count, and seat selection. For this exercise, imagine you have these details saved in a travel profile, including a Lakefront Air frequent-flyer number and an aisle-seat preference. Seats 14A (window) and 14C (aisle) are both available at no extra cost. Use the fictional profile for this exercise. Do not enter your real information."
+            },
+            {
+              "type": "paragraph",
+              "text": "How would you prefer to prepare the reservation?"
+            }
+          ],
+          "taskInstruction": "Ask for help preparing a reservation draft using the fictional profile.",
+          "question": "How would you prefer to prepare the reservation?",
+          "followUp": "Why would you choose that approach for preparing the reservation? If none fits, describe what you’d prefer.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I’d enter my passenger, contact, and frequent-flyer details, confirm one checked bag, and choose a seat myself."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "The form asks for your legal name, date of birth, email, and phone. You can also add your Lakefront Air frequent-flyer number. Confirm one checked bag, then choose between 14A (window) and 14C (aisle). Both seats are included in the fare. You fill out the form and choose your seat."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve also set the checked-bag count to one. Choose 14A (window) or 14C (aisle), then review the draft. Both seats are included in the fare."
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve set the checked-bag count to one and selected 14C because you prefer an aisle seat. The seat adds $0, so the total is still $345. The draft is ready for you to review and edit."
+            }
+          ]
+        },
+        {
+          "id": "hotel-selection",
+          "title": "Finding and choosing a hotel",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "All hotel names, prices, walking times, availability, and booking terms are fictional study details. Each price is the total for three nights for one adult, including taxes and mandatory fees. All rooms have a private bathroom."
+            },
+            {
+              "type": "paragraph",
+              "text": "You are visiting Boston alone for three nights. Your hotel budget is $1,050 maximum, including taxes and fees. You do not need to spend the full budget."
+            },
+            {
+              "type": "paragraph",
+              "text": "You can stay Thursday–Sunday, Friday–Monday, or Saturday–Tuesday. Changing between these stays has no other cost or scheduling penalty. You have no preference between these dates."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a private room and bathroom. You prefer staying near Boston Common, but would consider staying farther away to save money."
+            },
+            {
+              "type": "paragraph",
+              "text": "When choosing a hotel or room package, the stay dates are part of the option."
+            },
+            {
+              "type": "paragraph",
+              "text": "Which approach would you prefer for choosing your hotel and stay dates?"
+            }
+          ],
+          "taskInstruction": "Ask for help choosing a hotel and stay dates.",
+          "question": "Which approach would you prefer for choosing your hotel and stay dates?",
+          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I would search hotel websites, compare the options, and choose a hotel and stay dates myself without chatbot assistance."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I’ve selected total price, walking distance to Boston Common, and cancellation terms as the criteria to compare. Here are all 7 eligible hotels, listed alphabetically. All meet your room requirements.\n\n- Back Bay House — Thursday–Sunday: $720; Friday–Monday: $840; Saturday–Tuesday: $750; 15-minute walk to Boston Common | Pay now. Nonrefundable.\n- Beacon Court Hotel — Thursday–Sunday: $590; Friday–Monday: $600; Saturday–Tuesday: $650; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- Garden Square Inn — Thursday–Sunday: $575; Friday–Monday: $585; Saturday–Tuesday: $560; 15-minute walk to Boston Common | Pay at hotel. Free cancellation until 48 hours before check-in.\n- Harbor Point Inn — Thursday–Sunday: $570; Friday–Monday: $550; Saturday–Tuesday: $585; 20-minute walk to Boston Common | Pay now. Nonrefundable.\n- Parkside Grand — Thursday–Sunday: $900; Friday–Monday: $990; Saturday–Tuesday: $930; 2-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Thursday–Sunday: $480; Friday–Monday: $510; Saturday–Tuesday: $450; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nYou decide which hotels to shortlist and which hotel and dates to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Using total price, walking distance to Boston Common, and cancellation terms, I’ve narrowed 7 eligible hotels to these 3. These give you a closer option, a middle ground, and a lower-cost option.\n\n- Beacon Court Hotel — Thursday–Sunday: $590; Friday–Monday: $600; Saturday–Tuesday: $650; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Thursday–Sunday: $480; Friday–Monday: $510; Saturday–Tuesday: $450; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nWhich hotel and dates would you choose?"
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "After comparing total price, walking distance to Boston Common, and cancellation terms, I shortlisted the options and selected Common Street Hotel for Saturday–Tuesday: $510 total, with a private room and bathroom, a 10-minute walk from Boston Common. This starting rate requires payment now and is nonrefundable.\n\nIt balances your location preference with savings. Compared with Beacon Court’s Thursday–Sunday rate of $590, it saves $80 for a walk that is five minutes longer.\n\nThis is the final selection. No reservation or payment has been made."
+            }
+          ]
+        },
+        {
+          "id": "room-and-rate",
+          "title": "Finding and choosing a room and rate",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "For this question, assume Common Street Hotel has been selected. Your stay dates have not yet been selected and remain flexible within the same three options. Your $1,050 maximum hotel budget is unchanged."
+            },
+            {
+              "type": "paragraph",
+              "text": "You need a private room and bathroom. You prefer free cancellation and paying at the hotel, but would consider a nonrefundable rate to save money. A larger room would be nice, but is not required."
+            },
+            {
+              "type": "paragraph",
+              "text": "Which approach would you prefer for choosing your room, rate, and stay dates?"
+            }
+          ],
+          "taskInstruction": "Ask for help choosing a room, rate, and stay dates.",
+          "question": "Which approach would you prefer for choosing your room, rate, and stay dates?",
+          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "I would search the hotel’s room-and-rate options, compare them, and choose a package and stay dates myself without chatbot assistance."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "I’ve selected total price, room size and bed type, and payment and cancellation terms as the criteria to compare. Here are all 6 eligible room-and-rate packages, listed alphabetically. All meet your room requirements.\n\n- Compact Double — Saver — Thursday–Sunday: $525; Friday–Monday: $555; Saturday–Tuesday: $495; double bed; smaller room; pay now; nonrefundable.\n- Deluxe King — Flexible — Thursday–Sunday: $660; Friday–Monday: $720; Saturday–Tuesday: $645; king bed; larger room; pay at hotel; free cancellation until 48 hours before check-in.\n- Deluxe King — Saver — Thursday–Sunday: $600; Friday–Monday: $660; Saturday–Tuesday: $585; king bed; larger room; pay now; nonrefundable.\n- Junior Suite — Flexible — Thursday–Sunday: $900; Saturday–Tuesday: $870; king bed and separate sitting area; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Flexible — Thursday–Sunday: $570; Friday–Monday: $600; Saturday–Tuesday: $540; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; queen bed; compact room; pay now; nonrefundable.\n\nYou decide which room-and-rate packages to shortlist and which package and dates to choose."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Using total price, room size and bed type, and payment and cancellation terms, I’ve narrowed 6 eligible room-and-rate packages to these 2. These give you two rates for the same queen room, so you can trade a lower price for free cancellation.\n\n- Standard Queen — Flexible — Thursday–Sunday: $570; Friday–Monday: $600; Saturday–Tuesday: $540; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; queen bed; compact room; pay now; nonrefundable.\n\nWhich package and dates would you choose?"
+            },
+            {
+              "id": "D",
+              "kind": "chatbot",
+              "text": "After comparing total price, room size and bed type, and payment and cancellation terms, I shortlisted the options and selected the Standard Queen — Flexible package for Saturday–Tuesday at $540 total. It has a queen bed and private bathroom in a compact room. You pay at the hotel and can cancel free until 48 hours before check-in.\n\nIt meets your preference for cancellation flexibility and payment at the hotel for $30 more than the Saver rate for the same room and dates.\n\nThis is the final selection. No reservation or payment has been made."
+            }
+          ]
         }
       ]
     }

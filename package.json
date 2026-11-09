@@ -8,9 +8,11 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
-    "sample": "tsx scripts/generate-sample.ts"
+    "sample": "tsx scripts/generate-sample.ts",
+    "qualtrics:survey": "tsx scripts/generate-qualtrics.ts"
   },
   "dependencies": {
+    "@vercel/blob": "2.8.2",
     "exceljs": "4.4.0",
     "lucide-react": "0.468.0",
     "react": "19.0.0",

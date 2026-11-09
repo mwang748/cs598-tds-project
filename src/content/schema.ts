@@ -13,8 +13,10 @@ const optionSchema = z.object({ id, kind: z.enum(['manual', 'chatbot']), text })
 const checkpointSchema = z.object({
   id, title: text,
   context: z.array(blockSchema).optional(),
+  taskInstruction: text.optional(),
   travelerMessage: text.optional(),
   question: text,
+  followUp: text.optional(),
   responseType: z.literal('single-choice'),
   options: z.array(optionSchema).min(1, 'Add at least one response option'),
   researcherMetadata: z.record(z.unknown()).optional(),

@@ -1,12 +1,33 @@
 import ExcelJS from 'exceljs';
 import { describe, expect, it } from 'vitest';
-import example from '../../public/study.default.json';
+import boston from '../../public/study.default.json';
+import example from '../test/fixtures/study.example.json';
 import { studySchema } from '../content/schema';
-import { answerKey, chooseAnswer, createSession, hasUnexportedAnswers, nextCheckpoint, previousRoute } from '../session/session';
+import { answerKey, chooseAnswer, countAnswered, createSession, hasUnexportedAnswers, nextCheckpoint, previousRoute, writeFollowUp } from '../session/session';
 import { buildCsv, buildWorkbook, exportFilename, responseData, safeCsvCell } from './responses';
 
 const study = studySchema.parse(example);
 describe('state and export integrity', () => {
+  it('exports a Boston written approach as answered with a blank option ID', async () => {
+    const content = studySchema.parse(boston);
+    const key = answerKey('tight-tight', 'hotel-selection');
+    const written = 'I would start with a map of the area.';
+    const session = writeFollowUp(createSession(), key, written);
+    expect(countAnswered(content, session)).toBe(1);
+    expect(hasUnexportedAnswers(session)).toBe(true);
+    const { headers, rows } = responseData(content, session);
+    expect(rows).toHaveLength(16);
+    const rowIndex = rows.findIndex(row => row[headers.indexOf('Scenario ID')] === 'tight-tight' && row[headers.indexOf('Checkpoint ID')] === 'hotel-selection');
+    expect(rowIndex).toBe(2);
+    const row = rows[rowIndex];
+    expect(row[headers.indexOf('Selected option ID')]).toBe('');
+    expect(row[headers.indexOf('Follow-up response')]).toBe(written);
+    expect(row.at(-1)).toBe('Answered');
+    expect(buildCsv(content, session)).toContain(written);
+    const workbook = await buildWorkbook(content, session);
+    expect(workbook.getWorksheet('Responses')!.getCell(rowIndex + 2, headers.indexOf('Follow-up response') + 1).value).toBe(written);
+  });
+
   it('generates an anonymous session and tracks latest answers without changing stimuli', () => {
     let session = createSession();
     expect(session.id).toMatch(/^P-[a-f0-9]{12}$/);

@@ -1,6 +1,6 @@
 # Waypoint · Travel planning preference study
 
-A desktop-first, local-only React + TypeScript + Vite app for a university HCI preference study. All scenarios and replies are static JSON. There is no AI, backend, database, account, telemetry, or remote response upload.
+A desktop-first React + TypeScript + Vite app for a university HCI preference study. Scenarios and replies are prewritten in JSON. The app defaults to local Excel/CSV export and can optionally submit completed sessions to Qualtrics.
 
 The participant view is a simple chat mockup. Alternative responses look like selectable message bubbles, and the hamburger button reopens the current scenario details. There is no persistent header or study journey sidebar. Researcher tools are available through the small **Researcher** link beneath the chat.
 
@@ -27,7 +27,7 @@ npm run sample   # regenerate the clearly marked test-data workbook
 
 1. Review the fictional example stimuli before research use. Replace them with your own study content.
 2. Open the app. Read the instructions and click **Start study**. The app generates an anonymous ID, without collecting identifying information.
-3. Read each scenario brief and click **Begin scenario**. At each independent checkpoint, choose one alternative and **Continue**. The latest selection is recorded immediately. Earlier selections never change later stimuli.
+3. Read each scenario brief and click **Begin scenario**. For each **New task**, type a message and select **Send**. Choose an AI reply or select an option under **Do it yourself**, when available. Where a follow-up is provided, you can also write your own approach. **Next task** collapses the exchange. **Next scenario** introduces a fresh trip. The exports record selected options and written follow-up answers. The opening chat messages stay in memory for display.
 4. Use **Back** to review or change answers, if enabled in the JSON. Responses use stable IDs and exports retain the latest selection.
 5. At completion, click **Download responses** for a formatted `.xlsx`. CSV is available as a fallback. Check your browser’s download list and retain the file. Downloading does not clear answers or prove that a file was permanently saved.
 6. Click **Next participant**, download if needed, acknowledge the reminder and click **Confirm reset**. This clears responses and returns to the welcome screen. The next **Start study** generates a new ID. Cancelling keeps the existing session.
@@ -36,9 +36,34 @@ For an early departure, choose **Researcher → Export partial**. A partial work
 
 **Refresh and closing can lose responses.** Answers are held in memory, and there is no persistent session recovery. The footer reminds participants; a best-effort `beforeunload` warning runs while answers have changed since the last download request. Browsers control whether they show it. Retain every download before resetting, refreshing or closing.
 
+## Store results on the study site
+
+1. In Vercel, create a **Private** Blob store and connect it to the study project for **Production**. The connection adds `BLOB_READ_WRITE_TOKEN` on the server.
+2. In the project’s Production environment, set `VITE_SITE_RESULTS_ENABLED=true` and add a long, unique `RESEARCHER_RESULTS_PASSWORD` as a **Secret**. Keep the password with the study team.
+3. Redeploy from this branch. Finish a test run and open **Researcher → Saved results**. After entering the password, expand a session to review its answers. Use **Load more** if shown, then **Download all results (.csv)** to export one row per answered task.
+
+The site saves a completed session when the participant clicks **Finish study**. Site storage takes precedence when both server collection modes are enabled. The existing Excel download remains available for local and partial sessions.
+
+## Collect responses in Qualtrics
+
+1. Run `npm run qualtrics:survey`. In a new blank Qualtrics survey, remove the default question and use **Survey → Tools → Import/Export → Import survey** to import `qualtrics-survey.txt`. Review and publish the survey. Keep the imported question export tags and choice labels (the app's option IDs). The chat app contains the full response wording and is the only link participants need.
+2. Check that your Qualtrics account can generate an API token under **Account Settings → Qualtrics IDs** and has access to the destination survey. Use the same page to find the survey ID and datacenter ID.
+3. Import this repository as a Vite project on Vercel. Set the following variables for the intended deployment environment, then deploy the app.
+
+   | Variable | Value |
+   | --- | --- |
+   | `VITE_QUALTRICS_ENABLED` | `true` |
+   | `QUALTRICS_DATACENTER` | The datacenter ID, such as `iad1` |
+   | `QUALTRICS_SURVEY_ID` | The destination survey ID starting with `SV_` |
+   | `QUALTRICS_API_TOKEN` | A server-side secret. Enter it in the hosting settings. |
+
+4. Before collecting study data, use a test survey and complete a pilot from the deployed chat app. Check that **Finish study** confirms the save and that one row appears under **Data & Analysis** with the intended choices, a written-only answer, and the participant ID. Use a separate destination for live responses.
+
+The server looks up the imported field tags and choice labels in the Qualtrics response schema before it creates the response. Each retry uses the same submission key. Only the final option selections, written follow-ups, participant ID, and study content version are submitted. If saving cannot be confirmed, the participant can retry or download Excel/CSV. Preview and studies activated from JSON in the researcher panel use the local flow. If you change the bundled study, regenerate and import its survey before collecting that version. A school VM can use the same handler if its web server routes `POST /api/submit` to it. The plain Vite development server runs the local flow by default.
+
 ## Change the study through JSON
 
-- Default example / startup content: [`public/study.default.json`](public/study.default.json).
+- Boston travel study / startup content: [`public/study.default.json`](public/study.default.json).
 - Minimal editable starter: [`public/study.template.json`](public/study.template.json).
 - Full format and validation rules: [`docs/JSON_FORMAT.md`](docs/JSON_FORMAT.md).
 - Types and runtime Zod schema: [`src/content/schema.ts`](src/content/schema.ts).
@@ -53,7 +78,7 @@ Imported content lasts only until refresh. To change startup content permanently
 
 The production export function also generates [`outputs/sample/TEST-DATA_travel-study_P-TESTONLY_2026-11-05_1430.xlsx`](outputs/sample/TEST-DATA_travel-study_P-TESTONLY_2026-11-05_1430.xlsx). The study title and session ID explicitly identify this as fictional test data. It is not a participant record.
 
-Each Excel workbook has **Session summary** and **Responses** sheets, bold headers, frozen first rows, filters, wrapped text, readable column widths and alternating row shading. The response sheet has one unmerged row per checkpoint, in JSON order. Scenario factors become individual columns named `Factor: <key>` using the union of authored factor keys. Checkpoint positions are local to their scenario, starting at 1. Dates include the session’s IANA timezone, the applicable offset, and UTC timestamps. Status is Complete only after the final Continue with every question answered; other exports are Partial.
+Each Excel workbook has **Session summary** and **Responses** sheets, bold headers, frozen first rows, filters, wrapped text, readable column widths and alternating row shading. The response sheet has one unmerged row per checkpoint, in JSON order. Scenario factors become individual columns named `Factor: <key>` using the union of authored factor keys. Checkpoint positions are local to their scenario, starting at 1. Dates include the session’s IANA timezone, the applicable offset, and UTC timestamps. Selecting **Finish study** with every question answered marks the session Complete. Earlier exports are Partial.
 
 XLSX exports write strings as literal values, including strings beginning with `=`. CSV contains the same response table and UTF-8 BOM, with quoted fields and escaped quotes. To prevent formula evaluation in spreadsheet software, CSV prefixes a single apostrophe to formula-like fields (including leading whitespace followed by `=`, `+`, `-`, `@`, tabs or line breaks). Use XLSX for exact unmodified text. CSV does not contain the session summary; keep the XLSX when session metadata is needed.
 
@@ -70,8 +95,8 @@ src/styles.css             desktop layout and accessible interaction styles
 scripts/generate-sample.ts reproducible test-data workbook from the real exporter
 ```
 
-Keyboard: Tab moves between controls. Arrow keys change the focused response, Home/End jump within the response group, Space/Enter select, and Tab then Enter activates Continue. Native dialogs trap focus, support Escape, and restore focus on close. Motion respects the operating system’s reduced-motion preference.
+Tab moves between controls. In the message box, Enter sends and Shift+Enter inserts a line break. Arrow keys change the focused reply, Home/End jump within the reply group, and Space/Enter select. Native dialogs trap focus, support Escape, and restore focus on close. Motion respects the operating system’s reduced-motion preference.
 
 ## Scope
 
-The bundled content contains two short fictional scenarios and four checkpoints for demonstration, with different numbers of alternatives and an independent recovery example. These counts and categories are not assumed by the app. Examples are labeled fictional draft stimuli throughout the participant flow. The JSON is authoritative, researcher metadata is hidden from participants, and all strings render as plain text rather than HTML.
+The Boston travel study uses four combinations of budget and schedule. Each scenario contains flight selection, reservation preparation, hotel selection, and room and rate selection in that order. Add further tasks for a condition to that scenario’s `checkpoints` array. Each task presents four fixed replies and a written follow-up. The demonstration study used by the sample workbook lives in `src/test/fixtures/study.example.json`.
