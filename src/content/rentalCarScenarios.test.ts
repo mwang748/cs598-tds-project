@@ -3,6 +3,7 @@ import content from '../../public/study.default.json';
 import { studySchema } from './schema';
 
 const study = studySchema.parse(content);
+const rentalScenarios = study.scenarios.filter(scenario => scenario.checkpoints.some(task => task.id === 'rental-car-selection'));
 const dates = ['Thursday–Sunday', 'Friday–Monday', 'Saturday–Tuesday'];
 const inventory = [
   {
@@ -106,7 +107,7 @@ type Package = { id: string; provider: string; car: string; location: string; tr
 
 describe('rental-car selection scenarios', () => {
   it('mentions only rental companies actually displayed within each response', () => {
-    for (const scenario of study.scenarios) {
+    for (const scenario of rentalScenarios) {
       const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'rental-car-selection')!;
       for (const option of task.options.filter(option => option.kind === 'chatbot')) {
         const displayedNames = new Set([...option.text.matchAll(/^- (.*?) ·/gm)].map(match => match[1]));
@@ -116,7 +117,7 @@ describe('rental-car selection scenarios', () => {
       }
     }
   });
-  it.each(study.scenarios.map((scenario, index) => ({ scenario, index })))('filters prices, locations and dates correctly for $scenario.id', ({ scenario, index }) => {
+  it.each(rentalScenarios.map((scenario, index) => ({ scenario, index })))('filters prices, locations and dates correctly for $scenario.id', ({ scenario, index }) => {
     const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'rental-car-selection')!;
     const metadata = task.researcherMetadata!;
     const packages = metadata.eligiblePackages as Package[];

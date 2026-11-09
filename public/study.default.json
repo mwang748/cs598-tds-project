@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "studyId": "boston-travel-study",
-  "contentVersion": "draft-18",
+  "contentVersion": "draft-21",
   "title": "Travel Chatbot Study",
   "stimulusLabel": "Fictional study details",
   "instructions": {
@@ -13,14 +13,14 @@
       },
       {
         "title": "Preparing your reservations:",
-        "text": "This is where you decide how you’d like to get the flight, hotel, and rental car reservations added to cart/ready for payment."
+        "text": "Choose how to prepare a draft for a preselected flight, hotel, and rental car. Nothing is booked or paid for."
       },
       {
         "title": "Completing the purchase:",
         "text": "This is where you decide how you’d want to pay for the trip."
       }
     ],
-    "note": "Complete all flight-selection scenarios, then all hotel-selection scenarios, then all rental-car-selection scenarios, followed by the existing flight reservation preparation. All travel details are fictional; you and the chatbot can search the same options. Nothing is actually reserved or paid for. Treat each task independently. Choose a chatbot approach or Do it yourself, or describe another approach. Click Start Study to begin."
+    "note": "Complete the flight, hotel, and rental-car selection scenarios, then prepare one draft reservation for each service and answer one payment question. All travel details are fictional. Nothing is actually reserved or paid for. Treat each task independently. Click Start Study to begin."
   },
   "settings": {
     "allowBackNavigation": true,
@@ -120,50 +120,6 @@
               "id": "D",
               "kind": "chatbot",
               "text": "Chatbot chooses without asking me\n\n- Lakefront Air LF 222 | ORD 11:20 a.m. CT → BOS 2:40 p.m. ET | $345 total\n\nI selected Lakefront LF 222: it departs in your preferred time window and costs $25 more than the earlier flight. I make the selection without asking for approval. No reservation or payment is made."
-            }
-          ]
-        },
-        {
-          "id": "reservation-draft",
-          "title": "Preparing the reservation",
-          "context": [
-            {
-              "type": "paragraph",
-              "text": "For this question, assume Lakefront Air LF 222 has already been selected, regardless of your previous answer. It departs Chicago O’Hare at 11:20 a.m. CT and arrives at Boston Logan at 2:40 p.m. ET. The $345 fare includes one checked bag."
-            },
-            {
-              "type": "paragraph",
-              "text": "The reservation form asks for your legal name, date of birth, contact information, optional frequent-flyer number, checked-bag count, and seat selection. For this exercise, imagine you have these details saved in a travel profile, including a Lakefront Air frequent-flyer number and an aisle-seat preference. Seats 14A (window) and 14C (aisle) are both available at no extra cost. Use the fictional profile for this exercise. Do not enter your real information."
-            },
-            {
-              "type": "paragraph",
-              "text": "How would you prefer to prepare the reservation?"
-            }
-          ],
-          "taskInstruction": "Ask for help preparing a reservation draft using the fictional profile.",
-          "question": "How would you prefer to prepare the reservation?",
-          "followUp": "Why would you choose that approach for preparing the reservation? If none fits, describe what you’d prefer.",
-          "responseType": "single-choice",
-          "options": [
-            {
-              "id": "A",
-              "kind": "manual",
-              "text": "I’d enter my passenger, contact, and frequent-flyer details, confirm one checked bag, and choose a seat myself."
-            },
-            {
-              "id": "B",
-              "kind": "chatbot",
-              "text": "The form asks for your legal name, date of birth, email, and phone. You can also add your Lakefront Air frequent-flyer number. Confirm one checked bag, then choose between 14A (window) and 14C (aisle). Both seats are included in the fare. You fill out the form and choose your seat."
-            },
-            {
-              "id": "C",
-              "kind": "chatbot",
-              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve also set the checked-bag count to one. Choose 14A (window) or 14C (aisle), then review the draft. Both seats are included in the fare."
-            },
-            {
-              "id": "D",
-              "kind": "chatbot",
-              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve set the checked-bag count to one and selected 14C because you prefer an aisle seat. The seat adds $0, so the total is still $345. The draft is ready for you to review and edit."
             }
           ]
         },
@@ -429,50 +385,6 @@
               "id": "D",
               "kind": "chatbot",
               "text": "Chatbot chooses without asking me\n\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nI selected HarborLink HL 120 ($310). It avoids an early-morning or late-evening departure and costs $45 more than the cheapest flight. I make the selection without asking for approval. No reservation or payment is made."
-            }
-          ]
-        },
-        {
-          "id": "reservation-draft",
-          "title": "Preparing the reservation",
-          "context": [
-            {
-              "type": "paragraph",
-              "text": "For this question, assume Lakefront Air LF 222 has already been selected, regardless of your previous answer. It departs Chicago O’Hare at 11:20 a.m. CT and arrives at Boston Logan at 2:40 p.m. ET. The $345 fare includes one checked bag."
-            },
-            {
-              "type": "paragraph",
-              "text": "The reservation form asks for your legal name, date of birth, contact information, optional frequent-flyer number, checked-bag count, and seat selection. For this exercise, imagine you have these details saved in a travel profile, including a Lakefront Air frequent-flyer number and an aisle-seat preference. Seats 14A (window) and 14C (aisle) are both available at no extra cost. Use the fictional profile for this exercise. Do not enter your real information."
-            },
-            {
-              "type": "paragraph",
-              "text": "How would you prefer to prepare the reservation?"
-            }
-          ],
-          "taskInstruction": "Ask for help preparing a reservation draft using the fictional profile.",
-          "question": "How would you prefer to prepare the reservation?",
-          "followUp": "Why would you choose that approach for preparing the reservation? If none fits, describe what you’d prefer.",
-          "responseType": "single-choice",
-          "options": [
-            {
-              "id": "A",
-              "kind": "manual",
-              "text": "I’d enter my passenger, contact, and frequent-flyer details, confirm one checked bag, and choose a seat myself."
-            },
-            {
-              "id": "B",
-              "kind": "chatbot",
-              "text": "The form asks for your legal name, date of birth, email, and phone. You can also add your Lakefront Air frequent-flyer number. Confirm one checked bag, then choose between 14A (window) and 14C (aisle). Both seats are included in the fare. You fill out the form and choose your seat."
-            },
-            {
-              "id": "C",
-              "kind": "chatbot",
-              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve also set the checked-bag count to one. Choose 14A (window) or 14C (aisle), then review the draft. Both seats are included in the fare."
-            },
-            {
-              "id": "D",
-              "kind": "chatbot",
-              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve set the checked-bag count to one and selected 14C because you prefer an aisle seat. The seat adds $0, so the total is still $345. The draft is ready for you to review and edit."
             }
           ]
         },
@@ -829,50 +741,6 @@
           ]
         },
         {
-          "id": "reservation-draft",
-          "title": "Preparing the reservation",
-          "context": [
-            {
-              "type": "paragraph",
-              "text": "For this question, assume Lakefront Air LF 222 has already been selected, regardless of your previous answer. It departs Chicago O’Hare at 11:20 a.m. CT and arrives at Boston Logan at 2:40 p.m. ET. The $345 fare includes one checked bag."
-            },
-            {
-              "type": "paragraph",
-              "text": "The reservation form asks for your legal name, date of birth, contact information, optional frequent-flyer number, checked-bag count, and seat selection. For this exercise, imagine you have these details saved in a travel profile, including a Lakefront Air frequent-flyer number and an aisle-seat preference. Seats 14A (window) and 14C (aisle) are both available at no extra cost. Use the fictional profile for this exercise. Do not enter your real information."
-            },
-            {
-              "type": "paragraph",
-              "text": "How would you prefer to prepare the reservation?"
-            }
-          ],
-          "taskInstruction": "Ask for help preparing a reservation draft using the fictional profile.",
-          "question": "How would you prefer to prepare the reservation?",
-          "followUp": "Why would you choose that approach for preparing the reservation? If none fits, describe what you’d prefer.",
-          "responseType": "single-choice",
-          "options": [
-            {
-              "id": "A",
-              "kind": "manual",
-              "text": "I’d enter my passenger, contact, and frequent-flyer details, confirm one checked bag, and choose a seat myself."
-            },
-            {
-              "id": "B",
-              "kind": "chatbot",
-              "text": "The form asks for your legal name, date of birth, email, and phone. You can also add your Lakefront Air frequent-flyer number. Confirm one checked bag, then choose between 14A (window) and 14C (aisle). Both seats are included in the fare. You fill out the form and choose your seat."
-            },
-            {
-              "id": "C",
-              "kind": "chatbot",
-              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve also set the checked-bag count to one. Choose 14A (window) or 14C (aisle), then review the draft. Both seats are included in the fare."
-            },
-            {
-              "id": "D",
-              "kind": "chatbot",
-              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve set the checked-bag count to one and selected 14C because you prefer an aisle seat. The seat adds $0, so the total is still $345. The draft is ready for you to review and edit."
-            }
-          ]
-        },
-        {
           "id": "hotel-selection",
           "title": "Finding and choosing a hotel and room",
           "context": [
@@ -1192,50 +1060,6 @@
               "id": "D",
               "kind": "chatbot",
               "text": "Chatbot chooses without asking me\n\n- HarborLink Airways HL 120 | ORD 2:30 p.m. CT → BOS 5:50 p.m. ET | $310 total\n\nI selected HarborLink HL 120 ($310). It avoids an early-morning or late-evening departure and costs $45 more than the cheapest flight. I make the selection without asking for approval. No reservation or payment is made."
-            }
-          ]
-        },
-        {
-          "id": "reservation-draft",
-          "title": "Preparing the reservation",
-          "context": [
-            {
-              "type": "paragraph",
-              "text": "For this question, assume Lakefront Air LF 222 has already been selected, regardless of your previous answer. It departs Chicago O’Hare at 11:20 a.m. CT and arrives at Boston Logan at 2:40 p.m. ET. The $345 fare includes one checked bag."
-            },
-            {
-              "type": "paragraph",
-              "text": "The reservation form asks for your legal name, date of birth, contact information, optional frequent-flyer number, checked-bag count, and seat selection. For this exercise, imagine you have these details saved in a travel profile, including a Lakefront Air frequent-flyer number and an aisle-seat preference. Seats 14A (window) and 14C (aisle) are both available at no extra cost. Use the fictional profile for this exercise. Do not enter your real information."
-            },
-            {
-              "type": "paragraph",
-              "text": "How would you prefer to prepare the reservation?"
-            }
-          ],
-          "taskInstruction": "Ask for help preparing a reservation draft using the fictional profile.",
-          "question": "How would you prefer to prepare the reservation?",
-          "followUp": "Why would you choose that approach for preparing the reservation? If none fits, describe what you’d prefer.",
-          "responseType": "single-choice",
-          "options": [
-            {
-              "id": "A",
-              "kind": "manual",
-              "text": "I’d enter my passenger, contact, and frequent-flyer details, confirm one checked bag, and choose a seat myself."
-            },
-            {
-              "id": "B",
-              "kind": "chatbot",
-              "text": "The form asks for your legal name, date of birth, email, and phone. You can also add your Lakefront Air frequent-flyer number. Confirm one checked bag, then choose between 14A (window) and 14C (aisle). Both seats are included in the fare. You fill out the form and choose your seat."
-            },
-            {
-              "id": "C",
-              "kind": "chatbot",
-              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve also set the checked-bag count to one. Choose 14A (window) or 14C (aisle), then review the draft. Both seats are included in the fare."
-            },
-            {
-              "id": "D",
-              "kind": "chatbot",
-              "text": "I’ve filled in your saved legal name, date of birth, email, phone, and Lakefront Air frequent-flyer number. I’ve set the checked-bag count to one and selected 14C because you prefer an aisle seat. The seat adds $0, so the total is still $345. The draft is ready for you to review and edit."
             }
           ]
         },
@@ -1624,6 +1448,178 @@
             ],
             "rentalDurationHours": 72
           }
+        }
+      ]
+    },
+    {
+      "id": "reservation-preparation",
+      "title": "Preparing your reservations",
+      "introduction": [
+        {
+          "type": "paragraph",
+          "text": "These are separate tasks with preselected options. Use the fictional profile, not real personal information."
+        }
+      ],
+      "summary": [
+        {
+          "label": "Scope",
+          "value": "Prepare a draft only. Nothing will be booked or paid for."
+        }
+      ],
+      "checkpoints": [
+        {
+          "id": "flight-reservation-draft",
+          "title": "Flight reservation",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "Lakefront Air LF 222 is already selected. The $345 fare includes one checked bag. Your fictional profile has your passenger, contact, and frequent-flyer details and an aisle-seat preference. Seat 14C is available at no extra cost."
+            },
+            {
+              "type": "paragraph",
+              "text": "Nothing will be booked or paid for."
+            }
+          ],
+          "question": "How would you prefer to prepare the draft?",
+          "followUp": "Why this approach?",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "Complete it myself\n\nI enter my details, confirm the bag, and choose a seat."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "Chatbot prepares; I review\n\nIt enters my saved details, confirms the bag, and selects 14C. It pauses for my review."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Chatbot prepares; no required review\n\nIt does the same work and marks the draft ready. I can still edit it."
+            }
+          ]
+        },
+        {
+          "id": "hotel-reservation-draft",
+          "title": "Hotel reservation",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "A Standard Queen room at Common Street is already selected for Saturday–Tuesday ($510 total). Your fictional profile has the guest’s name and contact details. You want to add a note that you’ll arrive around 9 p.m."
+            },
+            {
+              "type": "paragraph",
+              "text": "Nothing will be booked or paid for."
+            }
+          ],
+          "question": "How would you prefer to prepare the draft?",
+          "followUp": "Why this approach?",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "Complete it myself\n\nI enter the guest details, check the dates, and add the arrival note."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "Chatbot prepares; I review\n\nIt enters the saved guest details and selected dates and adds the note. It pauses for my review."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Chatbot prepares; no required review\n\nIt does the same work and marks the draft ready. I can still edit it."
+            }
+          ]
+        },
+        {
+          "id": "rental-car-reservation-draft",
+          "title": "Rental-car reservation",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "A Beacon Rentals compact car is already selected for Friday–Monday ($270 total). Pickup and return are at the Logan airport rental center at 10 a.m. ET. Your fictional profile has the driver’s name and contact details."
+            },
+            {
+              "type": "paragraph",
+              "text": "Nothing will be booked or paid for."
+            }
+          ],
+          "question": "How would you prefer to prepare the draft?",
+          "followUp": "Why this approach?",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "Complete it myself\n\nI enter the driver details and check the pickup and return information."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "Chatbot prepares; I review\n\nIt enters the saved driver details and selected pickup and return information. It pauses for my review."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Chatbot prepares; no required review\n\nIt does the same work and marks the draft ready. I can still edit it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "payment",
+      "title": "Completing the payment",
+      "introduction": [
+        {
+          "type": "paragraph",
+          "text": "Imagine you’re at checkout for a trip reservation you’ve already reviewed."
+        }
+      ],
+      "summary": [
+        {
+          "label": "Scope",
+          "value": "Hypothetical checkout only. No real payment will be made."
+        }
+      ],
+      "checkpoints": [
+        {
+          "id": "complete-payment",
+          "title": "Completing the payment",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "Imagine you’re at checkout for a trip reservation you’ve already reviewed. No real payment will be made."
+            },
+            {
+              "type": "paragraph",
+              "text": "In all three options, you complete any required bank or payment-account authentication yourself. If the chatbot is handling payment and the price or reservation changes, it asks for your approval before paying."
+            }
+          ],
+          "question": "How would you prefer to complete the payment?",
+          "followUp": "What is the main reason for your choice?",
+          "responseType": "single-choice",
+          "options": [
+            {
+              "id": "A",
+              "kind": "manual",
+              "text": "Pay myself\n\nI choose or enter my payment method and submit the payment myself."
+            },
+            {
+              "id": "B",
+              "kind": "chatbot",
+              "text": "Chatbot prepares; I confirm\n\nThe chatbot prepares the payment using my authorized payment method. It shows me the final total and payment method, then submits only after I confirm."
+            },
+            {
+              "id": "C",
+              "kind": "chatbot",
+              "text": "Chatbot pays without asking again\n\nThe chatbot submits the payment using my authorized payment method without asking for another confirmation, but only if the reservation and total match what I already approved."
+            }
+          ]
         }
       ]
     }

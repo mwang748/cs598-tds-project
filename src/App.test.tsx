@@ -108,7 +108,7 @@ describe('participant and researcher flows', () => {
       expect(changedSchedule.tagName).toBe('STRONG');
       expect(screen.getByText(/Your \$350 maximum budget is unchanged/)).toBeVisible();
       expect(screen.queryByText('Consider the tradeoff between price and departure time.')).not.toBeInTheDocument();
-      expect(screen.queryByRole('heading', { name: 'Preparing the reservation' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'Flight reservation' })).not.toBeInTheDocument();
       const secondComparison = screen.getByRole('radio', { name: /Chatbot searches; I choose/ });
       const secondRecommendation = screen.getByRole('radio', { name: /Chatbot recommends a shortlist; I choose/ });
       const secondAutomatic = screen.getByRole('radio', { name: /Chatbot chooses without asking me/ });
@@ -138,7 +138,7 @@ describe('participant and researcher flows', () => {
       await user.click(screen.getByRole('button', { name: 'Next task' }));
       expect(screen.getByRole('heading', { name: 'Finding and choosing a hotel and room' })).toBeVisible();
       expect(screen.getByText('Boston · Tight budget, tight schedule')).toBeVisible();
-      expect(screen.queryByRole('heading', { name: 'Preparing the reservation' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'Flight reservation' })).not.toBeInTheDocument();
       const hotelSearch = screen.getByRole('radio', { name: /Chatbot searches; I choose/ });
       expect(hotelSearch).toHaveTextContent('3 matching hotel/room/date packages across 3 hotels');
       expect(hotelSearch).not.toHaveTextContent(/Garden Square|Parkside Grand/);
@@ -196,10 +196,47 @@ describe('participant and researcher flows', () => {
       expect(screen.getByRole('radio', { name: /Chatbot chooses without asking me/ })).toHaveTextContent('Beacon Rentals · Compact');
       await user.click(screen.getAllByRole('radio')[0]);
       await user.click(screen.getByRole('button', { name: 'Next task' }));
-      expect(screen.getByRole('heading', { name: 'Preparing the reservation' })).toBeVisible();
-      expect(screen.getByText('Boston · Tight budget, tight schedule')).toBeVisible();
-      expect(screen.getByText(/assume Lakefront Air LF 222 has already been selected/)).toBeVisible();
-      expect(screen.getByText(/Do not enter your real information/)).toBeVisible();
+      expect(screen.getByText('Preparing your reservations')).toBeVisible();
+      const reservations = [
+        { title: 'Flight reservation', details: /Lakefront Air LF 222 is already selected/ },
+        { title: 'Hotel reservation', details: /Common Street is already selected/ },
+        { title: 'Rental-car reservation', details: /Beacon Rentals compact car is already selected/ },
+      ];
+      for (const [index, { title, details }] of reservations.entries()) {
+        expect(screen.getByRole('heading', { name: title, level: 1 })).toBeVisible();
+        expect(screen.getByText(details)).toBeVisible();
+        expect(screen.getByText('Nothing will be booked or paid for.')).toBeVisible();
+        expect(screen.getAllByRole('radio')).toHaveLength(3);
+        const followUp = screen.getByRole('textbox', { name: 'Why this approach?' });
+        expect(followUp).toBeVisible();
+        expect(followUp).not.toBeRequired();
+        expect(followUp).toHaveValue('');
+        for (const other of reservations.filter(page => page.title !== title)) {
+          expect(screen.queryByRole('heading', { name: other.title, level: 1 })).not.toBeInTheDocument();
+        }
+        if (index < reservations.length - 1) {
+          await user.click(screen.getByRole('radio', { name: /Chatbot prepares; I review/ }));
+          await user.click(screen.getByRole('button', { name: 'Next task' }));
+        }
+      }
+      expect(screen.queryByText(/flight number/i)).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Next task' })).toBeDisabled();
+      await user.click(screen.getByRole('radio', { name: /Chatbot prepares; no required review/ }));
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByRole('heading', { name: 'How would you prefer to complete the payment?' })).toBeVisible();
+      expect(screen.getByText(/No real payment will be made/)).toBeVisible();
+      expect(screen.getByText(/you complete any required bank or payment-account authentication/)).toHaveTextContent('it asks for your approval before paying');
+      expect(screen.getAllByRole('radio')).toHaveLength(3);
+      expect(screen.getByRole('radio', { name: /^Pay myself/ })).toBeVisible();
+      expect(screen.getByRole('radio', { name: /^Chatbot prepares; I confirm/ })).toHaveTextContent('submits only after I confirm');
+      const autoPay = screen.getByRole('radio', { name: /^Chatbot pays without asking again/ });
+      expect(autoPay).toHaveTextContent('reservation and total match what I already approved');
+      const reasonForPayment = screen.getByRole('textbox', { name: 'What is the main reason for your choice?' });
+      expect(reasonForPayment).not.toBeRequired();
+      expect(reasonForPayment).toHaveValue('');
+      expect(screen.getByRole('button', { name: 'Finish study' })).toBeDisabled();
+      await user.click(autoPay);
+      expect(screen.getByRole('button', { name: 'Finish study' })).toBeEnabled();
     } finally {
       vi.unstubAllGlobals();
     }

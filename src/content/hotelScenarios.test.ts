@@ -3,6 +3,7 @@ import content from '../../public/study.default.json';
 import { studySchema } from './schema';
 
 const study = studySchema.parse(content);
+const hotelScenarios = study.scenarios.filter(scenario => scenario.checkpoints.some(task => task.id === 'hotel-selection'));
 const dates = ['Thursday–Sunday', 'Friday–Monday', 'Saturday–Tuesday'];
 const inventory = [
   { key: 'beacon', hotel: 'Beacon Court', prices: [null, 600, null] },
@@ -15,7 +16,7 @@ type Package = { id: string; hotel: string; room: string; dates: string; total: 
 
 describe('combined accommodation scenarios', () => {
   it('mentions only hotels actually displayed within each response', () => {
-    for (const scenario of study.scenarios) {
+    for (const scenario of hotelScenarios) {
       const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'hotel-selection')!;
       for (const option of task.options.filter(option => option.kind === 'chatbot')) {
         const displayedNames = new Set([...option.text.matchAll(/^- (.*?) ·/gm)].map(match => match[1]));
@@ -25,7 +26,7 @@ describe('combined accommodation scenarios', () => {
       }
     }
   });
-  it.each(study.scenarios.map((scenario, index) => ({ scenario, index })))('filters one inventory correctly for $scenario.id', ({ scenario, index }) => {
+  it.each(hotelScenarios.map((scenario, index) => ({ scenario, index })))('filters one inventory correctly for $scenario.id', ({ scenario, index }) => {
     const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'hotel-selection')!;
     const metadata = task.researcherMetadata!;
     const packages = metadata.eligiblePackages as Package[];
@@ -71,7 +72,7 @@ describe('combined accommodation scenarios', () => {
 
   it('keeps room and walking distance constant across dates and budgets', () => {
     const properties = new Map<string, string>();
-    study.scenarios.forEach(scenario => {
+    hotelScenarios.forEach(scenario => {
       const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'hotel-selection')!;
       (task.researcherMetadata!.eligiblePackages as Package[]).forEach(item => {
         const attributes = JSON.stringify([item.room, item.walk]);

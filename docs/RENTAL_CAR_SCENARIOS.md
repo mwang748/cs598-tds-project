@@ -7,9 +7,10 @@ All company names, prices, availability and transfer arrangements below are fict
 1. All four flight-selection questions.
 2. All four combined hotel/room/rate questions.
 3. All four rental-car-selection questions.
-4. The existing four flight-reservation preparation questions.
+4. One reservation-preparation question per service: flight, hotel, and rental car.
+5. One general payment question.
 
-The current draft has 16 tasks. Within each group, conditions run tight budget/fixed schedule, tight budget/flexible schedule, higher budget/fixed schedule, higher budget/flexible schedule. Assumptions belong at the start of each task group, not on the trip overview.
+The current draft has 16 tasks. Within each selection group, conditions run tight budget/fixed schedule, tight budget/flexible schedule, higher budget/fixed schedule, higher budget/flexible schedule. Assumptions belong at the start of each task group, not on the trip overview.
 
 ## Shared inventory
 

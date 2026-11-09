@@ -4,9 +4,11 @@ import example from '../test/fixtures/study.example.json';
 import template from '../../public/study.template.json';
 import { checkpointCount, validateStudy } from './schema';
 
+const flightScenarios = boston.scenarios.filter(scenario => scenario.checkpoints.some(task => task.id === 'flight-selection'));
+
 describe('researcher content validation', () => {
   it('keeps the trip overview to its original six fields without section assumptions', () => {
-    boston.scenarios.forEach(scenario => {
+    flightScenarios.forEach(scenario => {
       expect(scenario.summary.map(item => item.label)).toEqual(['Route', 'Flight budget', 'Flight departure', 'Hotel budget', 'Hotel stay dates', 'Travel party']);
     });
   });
@@ -34,7 +36,7 @@ describe('researcher content validation', () => {
     expect(task.options.find(option => option.id === 'D')!.text).toContain('without asking for approval');
   });
   it('keeps flight recommendations as shortlists with the final choice left to the user', () => {
-    boston.scenarios.forEach((scenario, index) => {
+    flightScenarios.forEach((scenario, index) => {
       const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'flight-selection')!;
       const recommendation = task.options.find(option => option.id === 'C')!.text;
       expect(recommendation).toContain('Chatbot recommends a shortlist; I choose');
@@ -44,7 +46,7 @@ describe('researcher content validation', () => {
     });
   });
   it('does not assume a preferred departure window in flexible-schedule flight tasks', () => {
-    boston.scenarios.filter(scenario => scenario.factors.schedule === 'flexible').forEach(scenario => {
+    flightScenarios.filter(scenario => scenario.factors?.schedule === 'flexible').forEach(scenario => {
       const task = scenario.checkpoints.find(checkpoint => checkpoint.id === 'flight-selection')!;
       const context = JSON.stringify(task.context);
       expect(context).toContain('you have no preferred departure time.');
