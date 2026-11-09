@@ -91,7 +91,6 @@ All block content is escaped by React and rendered safely as text. HTML, script 
 
 1. Upload or paste JSON in **Researcher**.
 2. Click **Validate JSON**. Errors identify paths using zero-based array indexes, for example `scenarios.0.checkpoints.1.options.2.id`, with scenario/checkpoint IDs when available. Duplicates, blank required text, empty studies, malformed tables and unsupported versions/question types are rejected.
-3. Review the configuration summary, then **Preview imported study**. Use the preview **Jump to** selector to inspect any introduction, checkpoint or completion screen. No results are created.
-4. Return through **Researcher** and click **Activate study**. This is disabled while any participant session exists, even if it has been downloaded or completed. Export and end/reset it first.
+3. Review the configuration summary and click **Activate study**. If a participant session is active, export as needed and use **End / reset session**. The validated file stays ready to activate after reset.
 
-Failed imports and edits to the draft editor never mutate active content. Even a valid candidate remains staged until explicitly activated. Candidate preview and participant state are separate. Imports are memory-only; to persist the study between refreshes, replace the default JSON file.
+Failed imports and edits to the draft editor never mutate active content. Even a valid candidate remains staged until explicitly activated. Imports are memory-only; to persist the study between refreshes, replace the default JSON file.

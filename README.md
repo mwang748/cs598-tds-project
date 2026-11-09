@@ -42,7 +42,7 @@ For an early departure, choose **Researcher → Export partial**. A partial work
 2. In the project’s Production environment, set `VITE_SITE_RESULTS_ENABLED=true` and add a long, unique `RESEARCHER_RESULTS_PASSWORD` as a **Secret**. Keep the password with the study team.
 3. Redeploy from this branch. Finish a test run and open **Researcher → Saved results**. After entering the password, expand a session to review its answers. Use **Load more** if shown, then **Download all results (.csv)** to export one row per answered task.
 
-The site saves a completed session when the participant clicks **Finish study**. If saving cannot be confirmed, use **Retry saving responses** or download a local copy. Preview and studies activated from JSON use the local flow. Excel and CSV downloads are also available for partial sessions.
+The site saves a completed session when the participant clicks **Finish study**. If saving cannot be confirmed, use **Retry saving responses** or download a local copy. Studies activated from JSON use the local flow. Excel and CSV downloads are also available for partial sessions.
 
 ## Change the study through JSON
 
@@ -51,9 +51,7 @@ The site saves a completed session when the participant clicks **Finish study**.
 - Full format and validation rules: [`docs/JSON_FORMAT.md`](docs/JSON_FORMAT.md).
 - Types and runtime Zod schema: [`src/content/schema.ts`](src/content/schema.ts).
 
-Use **Researcher** to upload a `.json` file or paste text. Click **Validate JSON**. Invalid content shows field paths and available scenario/checkpoint IDs; the active study remains intact. A valid candidate shows its title, version, scenarios and counts. Click **Preview imported study**, explore with the **Jump to** selector, then return to **Researcher → Activate study**. Activation is disabled until preview has been opened and while a participant session exists. End/reset that session first.
-
-**Preview active study** also lets you inspect the current configuration. Preview selections never create or modify a participant session. Preview has no response download. You can preview while a real session exists; **Exit preview** returns to its original screen and answers.
+Use **Researcher** to upload a `.json` file or paste text. Click **Validate JSON**. Invalid content shows field paths and available scenario/checkpoint IDs; the active study remains intact. A valid candidate shows its title, version, scenarios and counts. Click **Activate study** to use it for the next participant. If a session is active, use **End / reset session** first. The researcher workspace stays open with the validated file ready to activate.
 
 Imported content lasts only until refresh. To change startup content permanently, save the validated JSON over `public/study.default.json` and reload between sessions. Add/remove/reorder scenarios, checkpoints and options directly in their arrays. Titles, questions, constraints, products, prices and dates all come from JSON. Settings and factors have no hidden effect on stimuli. No response randomization or branching occurs.
 
@@ -73,7 +71,7 @@ src/content/schema.ts      JSON types, validation and counts
 src/session/session.ts     anonymous sessions, latest answers and navigation
 src/components/            blocks, reply bubbles, scenario reminder and researcher UI
 src/export/responses.ts    analysis rows, workbook, CSV and browser downloads
-src/App.tsx                screen flow and the separate preview state
+src/App.tsx                participant flow and researcher workspace
 src/styles.css             desktop layout and accessible interaction styles
 scripts/generate-sample.ts reproducible test-data workbook from the real exporter
 ```

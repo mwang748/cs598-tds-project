@@ -241,7 +241,7 @@ describe('participant and researcher flows', () => {
     expect(radios[0]).toHaveAttribute('aria-checked', 'true');
     expect(screen.getByRole('button', { name: /^Back$/ })).toBeDisabled();
   });
-  it('validates imports without changing live content and requires preview before activation', async () => {
+  it('rejects invalid JSON and activates a validated import directly', async () => {
     const user = userEvent.setup();
     render(<App initialStudy={study} />);
     await user.click(screen.getByRole('button', { name: /Researcher/ }));
@@ -255,42 +255,40 @@ describe('participant and researcher flows', () => {
     imported.scenarios.reverse();
     fireEvent.change(editor, { target: { value: JSON.stringify(imported) } });
     await user.click(screen.getByRole('button', { name: /Validate JSON/ }));
-    expect(screen.getByRole('button', { name: /Activate study/ })).toBeDisabled();
-    await user.click(screen.getByRole('button', { name: /Preview imported study/ }));
-    expect(screen.getByText('Researcher preview')).toBeVisible();
-    fireEvent.change(screen.getByLabelText('Jump to'), { target: { value: '1:1' } });
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('When a plan needs a rethink');
-    await sendTaskMessage(user);
-    await user.click(screen.getAllByRole('radio')[0]);
-    fireEvent.change(screen.getByLabelText('Jump to'), { target: { value: 'complete' } });
-    expect(screen.queryByRole('button', { name: /Download responses/ })).not.toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /^Researcher/ }));
-    expect(screen.getByText('No active session')).toBeVisible();
+    expect(screen.getByRole('button', { name: /Activate study/ })).toBeEnabled();
     await user.click(screen.getByRole('button', { name: /Activate study/ }));
     expect(screen.getByText(/Study activated/)).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
-    expect(screen.queryByText('Researcher preview')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('A replacement study');
     await user.click(screen.getByRole('button', { name: /Start study/ }));
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('A weekend by the coast');
   });
-  it('blocks study replacement during an active session, including during preview', async () => {
+  it('keeps an uploaded and validated study ready to activate after ending the current session', async () => {
     const user = await begin();
     await sendTaskMessage(user, 'Participant message');
     await user.click(screen.getAllByRole('radio')[0]);
     await user.click(screen.getByRole('button', { name: /^Researcher/ }));
-    await user.click(screen.getByRole('button', { name: /Validate JSON/ }));
-    await user.click(screen.getByRole('button', { name: /Preview imported study/ }));
-    fireEvent.change(screen.getByLabelText('Jump to'), { target: { value: '0:0' } });
-    expect(screen.getByRole('textbox', { name: 'Your message' })).toHaveValue('');
-    await sendTaskMessage(user, 'Preview message');
-    await user.click(screen.getByRole('button', { name: /^Researcher/ }));
-    expect(screen.getByRole('button', { name: /Activate study/ })).toBeDisabled();
-    expect(screen.getByText(/End\/reset the active participant/)).toBeVisible();
-    await user.click(screen.getByRole('button', { name: 'Close dialog' }));
-    await user.click(screen.getByRole('button', { name: /Exit preview/ }));
-    expect(screen.getByText('Participant message')).toBeVisible();
-    expect(screen.queryByText('Preview message')).not.toBeInTheDocument();
-    expect(screen.getAllByRole('radio')[0]).toHaveAttribute('aria-checked', 'true');
+    const researcher = within(screen.getByRole('dialog', { name: 'Researcher workspace' }));
+    const imported = { ...study, title: 'Uploaded study' };
+    const json = JSON.stringify(imported);
+    const file = new File([json], 'study.json', { type: 'application/json' });
+    // jsdom does not implement Blob.text().
+    Object.assign(file, { text: async () => json });
+    await user.upload(researcher.getByLabelText('Upload study JSON'), file);
+    await researcher.findByDisplayValue(json);
+    await user.click(researcher.getByRole('button', { name: 'Validate JSON' }));
+    const activate = researcher.getByRole('button', { name: 'Activate study' });
+    expect(activate).toBeDisabled();
+    await user.click(researcher.getByRole('button', { name: 'End / reset session' }));
+    const reset = within(screen.getByRole('dialog', { name: /Ready for/ }));
+    await user.click(reset.getByRole('checkbox'));
+    await user.click(reset.getByRole('button', { name: 'Confirm reset' }));
+    expect(researcher.getByText('No active session')).toBeVisible();
+    expect(activate).toBeEnabled();
+    await user.click(activate);
+    await user.click(researcher.getByRole('button', { name: 'Close dialog' }));
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Uploaded study');
+    expect(screen.getByRole('button', { name: 'Start study' })).toBeVisible();
   });
   it('renders HTML-like stimulus text literally and never reveals metadata', async () => {
     const content = structuredClone(study);
