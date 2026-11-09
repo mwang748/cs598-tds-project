@@ -1,6 +1,6 @@
 # Waypoint · Travel planning preference study
 
-A desktop-first React + TypeScript + Vite app for a university HCI preference study. Scenarios and replies are prewritten in JSON. The app defaults to local Excel/CSV export and can optionally submit completed sessions to Qualtrics.
+A desktop-first React + TypeScript + Vite app for a university HCI preference study. Scenarios and replies are prewritten in JSON. The app defaults to local Excel/CSV export and can optionally save completed sessions to private storage on the study site.
 
 The participant view is a simple chat mockup. Alternative responses look like selectable message bubbles, and the hamburger button reopens the current scenario details. There is no persistent header or study journey sidebar. Researcher tools are available through the small **Researcher** link beneath the chat.
 
@@ -9,7 +9,7 @@ The participant view is a simple chat mockup. Alternative responses look like se
 Install [Node.js](https://nodejs.org/) 22 LTS or newer. In PowerShell:
 
 ```powershell
-cd "C:\Users\minch\Documents\ChatGPT\598 tds project"
+cd "C:\Users\minch\Code\cs598-tds-project"
 npm ci
 npm run dev
 ```
@@ -42,24 +42,7 @@ For an early departure, choose **Researcher → Export partial**. A partial work
 2. In the project’s Production environment, set `VITE_SITE_RESULTS_ENABLED=true` and add a long, unique `RESEARCHER_RESULTS_PASSWORD` as a **Secret**. Keep the password with the study team.
 3. Redeploy from this branch. Finish a test run and open **Researcher → Saved results**. After entering the password, expand a session to review its answers. Use **Load more** if shown, then **Download all results (.csv)** to export one row per answered task.
 
-The site saves a completed session when the participant clicks **Finish study**. Site storage takes precedence when both server collection modes are enabled. The existing Excel download remains available for local and partial sessions.
-
-## Collect responses in Qualtrics
-
-1. Run `npm run qualtrics:survey`. In a new blank Qualtrics survey, remove the default question and use **Survey → Tools → Import/Export → Import survey** to import `qualtrics-survey.txt`. Review and publish the survey. Keep the imported question export tags and choice labels (the app's option IDs). The chat app contains the full response wording and is the only link participants need.
-2. Check that your Qualtrics account can generate an API token under **Account Settings → Qualtrics IDs** and has access to the destination survey. Use the same page to find the survey ID and datacenter ID.
-3. Import this repository as a Vite project on Vercel. Set the following variables for the intended deployment environment, then deploy the app.
-
-   | Variable | Value |
-   | --- | --- |
-   | `VITE_QUALTRICS_ENABLED` | `true` |
-   | `QUALTRICS_DATACENTER` | The datacenter ID, such as `iad1` |
-   | `QUALTRICS_SURVEY_ID` | The destination survey ID starting with `SV_` |
-   | `QUALTRICS_API_TOKEN` | A server-side secret. Enter it in the hosting settings. |
-
-4. Before collecting study data, use a test survey and complete a pilot from the deployed chat app. Check that **Finish study** confirms the save and that one row appears under **Data & Analysis** with the intended choices, a written-only answer, and the participant ID. Use a separate destination for live responses.
-
-The server looks up the imported field tags and choice labels in the Qualtrics response schema before it creates the response. Each retry uses the same submission key. Only the final option selections, written follow-ups, participant ID, and study content version are submitted. If saving cannot be confirmed, the participant can retry or download Excel/CSV. Preview and studies activated from JSON in the researcher panel use the local flow. If you change the bundled study, regenerate and import its survey before collecting that version. A school VM can use the same handler if its web server routes `POST /api/submit` to it. The plain Vite development server runs the local flow by default.
+The site saves a completed session when the participant clicks **Finish study**. If saving cannot be confirmed, use **Retry saving responses** or download a local copy. Preview and studies activated from JSON use the local flow. Excel and CSV downloads are also available for partial sessions.
 
 ## Change the study through JSON
 

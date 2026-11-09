@@ -8,7 +8,7 @@ import { ResearcherPanel } from './components/ResearcherPanel';
 import { ReplyText } from './components/ReplyText';
 import { ScenarioMenu } from './components/ScenarioMenu';
 import { TaskChat } from './components/TaskChat';
-import { submitResponses } from './qualtrics/client';
+import { submitResponses } from './results/client';
 
 interface Preview {
   study: Study;
@@ -18,7 +18,7 @@ interface Preview {
   followUps: Record<string, string>;
 }
 
-export function App({ initialStudy, qualtricsEnabled = import.meta.env.VITE_QUALTRICS_ENABLED === 'true' }: { initialStudy?: Study; qualtricsEnabled?: boolean } = {}) {
+export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const [study, setStudy] = useState<Study | null>(initialStudy ?? null);
   const [loadError, setLoadError] = useState('');
   const [session, setSession] = useState<ParticipantSession | null>(null);
@@ -38,7 +38,7 @@ export function App({ initialStudy, qualtricsEnabled = import.meta.env.VITE_QUAL
   const headingRef = useRef<HTMLHeadingElement>(null);
   const contentRef = useRef<HTMLElement>(null);
   const siteResultsEnabled = import.meta.env.VITE_SITE_RESULTS_ENABLED === 'true';
-  const saveToServer = (siteResultsEnabled || qualtricsEnabled) && usingBundledStudy;
+  const saveToServer = siteResultsEnabled && usingBundledStudy;
   const submitting = submissionStatus === 'submitting';
   const submitted = submissionStatus === 'submitted';
 
@@ -247,7 +247,7 @@ export function App({ initialStudy, qualtricsEnabled = import.meta.env.VITE_QUAL
               <p>{preview ? 'Preview mode does not create a session or any exportable results.' : `${answered} checkpoints answered across ${activeStudy.scenarios.length} scenarios.`}</p>{!preview && session && <code>{session.id}</code>}
             </div></div>
             {preview ? <button className="button primary" onClick={() => setPreview(null)}>Exit preview <ArrowRight size={16} /></button> : <>
-              {submissionStatus === 'failed' && session && <div className="button-row"><button className="button primary" disabled={busy} onClick={() => submitCompletedStudy(session)}>Retry submission</button></div>}
+              {submissionStatus === 'failed' && session && <div className="button-row"><button className="button primary" disabled={busy} onClick={() => submitCompletedStudy(session)}>Retry saving responses</button></div>}
               <button className="button primary download-main" disabled={busy || submitting} onClick={() => exportResults('xlsx')}><Download size={19} /> {busy ? 'Preparing download…' : 'Download responses'}<span>.xlsx</span></button>
               <button className="text-button csv-fallback" disabled={busy || submitting} onClick={() => exportResults('csv')}>Download CSV instead <ArrowDownToLine size={14} /></button>
               <p className="download-explainer">{submitted ? 'You’re done. A local copy is optional.' : submitting ? 'Keep this tab open until your submission is confirmed.' : submissionStatus === 'failed' ? 'Retry or download a backup before closing this tab.' : 'Keep the browser download for your records. No server copy is created.'}</p>

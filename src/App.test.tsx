@@ -35,9 +35,10 @@ describe('participant and researcher flows', () => {
       .mockResolvedValueOnce(Response.json({ saved: false }, { status: 502 }))
       .mockResolvedValueOnce(Response.json({ saved: true }));
     vi.stubGlobal('fetch', submit);
+    vi.stubEnv('VITE_SITE_RESULTS_ENABLED', 'true');
     try {
       const user = userEvent.setup();
-      render(<App initialStudy={oneTask} qualtricsEnabled />);
+      render(<App initialStudy={oneTask} />);
       await user.click(screen.getByRole('button', { name: 'Start study' }));
       await user.click(screen.getByRole('button', { name: 'Begin scenario' }));
       await sendTaskMessage(user, 'Could you help me pick a hotel?');
@@ -46,7 +47,7 @@ describe('participant and researcher flows', () => {
       await user.click(screen.getByRole('button', { name: 'Finish study' }));
       expect(await screen.findByRole('alert')).toHaveTextContent('couldn’t confirm');
       expect(screen.getByRole('button', { name: /Download responses/ })).toBeEnabled();
-      await user.click(screen.getByRole('button', { name: 'Retry submission' }));
+      await user.click(screen.getByRole('button', { name: 'Retry saving responses' }));
       expect(await screen.findByText('Your responses were saved')).toBeVisible();
       expect(submit).toHaveBeenCalledTimes(2);
       expect(submit.mock.calls[1]).toEqual(submit.mock.calls[0]);
@@ -57,6 +58,7 @@ describe('participant and researcher flows', () => {
       expect(init?.body).not.toContain('Could you help me pick a hotel?');
     } finally {
       vi.unstubAllGlobals();
+      vi.unstubAllEnvs();
     }
   });
 

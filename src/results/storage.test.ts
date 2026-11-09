@@ -14,8 +14,8 @@ const data = {
     scenario.checkpoints.map(task => [answerKey(scenario.id, task.id), task.options[0].id]))),
   followUps: { [answerKey(study.scenarios[0].id, study.scenarios[0].checkpoints[0].id)]: 'This is a test follow-up.' },
 };
-const request = () => new Request('https://example.edu/api/submit', {
-  method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
+const request = (input: unknown = data) => new Request('https://example.edu/api/submit', {
+  method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input),
 });
 const storageBody = (value: string) => ({ statusCode: 200, stream: new Response(value).body });
 
@@ -40,6 +40,25 @@ describe('site results', () => {
     expect(await (await submit.fetch(request())).json()).toEqual({ saved: true });
     expect(blob.put.mock.calls[1][0]).toBe(pathname);
     expect(blob.get).toHaveBeenCalledWith(pathname, expect.objectContaining({ access: 'private' }));
+  });
+
+  it('rejects incomplete, stale or invalid answers before writing to storage', async () => {
+    const scenario = study.scenarios[0];
+    const key = answerKey(scenario.id, scenario.checkpoints[0].id);
+    const incompleteAnswers = { ...data.answers };
+    delete incompleteAnswers[key];
+    expect((await submit.fetch(request({ ...data, answers: incompleteAnswers, followUps: {} }))).status).toBe(400);
+    expect((await submit.fetch(request({ ...data, contentVersion: 'old' }))).status).toBe(400);
+    expect((await submit.fetch(request({ ...data, answers: { ...data.answers, [key]: 'invalid-option' } }))).status).toBe(400);
+    expect(blob.put).not.toHaveBeenCalled();
+  });
+
+  it('rejects submissions when site storage is disabled', async () => {
+    vi.stubEnv('VITE_SITE_RESULTS_ENABLED', 'false');
+    const response = await submit.fetch(request());
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ saved: false });
+    expect(blob.put).not.toHaveBeenCalled();
   });
 
   it('requires the researcher password before reading storage and prevents caching', async () => {
