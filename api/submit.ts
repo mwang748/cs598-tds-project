@@ -3,6 +3,7 @@ import boston from '../public/study.default.json' with { type: 'json' };
 import { studySchema } from '../src/content/schema.js';
 import { answerKey } from '../src/session/session.js';
 import { participantTag, studyFields, versionTag } from '../src/qualtrics/studyFields.js';
+import { saveResult } from '../src/results/storage.js';
 
 const study = studySchema.parse(boston);
 const fields = studyFields(study);
@@ -88,10 +89,6 @@ export default {
     if (request.method !== 'POST') return new Response(null, { status: 405, headers: { Allow: 'POST' } });
     if (!/^application\/json(?:;|$)/i.test(request.headers.get('content-type') ?? '')) return failure(415);
 
-    const { QUALTRICS_DATACENTER, QUALTRICS_SURVEY_ID, QUALTRICS_API_TOKEN } = process.env;
-    if (!QUALTRICS_DATACENTER || !/^[a-z0-9]+$/i.test(QUALTRICS_DATACENTER)
-      || !QUALTRICS_SURVEY_ID || !/^SV_[a-z0-9]+$/i.test(QUALTRICS_SURVEY_ID) || !QUALTRICS_API_TOKEN) return failure(503);
-
     const body = await request.text().catch(() => '');
     if (body.length > 150_000) return failure(413);
     let input: unknown;
@@ -100,6 +97,36 @@ export default {
     if (!parsed.success) return failure(400);
     const answers = qualifiedAnswers(parsed.data);
     if (!answers) return failure(400);
+
+    const { BLOB_READ_WRITE_TOKEN, RESEARCHER_RESULTS_PASSWORD } = process.env;
+    if (process.env.VITE_SITE_RESULTS_ENABLED === 'true') {
+      if (!BLOB_READ_WRITE_TOKEN || !RESEARCHER_RESULTS_PASSWORD?.trim()) return failure(503);
+      const { submissionKey, studyId, contentVersion, participantId } = parsed.data;
+      try {
+        await saveResult({
+          submissionKey, studyId, contentVersion, participantId,
+          responses: answers.map(({ scenario, checkpoint, selected, written }) => ({
+            scenarioId: scenario.id,
+            scenarioTitle: scenario.title,
+            budget: scenario.factors?.budget ?? '',
+            schedule: scenario.factors?.schedule ?? '',
+            taskId: checkpoint.id,
+            taskTitle: checkpoint.title,
+            optionId: selected ?? '',
+            optionText: checkpoint.options.find(option => option.id === selected)?.text ?? '',
+            followUp: written ?? '',
+          })),
+        }, BLOB_READ_WRITE_TOKEN);
+        return Response.json({ saved: true });
+      } catch {
+        console.error('Could not save the completed study response to private storage.');
+        return failure(502);
+      }
+    }
+
+    const { QUALTRICS_DATACENTER, QUALTRICS_SURVEY_ID, QUALTRICS_API_TOKEN } = process.env;
+    if (!QUALTRICS_DATACENTER || !/^[a-z0-9]+$/i.test(QUALTRICS_DATACENTER)
+      || !QUALTRICS_SURVEY_ID || !/^SV_[a-z0-9]+$/i.test(QUALTRICS_SURVEY_ID) || !QUALTRICS_API_TOKEN) return failure(503);
 
     const base = `https://${QUALTRICS_DATACENTER}.qualtrics.com/API/v3/surveys/${QUALTRICS_SURVEY_ID}`;
     const headers = { 'X-API-TOKEN': QUALTRICS_API_TOKEN, Accept: 'application/json' };

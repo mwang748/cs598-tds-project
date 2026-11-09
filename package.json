@@ -12,6 +12,7 @@
     "qualtrics:survey": "tsx scripts/generate-qualtrics.ts"
   },
   "dependencies": {
+    "@vercel/blob": "2.8.2",
     "exceljs": "4.4.0",
     "lucide-react": "0.468.0",
     "react": "19.0.0",

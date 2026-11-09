@@ -37,7 +37,8 @@ export function App({ initialStudy, qualtricsEnabled = import.meta.env.VITE_QUAL
   const submitInFlight = useRef(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const contentRef = useRef<HTMLElement>(null);
-  const submitToQualtrics = qualtricsEnabled && usingBundledStudy;
+  const siteResultsEnabled = import.meta.env.VITE_SITE_RESULTS_ENABLED === 'true';
+  const saveToServer = (siteResultsEnabled || qualtricsEnabled) && usingBundledStudy;
   const submitting = submissionStatus === 'submitting';
   const submitted = submissionStatus === 'submitted';
 
@@ -147,7 +148,7 @@ export function App({ initialStudy, qualtricsEnabled = import.meta.env.VITE_QUAL
     if (!preview && session && nextTask.screen === 'complete') {
       const completed = { ...session, completed: true };
       setSession(completed);
-      if (submitToQualtrics) void submitCompletedStudy(completed);
+      if (saveToServer) void submitCompletedStudy(completed);
     }
     navigate(nextTask);
   };
@@ -240,7 +241,7 @@ export function App({ initialStudy, qualtricsEnabled = import.meta.env.VITE_QUAL
           </>}
           {route.screen === 'complete' && <div className="completion-content"><span className="completion-icon"><Bot size={28} /></span><h1 ref={headingRef} tabIndex={-1}>{!preview && submitting ? 'Finishing the study…' : 'Thanks, that’s everything!'}</h1><p className="welcome-lede">You’ve shared how you’d like a travel chatbot to help.</p>
             <div className="completion-card"><FileCheck2 size={26} /><div>
-              <h2 role={!preview && submitToQualtrics ? (submissionStatus === 'failed' ? 'alert' : 'status') : undefined}>
+              <h2 role={!preview && saveToServer ? (submissionStatus === 'failed' ? 'alert' : 'status') : undefined}>
                 {preview ? 'This is the completion preview' : submitted ? 'Your responses were saved' : submitting ? 'Submitting your responses…' : submissionStatus === 'failed' ? 'We couldn’t confirm that your responses were saved' : 'Your responses are ready to download'}
               </h2>
               <p>{preview ? 'Preview mode does not create a session or any exportable results.' : `${answered} checkpoints answered across ${activeStudy.scenarios.length} scenarios.`}</p>{!preview && session && <code>{session.id}</code>}
@@ -251,15 +252,15 @@ export function App({ initialStudy, qualtricsEnabled = import.meta.env.VITE_QUAL
               <button className="text-button csv-fallback" disabled={busy || submitting} onClick={() => exportResults('csv')}>Download CSV instead <ArrowDownToLine size={14} /></button>
               <p className="download-explainer">{submitted ? 'You’re done. A local copy is optional.' : submitting ? 'Keep this tab open until your submission is confirmed.' : submissionStatus === 'failed' ? 'Retry or download a backup before closing this tab.' : 'Keep the browser download for your records. No server copy is created.'}</p>
             </>}
-            <div className="completion-bottom">{activeStudy.settings.allowBackNavigation && (preview || !submitToQualtrics) && <button className="text-button" onClick={() => navigate(previousRoute(activeStudy, route))}><ArrowLeft size={15} /> Review responses</button>}{!preview && <button className="text-button" disabled={busy || submitting} onClick={requestReset}>Next participant <ArrowRight size={15} /></button>}</div>
+            <div className="completion-bottom">{activeStudy.settings.allowBackNavigation && (preview || !saveToServer) && <button className="text-button" onClick={() => navigate(previousRoute(activeStudy, route))}><ArrowLeft size={15} /> Review responses</button>}{!preview && <button className="text-button" disabled={busy || submitting} onClick={requestReset}>Next participant <ArrowRight size={15} /></button>}</div>
           </div>}
         </div>
         {!resetOpen && !researcherOpen && (exportNotice || exportError) && <div className={`export-notice ${exportError ? 'error' : ''}`} role={exportError ? 'alert' : 'status'}>{exportError ? <AlertCircle size={17} /> : <CheckCircle2 size={17} />}<p>{exportError || exportNotice}</p></div>}
-        <footer className="study-footer"><div><p>{session ? submitted ? 'Responses saved.' : submitToQualtrics ? 'Answers are submitted when you finish. Keep this tab open.' : 'Download before refreshing or closing. Answers are held in memory.' : 'Chat mockup · all assistant messages are prewritten.'}</p>{activeStudy.stimulusLabel && <p>{activeStudy.stimulusLabel}</p>}</div><button className="researcher-button" disabled={submitting} onClick={() => setResearcherOpen(true)}><Settings2 size={14} /> Researcher</button></footer>
+        <footer className="study-footer"><div><p>{session ? submitted ? 'Responses saved.' : saveToServer ? 'Answers are submitted when you finish. Keep this tab open.' : 'Download before refreshing or closing. Answers are held in memory.' : 'Chat mockup · all assistant messages are prewritten.'}</p>{activeStudy.stimulusLabel && <p>{activeStudy.stimulusLabel}</p>}</div><button className="researcher-button" disabled={submitting} onClick={() => setResearcherOpen(true)}><Settings2 size={14} /> Researcher</button></footer>
       </main>
     </div>
-    {study && <ResearcherPanel open={researcherOpen} study={study} session={session} busy={busy || submitting} onClose={() => setResearcherOpen(false)} onPreview={content => { setPreview({ study: content, route: { screen: 'welcome' }, messages: {}, answers: {}, followUps: {} }); setResearcherOpen(false); }} onActivate={content => { if (session) return; setStudy(content); setUsingBundledStudy(false); setPreview(null); setParticipantRoute({ screen: 'welcome' }); }} onReset={requestReset} onExport={exportResults} />}
+    {study && <ResearcherPanel open={researcherOpen} study={study} session={session} busy={busy || submitting} siteResultsEnabled={siteResultsEnabled} onClose={() => setResearcherOpen(false)} onPreview={content => { setPreview({ study: content, route: { screen: 'welcome' }, messages: {}, answers: {}, followUps: {} }); setResearcherOpen(false); }} onActivate={content => { if (session) return; setStudy(content); setUsingBundledStudy(false); setPreview(null); setParticipantRoute({ screen: 'welcome' }); }} onReset={requestReset} onExport={exportResults} />}
     {researcherOpen && !resetOpen && (exportNotice || exportError) && <div className="toast" role={exportError ? 'alert' : 'status'}>{exportError || exportNotice}</div>}
-    {resetOpen && <Modal title="Ready for the next participant?" onClose={() => setResetOpen(false)}><div className="reset-body"><div className="reset-warning"><AlertCircle size={22} /><p>{submitted ? 'Qualtrics has saved this participant’s responses. Resetting clears the current session from this browser.' : 'Download this participant’s results before continuing. Resetting clears their answers from this browser, including any responses you haven’t downloaded.'}</p></div><div className="button-row"><button className="button primary small" disabled={busy} onClick={() => exportResults('xlsx')}><Download size={15} /> Download current results</button><button className="text-button" disabled={busy} onClick={() => exportResults('csv')}>CSV fallback</button></div>{(exportNotice || exportError) && <p className={exportError ? 'error-text' : 'success-text'} role="status">{exportError || exportNotice}</p>}<label className="confirmation-label"><input type="checkbox" checked={resetConfirmed} onChange={event => setResetConfirmed(event.target.checked)} /> {submitted ? 'I’m ready to start a new session.' : 'I have retained the download, or I understand these responses will be lost.'}</label><div className="page-actions"><button className="button" onClick={() => setResetOpen(false)}>Keep session</button><button className="button danger" disabled={!resetConfirmed || busy} onClick={reset}>Confirm reset</button></div></div></Modal>}
+    {resetOpen && <Modal title="Ready for the next participant?" onClose={() => setResetOpen(false)}><div className="reset-body"><div className="reset-warning"><AlertCircle size={22} /><p>{submitted ? 'This participant’s responses are saved. Resetting clears the current session from this browser.' : 'Download this participant’s results before continuing. Resetting clears their answers from this browser, including any responses you haven’t downloaded.'}</p></div><div className="button-row"><button className="button primary small" disabled={busy} onClick={() => exportResults('xlsx')}><Download size={15} /> Download current results</button><button className="text-button" disabled={busy} onClick={() => exportResults('csv')}>CSV fallback</button></div>{(exportNotice || exportError) && <p className={exportError ? 'error-text' : 'success-text'} role="status">{exportError || exportNotice}</p>}<label className="confirmation-label"><input type="checkbox" checked={resetConfirmed} onChange={event => setResetConfirmed(event.target.checked)} /> {submitted ? 'I’m ready to start a new session.' : 'I have retained the download, or I understand these responses will be lost.'}</label><div className="page-actions"><button className="button" onClick={() => setResetOpen(false)}>Keep session</button><button className="button danger" disabled={!resetConfirmed || busy} onClick={reset}>Confirm reset</button></div></div></Modal>}
   </div>;
 }

@@ -36,6 +36,14 @@ For an early departure, choose **Researcher → Export partial**. A partial work
 
 **Refresh and closing can lose responses.** Answers are held in memory, and there is no persistent session recovery. The footer reminds participants; a best-effort `beforeunload` warning runs while answers have changed since the last download request. Browsers control whether they show it. Retain every download before resetting, refreshing or closing.
 
+## Store results on the study site
+
+1. In Vercel, create a **Private** Blob store and connect it to the study project for **Production**. The connection adds `BLOB_READ_WRITE_TOKEN` on the server.
+2. In the project’s Production environment, set `VITE_SITE_RESULTS_ENABLED=true` and add a long, unique `RESEARCHER_RESULTS_PASSWORD` as a **Secret**. Keep the password with the study team.
+3. Redeploy from this branch. Finish a test run and open **Researcher → Saved results**. After entering the password, expand a session to review its answers. Use **Load more** if shown, then **Download all results (.csv)** to export one row per answered task.
+
+The site saves a completed session when the participant clicks **Finish study**. Site storage takes precedence when both server collection modes are enabled. The existing Excel download remains available for local and partial sessions.
+
 ## Collect responses in Qualtrics
 
 1. Run `npm run qualtrics:survey`. In a new blank Qualtrics survey, remove the default question and use **Survey → Tools → Import/Export → Import survey** to import `qualtrics-survey.txt`. Review and publish the survey. Keep the imported question export tags and choice labels (the app's option IDs). The chat app contains the full response wording and is the only link participants need.

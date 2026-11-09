@@ -2,6 +2,7 @@ import ExcelJS from 'exceljs';
 import type { Study } from '../content/schema';
 import { answerKey, countAnswered, isComplete, type ParticipantSession } from '../session/session';
 import { checkpointCount } from '../content/schema';
+import type { ResultRecord } from '../results/record';
 
 /** One rectangular record per checkpoint, in authored order. */
 export function responseData(study: Study, session: ParticipantSession) {
@@ -105,6 +106,17 @@ function download(blob: Blob, filename: string) {
   link.href = url; link.download = filename;
   document.body.append(link); link.click(); link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 30_000);
+}
+
+export function downloadStoredResults(records: ResultRecord[]) {
+  const headers = ['Participant ID', 'Study ID', 'Content version', 'Saved at (UTC)', 'Scenario ID', 'Scenario', 'Budget', 'Schedule', 'Task ID', 'Task', 'Selected option ID', 'Selected response', 'Written follow-up'];
+  const rows = records.flatMap(record => record.responses.map(response => [
+    record.participantId, record.studyId, record.contentVersion, record.savedAt,
+    response.scenarioId, response.scenarioTitle, response.budget, response.schedule, response.taskId, response.taskTitle,
+    response.optionId, response.optionText, response.followUp,
+  ]));
+  const csv = '\uFEFF' + [headers, ...rows].map(row => row.map(safeCsvCell).join(',')).join('\r\n');
+  download(new Blob([csv], { type: 'text/csv;charset=utf-8' }), 'travel-study-results.csv');
 }
 export async function downloadResponses(study: Study, session: ParticipantSession, format: 'xlsx' | 'csv') {
   if (format === 'csv') download(new Blob([buildCsv(study, session)], { type: 'text/csv;charset=utf-8' }), exportFilename(session, format));
