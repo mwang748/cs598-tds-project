@@ -34,7 +34,7 @@ describe('site results', () => {
     const [pathname, stored, options] = blob.put.mock.calls[0];
     expect(options).toMatchObject({ access: 'private', allowOverwrite: false, addRandomSuffix: false });
     expect(JSON.parse(stored)).toMatchObject({ participantId: data.participantId, responses: [
-      expect.objectContaining({ followUp: 'This is a test follow-up.' }), ...Array.from({ length: 15 }, () => expect.any(Object)),
+      expect.objectContaining({ followUp: 'This is a test follow-up.' }), ...Array.from({ length: Object.keys(data.answers).length - 1 }, () => expect.any(Object)),
     ] });
     blob.get.mockResolvedValueOnce(storageBody(stored));
     expect(await (await submit.fetch(request())).json()).toEqual({ saved: true });

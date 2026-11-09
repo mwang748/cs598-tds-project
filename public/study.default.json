@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "studyId": "boston-travel-study",
-  "contentVersion": "draft-10",
+  "contentVersion": "draft-11",
   "title": "Travel Chatbot Study",
   "stimulusLabel": "Fictional study details",
   "instructions": {
@@ -9,7 +9,7 @@
     "steps": [
       {
         "title": "Planning your trip:",
-        "text": "Here is where you will decide how you’d like to find and choose a flight, a hotel, a room and rate, and a rental car."
+        "text": "Choose how you’d find and select flights, then a hotel and room/rate together. Complete all flight scenarios before all hotel scenarios."
       },
       {
         "title": "Preparing your reservations:",
@@ -20,11 +20,14 @@
         "text": "This is where you decide how you’d want to pay for the trip."
       }
     ],
-    "note": "First, choose flights across four budget and schedule scenarios. Then complete the remaining tasks. All travel details are fictional; you and the chatbot can search the same options. Nothing is actually reserved or paid for. Treat each task independently. Choose a chatbot approach or the Do it yourself option, or describe another approach. Click Start Study to begin."
+    "note": "First, choose flights across four budget and schedule scenarios. Then choose hotel/room/rate packages across the same four conditions, followed by flight reservation preparation. All travel details are fictional; you and the chatbot can search the same options. Nothing is actually reserved or paid for. Treat each task independently. Choose a chatbot approach or Do it yourself, or describe another approach. Click Start Study to begin."
   },
   "settings": {
     "allowBackNavigation": true,
-    "firstTaskId": "flight-selection"
+    "taskOrder": [
+      "flight-selection",
+      "hotel-selection"
+    ]
   },
   "scenarios": [
     {
@@ -64,6 +67,10 @@
         {
           "label": "Travel party",
           "value": "One adult · three nights"
+        },
+        {
+          "label": "Hotel task assumptions",
+          "value": "Independent of flight answers. Three nights; private room and bathroom. Prefer Boston Common proximity and free cancellation; may trade these for savings. Flexible stays can shift the whole trip without extra transportation cost."
         }
       ],
       "checkpoints": [
@@ -165,99 +172,94 @@
         },
         {
           "id": "hotel-selection",
-          "title": "Finding and choosing a hotel",
+          "title": "Finding and choosing a hotel and room",
           "context": [
             {
               "type": "paragraph",
-              "text": "All hotel names, prices, walking times, availability, and booking terms are fictional study details. Each price is the total for three nights for one adult, including taxes and mandatory fees. All rooms have a private bathroom."
+              "text": "Choose your hotel, room, and rate together.",
+              "emphasis": true
             },
             {
               "type": "paragraph",
-              "text": "You are visiting Boston alone for three nights. Your hotel budget is $600 maximum, including taxes and fees."
+              "text": "You’re visiting Boston alone for three nights. You need a private room and bathroom. Prefer staying near Boston Common and having free cancellation, but consider giving these up to save money. All packages meet your basic room requirements; prices cover the whole stay, including taxes and fees."
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "Budget: $600 maximum for all three nights.",
+                "Required stay: Friday–Monday."
+              ]
             },
             {
               "type": "paragraph",
-              "text": "Your travel arrangements are fixed. You must check in Friday and check out Monday; these dates cannot change."
-            },
-            {
-              "type": "paragraph",
-              "text": "You need a private room and bathroom. You prefer staying near Boston Common, but would consider staying farther away to save money."
-            },
-            {
-              "type": "paragraph",
-              "text": "Which approach would you prefer?"
+              "text": "This hotel task is independent of your flight answers. All details are fictional. No reservation or payment is made."
             }
           ],
-          "taskInstruction": "Ask for help choosing a hotel.",
-          "question": "Which approach would you prefer?",
-          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "question": "How would you prefer to find and choose your hotel, room, rate, and stay dates?",
+          "followUp": "Why this approach? Would you want different chatbot involvement for choosing the hotel versus its room/rate?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "I would search hotel websites, compare the options, and choose a hotel myself without chatbot assistance."
+              "text": "Search and choose myself\n\nI search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
             },
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "I’ve selected total price, walking distance to Boston Common, and cancellation terms as the criteria to compare. Here are all 5 eligible hotels, listed alphabetically. All meet your room requirements.\n\n- Beacon Court Hotel — Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Friday–Monday: $570; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- Garden Square Inn — Friday–Monday: $585; 15-minute walk to Boston Common | Pay at hotel. Free cancellation until 48 hours before check-in.\n- Harbor Point Inn — Friday–Monday: $550; 20-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Friday–Monday: $510; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nYou decide which hotels to shortlist and which hotel to choose."
+              "text": "Chatbot searches; I choose\n\nI found 3 matching hotel/room/date packages across 3 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n\nGarden Square is unavailable Friday–Monday. Parkside Grand is available but over budget. Compare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Using total price, walking distance to Boston Common, and cancellation terms, I’ve narrowed 5 eligible hotels to these 3. These give you a closer option, a middle ground, and a lower-cost option.\n\n- Beacon Court Hotel — Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Friday–Monday: $570; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Friday–Monday: $510; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nWhich hotel would you choose?"
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 3 matching hotel/room/date packages. Here are 2 I recommend comparing:\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n\nHarbor Point saves $20. Common Street is ten minutes closer to Boston Common. Both are nonrefundable. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "After comparing total price, walking distance to Boston Common, and cancellation terms, I shortlisted the options and selected Common Street Hotel for Friday–Monday: $570 total, with a private room and bathroom, a 10-minute walk from Boston Common. This starting rate requires payment now and is nonrefundable.\n\nIt balances your location preference with savings. Compared with Beacon Court’s $600 rate, it saves $30 for a walk that is five minutes longer.\n\nThis is the final selection. No reservation or payment has been made."
-            }
-          ]
-        },
-        {
-          "id": "room-and-rate",
-          "title": "Finding and choosing a room and rate",
-          "context": [
-            {
-              "type": "paragraph",
-              "text": "For this question, assume Common Street Hotel has been selected. Your stay is Friday–Monday. Your $600 maximum hotel budget is unchanged."
-            },
-            {
-              "type": "paragraph",
-              "text": "You need a private room and bathroom. You prefer free cancellation and paying at the hotel, but would consider a nonrefundable rate to save money. A larger room would be nice, but is not required."
-            },
-            {
-              "type": "paragraph",
-              "text": "Which approach would you prefer?"
+              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n\nI selected Common Street · Standard Queen · Saver, Friday–Monday, for $570.\n\nIt costs $20 more than Harbor Point but is ten minutes closer to Boston Common. Free cancellation is not available among the matching Friday–Monday packages. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
-          "taskInstruction": "Ask for help choosing a room and rate.",
-          "question": "Which approach would you prefer?",
-          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
-          "responseType": "single-choice",
-          "options": [
-            {
-              "id": "A",
-              "kind": "manual",
-              "text": "I would search the hotel’s room-and-rate options, compare them, and choose a package myself without chatbot assistance."
-            },
-            {
-              "id": "B",
-              "kind": "chatbot",
-              "text": "I’ve selected total price, room size and bed type, and payment and cancellation terms as the criteria to compare. Here are all 3 eligible room-and-rate packages, listed alphabetically. All meet your room requirements.\n\n- Compact Double — Saver — Friday–Monday: $555; double bed; smaller room; pay now; nonrefundable.\n- Standard Queen — Flexible — Friday–Monday: $600; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Friday–Monday: $570; queen bed; compact room; pay now; nonrefundable.\n\nYou decide which room-and-rate packages to shortlist and which package to choose."
-            },
-            {
-              "id": "C",
-              "kind": "chatbot",
-              "text": "Using total price, room size and bed type, and payment and cancellation terms, I’ve narrowed 3 eligible room-and-rate packages to these 2. These give you two rates for the same queen room, so you can trade a lower price for free cancellation.\n\n- Standard Queen — Flexible — Friday–Monday: $600; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Friday–Monday: $570; queen bed; compact room; pay now; nonrefundable.\n\nWhich package would you choose?"
-            },
-            {
-              "id": "D",
-              "kind": "chatbot",
-              "text": "After comparing total price, room size and bed type, and payment and cancellation terms, I shortlisted the options and selected the Standard Queen — Flexible package for Friday–Monday at $600 total. It has a queen bed and private bathroom in a compact room. You pay at the hotel and can cancel free until 48 hours before check-in.\n\nIt meets your preference for cancellation flexibility and payment at the hotel for $30 more than the Saver rate for the same room and dates.\n\nThis is the final selection. No reservation or payment has been made."
-            }
-          ]
+          "researcherMetadata": {
+            "combinedHotelRoom": true,
+            "eligiblePackages": [
+              {
+                "id": "beacon-1",
+                "hotel": "Beacon Court",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 600,
+                "walk": 5,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "common-1",
+                "hotel": "Common Street",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 570,
+                "walk": 10,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "harbor-1",
+                "hotel": "Harbor Point",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 550,
+                "walk": 20,
+                "terms": "Pay now; nonrefundable."
+              }
+            ],
+            "recommendedPackageIds": [
+              "common-1",
+              "harbor-1"
+            ],
+            "selectedPackageId": "common-1"
+          }
         }
       ]
     },
@@ -298,6 +300,10 @@
         {
           "label": "Travel party",
           "value": "One adult · three nights"
+        },
+        {
+          "label": "Hotel task assumptions",
+          "value": "Independent of flight answers. Three nights; private room and bathroom. Prefer Boston Common proximity and free cancellation; may trade these for savings. Flexible stays can shift the whole trip without extra transportation cost."
         }
       ],
       "checkpoints": [
@@ -387,103 +393,141 @@
         },
         {
           "id": "hotel-selection",
-          "title": "Finding and choosing a hotel",
+          "title": "Finding and choosing a hotel and room",
           "context": [
             {
               "type": "paragraph",
-              "text": "All hotel names, prices, walking times, availability, and booking terms are fictional study details. Each price is the total for three nights for one adult, including taxes and mandatory fees. All rooms have a private bathroom."
+              "text": "What changed: Your hotel stay dates are now flexible.",
+              "emphasis": true
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "Budget: $600 maximum for all three nights.",
+                "Stay dates: Thursday–Sunday, Friday–Monday, or Saturday–Tuesday. No preferred dates.",
+                "The same private-room requirements and location/cancellation preferences apply."
+              ]
             },
             {
               "type": "paragraph",
-              "text": "You are visiting Boston alone for three nights. Your hotel budget is $600 maximum, including taxes and fees."
-            },
-            {
-              "type": "paragraph",
-              "text": "You can stay Thursday–Sunday, Friday–Monday, or Saturday–Tuesday. Changing between these stays has no other cost or scheduling penalty. You have no preference between these dates."
-            },
-            {
-              "type": "paragraph",
-              "text": "You need a private room and bathroom. You prefer staying near Boston Common, but would consider staying farther away to save money."
-            },
-            {
-              "type": "paragraph",
-              "text": "When choosing a hotel or room package, the stay dates are part of the option."
-            },
-            {
-              "type": "paragraph",
-              "text": "Which approach would you prefer for choosing your hotel and stay dates?"
+              "text": "This hotel task is independent of your flight answers. Your whole trip, including transportation, can shift to any listed stay at no extra cost. “Unavailable” means no room for those dates. No reservation or payment is made."
             }
           ],
-          "taskInstruction": "Ask for help choosing a hotel and stay dates.",
-          "question": "Which approach would you prefer for choosing your hotel and stay dates?",
-          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "question": "How would you prefer to find and choose your hotel, room, rate, and stay dates?",
+          "followUp": "Why this approach? Would you want different chatbot involvement for choosing the hotel versus its room/rate?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "I would search hotel websites, compare the options, and choose a hotel and stay dates myself without chatbot assistance."
+              "text": "Search and choose myself\n\nI search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
             },
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "I’ve selected total price, walking distance to Boston Common, and cancellation terms as the criteria to compare. Here are all 5 eligible hotels, listed alphabetically. All meet your room requirements.\n\n- Beacon Court Hotel — Thursday–Sunday: $590; Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- Garden Square Inn — Thursday–Sunday: $575; Friday–Monday: $585; Saturday–Tuesday: $560; 15-minute walk to Boston Common | Pay at hotel. Free cancellation until 48 hours before check-in.\n- Harbor Point Inn — Thursday–Sunday: $570; Friday–Monday: $550; Saturday–Tuesday: $585; 20-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Thursday–Sunday: $480; Friday–Monday: $510; Saturday–Tuesday: $450; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nYou decide which hotels to shortlist and which hotel and dates to choose."
+              "text": "Chatbot searches; I choose\n\nI found 8 matching hotel/room/date packages across 4 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable. Unavailable: Thursday–Sunday, Saturday–Tuesday.\n- Common Street · Standard Queen · Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550; Saturday–Tuesday: $580 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in. Unavailable: Friday–Monday.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550; Saturday–Tuesday: $520 | 20-minute walk to Boston Common. Pay now; nonrefundable. Unavailable: Thursday–Sunday.\n\nParkside Grand is available but over budget for every listed stay. Compare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Using total price, walking distance to Boston Common, and cancellation terms, I’ve narrowed 5 eligible hotels to these 3. These give you a closer option, a middle ground, and a lower-cost option.\n\n- Beacon Court Hotel — Thursday–Sunday: $590; Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Thursday–Sunday: $480; Friday–Monday: $510; Saturday–Tuesday: $450; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nWhich hotel and dates would you choose?"
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 8 matching hotel/room/date packages. Here are 2 I recommend comparing:\n\n- Common Street · Standard Queen · Saver — Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n\nCommon Street is cheapest. Garden Square costs $40 more, adds five minutes to the walk, and offers free cancellation. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "After comparing total price, walking distance to Boston Common, and cancellation terms, I shortlisted the options and selected Common Street Hotel for Saturday–Tuesday: $510 total, with a private room and bathroom, a 10-minute walk from Boston Common. This starting rate requires payment now and is nonrefundable.\n\nIt balances your location preference with savings. Compared with Beacon Court’s Thursday–Sunday rate of $590, it saves $80 for a walk that is five minutes longer.\n\nThis is the final selection. No reservation or payment has been made."
-            }
-          ]
-        },
-        {
-          "id": "room-and-rate",
-          "title": "Finding and choosing a room and rate",
-          "context": [
-            {
-              "type": "paragraph",
-              "text": "For this question, assume Common Street Hotel has been selected. Your stay dates have not yet been selected and remain flexible within the same three options. Your $600 maximum hotel budget is unchanged."
-            },
-            {
-              "type": "paragraph",
-              "text": "You need a private room and bathroom. You prefer free cancellation and paying at the hotel, but would consider a nonrefundable rate to save money. A larger room would be nice, but is not required."
-            },
-            {
-              "type": "paragraph",
-              "text": "Which approach would you prefer for choosing your room, rate, and stay dates?"
+              "text": "Chatbot chooses without asking me\n\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n\nI selected Garden Square · Standard Queen · Flexible, Thursday–Sunday, for $550.\n\nThese are Garden Square’s cheapest dates. Compared with Common Street’s Saturday–Tuesday package, it costs $40 more and adds five minutes to the walk, but includes free cancellation and payment at the hotel. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
-          "taskInstruction": "Ask for help choosing a room, rate, and stay dates.",
-          "question": "Which approach would you prefer for choosing your room, rate, and stay dates?",
-          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
-          "responseType": "single-choice",
-          "options": [
-            {
-              "id": "A",
-              "kind": "manual",
-              "text": "I would search the hotel’s room-and-rate options, compare them, and choose a package and stay dates myself without chatbot assistance."
-            },
-            {
-              "id": "B",
-              "kind": "chatbot",
-              "text": "I’ve selected total price, room size and bed type, and payment and cancellation terms as the criteria to compare. Here are all 4 eligible room-and-rate packages, listed alphabetically. All meet your room requirements.\n\n- Compact Double — Saver — Thursday–Sunday: $525; Friday–Monday: $555; Saturday–Tuesday: $495; double bed; smaller room; pay now; nonrefundable.\n- Deluxe King — Saver — Thursday–Sunday: $600; Saturday–Tuesday: $585; king bed; larger room; pay now; nonrefundable.\n- Standard Queen — Flexible — Thursday–Sunday: $570; Friday–Monday: $600; Saturday–Tuesday: $540; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; queen bed; compact room; pay now; nonrefundable.\n\nYou decide which room-and-rate packages to shortlist and which package and dates to choose."
-            },
-            {
-              "id": "C",
-              "kind": "chatbot",
-              "text": "Using total price, room size and bed type, and payment and cancellation terms, I’ve narrowed 4 eligible room-and-rate packages to these 2. These give you two rates for the same queen room, so you can trade a lower price for free cancellation.\n\n- Standard Queen — Flexible — Thursday–Sunday: $570; Friday–Monday: $600; Saturday–Tuesday: $540; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; queen bed; compact room; pay now; nonrefundable.\n\nWhich package and dates would you choose?"
-            },
-            {
-              "id": "D",
-              "kind": "chatbot",
-              "text": "After comparing total price, room size and bed type, and payment and cancellation terms, I shortlisted the options and selected the Standard Queen — Flexible package for Saturday–Tuesday at $540 total. It has a queen bed and private bathroom in a compact room. You pay at the hotel and can cancel free until 48 hours before check-in.\n\nIt meets your preference for cancellation flexibility and payment at the hotel for $30 more than the Saver rate for the same room and dates.\n\nThis is the final selection. No reservation or payment has been made."
-            }
-          ]
+          "researcherMetadata": {
+            "combinedHotelRoom": true,
+            "eligiblePackages": [
+              {
+                "id": "beacon-1",
+                "hotel": "Beacon Court",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 600,
+                "walk": 5,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "common-0",
+                "hotel": "Common Street",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Thursday–Sunday",
+                "total": 540,
+                "walk": 10,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "common-1",
+                "hotel": "Common Street",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 570,
+                "walk": 10,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "common-2",
+                "hotel": "Common Street",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Saturday–Tuesday",
+                "total": 510,
+                "walk": 10,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "garden-0",
+                "hotel": "Garden Square",
+                "room": "Standard Queen",
+                "rate": "Flexible",
+                "dates": "Thursday–Sunday",
+                "total": 550,
+                "walk": 15,
+                "terms": "Pay at hotel; free cancellation until 48 hours before check-in."
+              },
+              {
+                "id": "garden-2",
+                "hotel": "Garden Square",
+                "room": "Standard Queen",
+                "rate": "Flexible",
+                "dates": "Saturday–Tuesday",
+                "total": 580,
+                "walk": 15,
+                "terms": "Pay at hotel; free cancellation until 48 hours before check-in."
+              },
+              {
+                "id": "harbor-1",
+                "hotel": "Harbor Point",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 550,
+                "walk": 20,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "harbor-2",
+                "hotel": "Harbor Point",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Saturday–Tuesday",
+                "total": 520,
+                "walk": 20,
+                "terms": "Pay now; nonrefundable."
+              }
+            ],
+            "recommendedPackageIds": [
+              "common-2",
+              "garden-0"
+            ],
+            "selectedPackageId": "garden-0"
+          }
         }
       ]
     },
@@ -524,6 +568,10 @@
         {
           "label": "Travel party",
           "value": "One adult · three nights"
+        },
+        {
+          "label": "Hotel task assumptions",
+          "value": "Independent of flight answers. Three nights; private room and bathroom. Prefer Boston Common proximity and free cancellation; may trade these for savings. Flexible stays can shift the whole trip without extra transportation cost."
         }
       ],
       "checkpoints": [
@@ -621,99 +669,101 @@
         },
         {
           "id": "hotel-selection",
-          "title": "Finding and choosing a hotel",
+          "title": "Finding and choosing a hotel and room",
           "context": [
             {
               "type": "paragraph",
-              "text": "All hotel names, prices, walking times, availability, and booking terms are fictional study details. Each price is the total for three nights for one adult, including taxes and mandatory fees. All rooms have a private bathroom."
+              "text": "What changed: Your hotel budget is higher, but your stay dates are fixed.",
+              "emphasis": true
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "Budget: $1,050 maximum for all three nights.",
+                "Required stay: Friday–Monday.",
+                "The same private-room requirements and location/cancellation preferences apply."
+              ]
             },
             {
               "type": "paragraph",
-              "text": "You are visiting Boston alone for three nights. Your hotel budget is $1,050 maximum, including taxes and fees. You do not need to spend the full budget."
-            },
-            {
-              "type": "paragraph",
-              "text": "Your travel arrangements are fixed. You must check in Friday and check out Monday; these dates cannot change."
-            },
-            {
-              "type": "paragraph",
-              "text": "You need a private room and bathroom. You prefer staying near Boston Common, but would consider staying farther away to save money."
-            },
-            {
-              "type": "paragraph",
-              "text": "Which approach would you prefer?"
+              "text": "This hotel task is independent of your flight answers. All details are fictional. No reservation or payment is made."
             }
           ],
-          "taskInstruction": "Ask for help choosing a hotel.",
-          "question": "Which approach would you prefer?",
-          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "question": "How would you prefer to find and choose your hotel, room, rate, and stay dates?",
+          "followUp": "Why this approach? Would you want different chatbot involvement for choosing the hotel versus its room/rate?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "I would search hotel websites, compare the options, and choose a hotel myself without chatbot assistance."
+              "text": "Search and choose myself\n\nI search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
             },
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "I’ve selected total price, walking distance to Boston Common, and cancellation terms as the criteria to compare. Here are all 7 eligible hotels, listed alphabetically. All meet your room requirements.\n\n- Back Bay House — Friday–Monday: $840; 15-minute walk to Boston Common | Pay now. Nonrefundable.\n- Beacon Court Hotel — Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Friday–Monday: $570; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- Garden Square Inn — Friday–Monday: $585; 15-minute walk to Boston Common | Pay at hotel. Free cancellation until 48 hours before check-in.\n- Harbor Point Inn — Friday–Monday: $550; 20-minute walk to Boston Common | Pay now. Nonrefundable.\n- Parkside Grand — Friday–Monday: $990; 2-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Friday–Monday: $510; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nYou decide which hotels to shortlist and which hotel to choose."
+              "text": "Chatbot searches; I choose\n\nI found 4 matching hotel/room/date packages across 4 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable.\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550 | 20-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Friday–Monday: $990 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nGarden Square is unavailable Friday–Monday. Compare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Using total price, walking distance to Boston Common, and cancellation terms, I’ve narrowed 7 eligible hotels to these 3. These give you a closer option, a middle ground, and a lower-cost option.\n\n- Beacon Court Hotel — Friday–Monday: $600; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Friday–Monday: $570; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Friday–Monday: $510; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nWhich hotel would you choose?"
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 4 matching hotel/room/date packages. Here are 2 I recommend comparing:\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Parkside Grand · Deluxe King · Saver — Friday–Monday: $990 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nCommon Street saves $420. Parkside Grand reduces the walk from ten minutes to two. Both are nonrefundable. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "After comparing total price, walking distance to Boston Common, and cancellation terms, I shortlisted the options and selected Common Street Hotel for Friday–Monday: $570 total, with a private room and bathroom, a 10-minute walk from Boston Common. This starting rate requires payment now and is nonrefundable.\n\nIt balances your location preference with savings. Compared with Beacon Court’s $600 rate, it saves $30 for a walk that is five minutes longer.\n\nThis is the final selection. No reservation or payment has been made."
-            }
-          ]
-        },
-        {
-          "id": "room-and-rate",
-          "title": "Finding and choosing a room and rate",
-          "context": [
-            {
-              "type": "paragraph",
-              "text": "For this question, assume Common Street Hotel has been selected. Your stay is Friday–Monday. Your $1,050 maximum hotel budget is unchanged."
-            },
-            {
-              "type": "paragraph",
-              "text": "You need a private room and bathroom. You prefer free cancellation and paying at the hotel, but would consider a nonrefundable rate to save money. A larger room would be nice, but is not required."
-            },
-            {
-              "type": "paragraph",
-              "text": "Which approach would you prefer?"
+              "text": "Chatbot chooses without asking me\n\n- Common Street · Standard Queen · Saver — Friday–Monday: $570 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n\nI selected Common Street · Standard Queen · Saver, Friday–Monday, for $570.\n\nIt costs $20 more than Harbor Point but is ten minutes closer to Boston Common. Free cancellation is not available among the matching Friday–Monday packages. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
-          "taskInstruction": "Ask for help choosing a room and rate.",
-          "question": "Which approach would you prefer?",
-          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
-          "responseType": "single-choice",
-          "options": [
-            {
-              "id": "A",
-              "kind": "manual",
-              "text": "I would search the hotel’s room-and-rate options, compare them, and choose a package myself without chatbot assistance."
-            },
-            {
-              "id": "B",
-              "kind": "chatbot",
-              "text": "I’ve selected total price, room size and bed type, and payment and cancellation terms as the criteria to compare. Here are all 5 eligible room-and-rate packages, listed alphabetically. All meet your room requirements.\n\n- Compact Double — Saver — Friday–Monday: $555; double bed; smaller room; pay now; nonrefundable.\n- Deluxe King — Flexible — Friday–Monday: $720; king bed; larger room; pay at hotel; free cancellation until 48 hours before check-in.\n- Deluxe King — Saver — Friday–Monday: $660; king bed; larger room; pay now; nonrefundable.\n- Standard Queen — Flexible — Friday–Monday: $600; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Friday–Monday: $570; queen bed; compact room; pay now; nonrefundable.\n\nYou decide which room-and-rate packages to shortlist and which package to choose."
-            },
-            {
-              "id": "C",
-              "kind": "chatbot",
-              "text": "Using total price, room size and bed type, and payment and cancellation terms, I’ve narrowed 5 eligible room-and-rate packages to these 2. These give you two rates for the same queen room, so you can trade a lower price for free cancellation.\n\n- Standard Queen — Flexible — Friday–Monday: $600; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Friday–Monday: $570; queen bed; compact room; pay now; nonrefundable.\n\nWhich package would you choose?"
-            },
-            {
-              "id": "D",
-              "kind": "chatbot",
-              "text": "After comparing total price, room size and bed type, and payment and cancellation terms, I shortlisted the options and selected the Standard Queen — Flexible package for Friday–Monday at $600 total. It has a queen bed and private bathroom in a compact room. You pay at the hotel and can cancel free until 48 hours before check-in.\n\nIt meets your preference for cancellation flexibility and payment at the hotel for $30 more than the Saver rate for the same room and dates.\n\nThis is the final selection. No reservation or payment has been made."
-            }
-          ]
+          "researcherMetadata": {
+            "combinedHotelRoom": true,
+            "eligiblePackages": [
+              {
+                "id": "beacon-1",
+                "hotel": "Beacon Court",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 600,
+                "walk": 5,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "common-1",
+                "hotel": "Common Street",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 570,
+                "walk": 10,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "harbor-1",
+                "hotel": "Harbor Point",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 550,
+                "walk": 20,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "parkside-1",
+                "hotel": "Parkside Grand",
+                "room": "Deluxe King",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 990,
+                "walk": 2,
+                "terms": "Pay now; nonrefundable."
+              }
+            ],
+            "recommendedPackageIds": [
+              "common-1",
+              "parkside-1"
+            ],
+            "selectedPackageId": "common-1"
+          }
         }
       ]
     },
@@ -754,6 +804,10 @@
         {
           "label": "Travel party",
           "value": "One adult · three nights"
+        },
+        {
+          "label": "Hotel task assumptions",
+          "value": "Independent of flight answers. Three nights; private room and bathroom. Prefer Boston Common proximity and free cancellation; may trade these for savings. Flexible stays can shift the whole trip without extra transportation cost."
         }
       ],
       "checkpoints": [
@@ -843,103 +897,172 @@
         },
         {
           "id": "hotel-selection",
-          "title": "Finding and choosing a hotel",
+          "title": "Finding and choosing a hotel and room",
           "context": [
             {
               "type": "paragraph",
-              "text": "All hotel names, prices, walking times, availability, and booking terms are fictional study details. Each price is the total for three nights for one adult, including taxes and mandatory fees. All rooms have a private bathroom."
+              "text": "What changed: Your hotel stay dates are now flexible.",
+              "emphasis": true
+            },
+            {
+              "type": "bullet-list",
+              "items": [
+                "Budget: $1,050 maximum for all three nights.",
+                "Stay dates: Thursday–Sunday, Friday–Monday, or Saturday–Tuesday. No preferred dates.",
+                "The same private-room requirements and location/cancellation preferences apply."
+              ]
             },
             {
               "type": "paragraph",
-              "text": "You are visiting Boston alone for three nights. Your hotel budget is $1,050 maximum, including taxes and fees. You do not need to spend the full budget."
-            },
-            {
-              "type": "paragraph",
-              "text": "You can stay Thursday–Sunday, Friday–Monday, or Saturday–Tuesday. Changing between these stays has no other cost or scheduling penalty. You have no preference between these dates."
-            },
-            {
-              "type": "paragraph",
-              "text": "You need a private room and bathroom. You prefer staying near Boston Common, but would consider staying farther away to save money."
-            },
-            {
-              "type": "paragraph",
-              "text": "When choosing a hotel or room package, the stay dates are part of the option."
-            },
-            {
-              "type": "paragraph",
-              "text": "Which approach would you prefer for choosing your hotel and stay dates?"
+              "text": "This hotel task is independent of your flight answers. Your whole trip, including transportation, can shift to any listed stay at no extra cost. “Unavailable” means no room for those dates. No reservation or payment is made."
             }
           ],
-          "taskInstruction": "Ask for help choosing a hotel and stay dates.",
-          "question": "Which approach would you prefer for choosing your hotel and stay dates?",
-          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
+          "question": "How would you prefer to find and choose your hotel, room, rate, and stay dates?",
+          "followUp": "Why this approach? Would you want different chatbot involvement for choosing the hotel versus its room/rate?",
           "responseType": "single-choice",
           "options": [
             {
               "id": "A",
               "kind": "manual",
-              "text": "I would search hotel websites, compare the options, and choose a hotel and stay dates myself without chatbot assistance."
+              "text": "Search and choose myself\n\nI search hotel websites, compare hotel/room/rate packages and available dates, and choose one without the chatbot."
             },
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "I’ve selected total price, walking distance to Boston Common, and cancellation terms as the criteria to compare. Here are all 7 eligible hotels, listed alphabetically. All meet your room requirements.\n\n- Back Bay House — Thursday–Sunday: $720; Friday–Monday: $840; Saturday–Tuesday: $750; 15-minute walk to Boston Common | Pay now. Nonrefundable.\n- Beacon Court Hotel — Thursday–Sunday: $590; Friday–Monday: $600; Saturday–Tuesday: $650; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- Garden Square Inn — Thursday–Sunday: $575; Friday–Monday: $585; Saturday–Tuesday: $560; 15-minute walk to Boston Common | Pay at hotel. Free cancellation until 48 hours before check-in.\n- Harbor Point Inn — Thursday–Sunday: $570; Friday–Monday: $550; Saturday–Tuesday: $585; 20-minute walk to Boston Common | Pay now. Nonrefundable.\n- Parkside Grand — Thursday–Sunday: $900; Friday–Monday: $990; Saturday–Tuesday: $930; 2-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Thursday–Sunday: $480; Friday–Monday: $510; Saturday–Tuesday: $450; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nYou decide which hotels to shortlist and which hotel and dates to choose."
+              "text": "Chatbot searches; I choose\n\nI found 11 matching hotel/room/date packages across 5 hotels, listed alphabetically. Prices include taxes and fees for all three nights.\n\n- Beacon Court · Standard Queen · Saver — Friday–Monday: $600 | 5-minute walk to Boston Common. Pay now; nonrefundable. Unavailable: Thursday–Sunday, Saturday–Tuesday.\n- Common Street · Standard Queen · Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550; Saturday–Tuesday: $580 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in. Unavailable: Friday–Monday.\n- Harbor Point · Standard Queen · Saver — Friday–Monday: $550; Saturday–Tuesday: $520 | 20-minute walk to Boston Common. Pay now; nonrefundable. Unavailable: Thursday–Sunday.\n- Parkside Grand · Deluxe King · Saver — Thursday–Sunday: $900; Friday–Monday: $990; Saturday–Tuesday: $930 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nCompare the packages and dates, then choose one. I have not ranked or recommended them."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Using total price, walking distance to Boston Common, and cancellation terms, I’ve narrowed 7 eligible hotels to these 3. These give you a closer option, a middle ground, and a lower-cost option.\n\n- Beacon Court Hotel — Thursday–Sunday: $590; Friday–Monday: $600; Saturday–Tuesday: $650; 5-minute walk to Boston Common | Pay now. Nonrefundable.\n- Common Street Hotel — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; 10-minute walk to Boston Common | Pay now. Nonrefundable.\n- South End Lodge — Thursday–Sunday: $480; Friday–Monday: $510; Saturday–Tuesday: $450; 25-minute walk to Boston Common | Pay now. Nonrefundable.\n\nWhich hotel and dates would you choose?"
+              "text": "Chatbot recommends a shortlist; I choose\n\nI found 11 matching hotel/room/date packages. Here are 3 I recommend comparing:\n\n- Common Street · Standard Queen · Saver — Saturday–Tuesday: $510 | 10-minute walk to Boston Common. Pay now; nonrefundable.\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n- Parkside Grand · Deluxe King · Saver — Thursday–Sunday: $900 | 2-minute walk to Boston Common. Pay now; nonrefundable.\n\nCommon Street is cheapest. Garden Square costs $40 more, adds five minutes to the walk, and offers free cancellation. Parkside Grand has the shortest walk but costs $390 more than Common Street. You make the final choice."
             },
             {
               "id": "D",
               "kind": "chatbot",
-              "text": "After comparing total price, walking distance to Boston Common, and cancellation terms, I shortlisted the options and selected Common Street Hotel for Saturday–Tuesday: $510 total, with a private room and bathroom, a 10-minute walk from Boston Common. This starting rate requires payment now and is nonrefundable.\n\nIt balances your location preference with savings. Compared with Beacon Court’s Thursday–Sunday rate of $590, it saves $80 for a walk that is five minutes longer.\n\nThis is the final selection. No reservation or payment has been made."
-            }
-          ]
-        },
-        {
-          "id": "room-and-rate",
-          "title": "Finding and choosing a room and rate",
-          "context": [
-            {
-              "type": "paragraph",
-              "text": "For this question, assume Common Street Hotel has been selected. Your stay dates have not yet been selected and remain flexible within the same three options. Your $1,050 maximum hotel budget is unchanged."
-            },
-            {
-              "type": "paragraph",
-              "text": "You need a private room and bathroom. You prefer free cancellation and paying at the hotel, but would consider a nonrefundable rate to save money. A larger room would be nice, but is not required."
-            },
-            {
-              "type": "paragraph",
-              "text": "Which approach would you prefer for choosing your room, rate, and stay dates?"
+              "text": "Chatbot chooses without asking me\n\n- Garden Square · Standard Queen · Flexible — Thursday–Sunday: $550 | 15-minute walk to Boston Common. Pay at hotel; free cancellation until 48 hours before check-in.\n\nI selected Garden Square · Standard Queen · Flexible, Thursday–Sunday, for $550.\n\nThese are Garden Square’s cheapest dates. Compared with Common Street’s Saturday–Tuesday package, it costs $40 more and adds five minutes to the walk, but includes free cancellation and payment at the hotel. I make the selection without asking for approval. No reservation or payment is made."
             }
           ],
-          "taskInstruction": "Ask for help choosing a room, rate, and stay dates.",
-          "question": "Which approach would you prefer for choosing your room, rate, and stay dates?",
-          "followUp": "Why would you prefer this approach? If none fits, describe your preferred approach.",
-          "responseType": "single-choice",
-          "options": [
-            {
-              "id": "A",
-              "kind": "manual",
-              "text": "I would search the hotel’s room-and-rate options, compare them, and choose a package and stay dates myself without chatbot assistance."
-            },
-            {
-              "id": "B",
-              "kind": "chatbot",
-              "text": "I’ve selected total price, room size and bed type, and payment and cancellation terms as the criteria to compare. Here are all 6 eligible room-and-rate packages, listed alphabetically. All meet your room requirements.\n\n- Compact Double — Saver — Thursday–Sunday: $525; Friday–Monday: $555; Saturday–Tuesday: $495; double bed; smaller room; pay now; nonrefundable.\n- Deluxe King — Flexible — Thursday–Sunday: $660; Friday–Monday: $720; Saturday–Tuesday: $645; king bed; larger room; pay at hotel; free cancellation until 48 hours before check-in.\n- Deluxe King — Saver — Thursday–Sunday: $600; Friday–Monday: $660; Saturday–Tuesday: $585; king bed; larger room; pay now; nonrefundable.\n- Junior Suite — Flexible — Thursday–Sunday: $900; Saturday–Tuesday: $870; king bed and separate sitting area; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Flexible — Thursday–Sunday: $570; Friday–Monday: $600; Saturday–Tuesday: $540; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; queen bed; compact room; pay now; nonrefundable.\n\nYou decide which room-and-rate packages to shortlist and which package and dates to choose."
-            },
-            {
-              "id": "C",
-              "kind": "chatbot",
-              "text": "Using total price, room size and bed type, and payment and cancellation terms, I’ve narrowed 6 eligible room-and-rate packages to these 2. These give you two rates for the same queen room, so you can trade a lower price for free cancellation.\n\n- Standard Queen — Flexible — Thursday–Sunday: $570; Friday–Monday: $600; Saturday–Tuesday: $540; queen bed; compact room; pay at hotel; free cancellation until 48 hours before check-in.\n- Standard Queen — Saver — Thursday–Sunday: $540; Friday–Monday: $570; Saturday–Tuesday: $510; queen bed; compact room; pay now; nonrefundable.\n\nWhich package and dates would you choose?"
-            },
-            {
-              "id": "D",
-              "kind": "chatbot",
-              "text": "After comparing total price, room size and bed type, and payment and cancellation terms, I shortlisted the options and selected the Standard Queen — Flexible package for Saturday–Tuesday at $540 total. It has a queen bed and private bathroom in a compact room. You pay at the hotel and can cancel free until 48 hours before check-in.\n\nIt meets your preference for cancellation flexibility and payment at the hotel for $30 more than the Saver rate for the same room and dates.\n\nThis is the final selection. No reservation or payment has been made."
-            }
-          ]
+          "researcherMetadata": {
+            "combinedHotelRoom": true,
+            "eligiblePackages": [
+              {
+                "id": "beacon-1",
+                "hotel": "Beacon Court",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 600,
+                "walk": 5,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "common-0",
+                "hotel": "Common Street",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Thursday–Sunday",
+                "total": 540,
+                "walk": 10,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "common-1",
+                "hotel": "Common Street",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 570,
+                "walk": 10,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "common-2",
+                "hotel": "Common Street",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Saturday–Tuesday",
+                "total": 510,
+                "walk": 10,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "garden-0",
+                "hotel": "Garden Square",
+                "room": "Standard Queen",
+                "rate": "Flexible",
+                "dates": "Thursday–Sunday",
+                "total": 550,
+                "walk": 15,
+                "terms": "Pay at hotel; free cancellation until 48 hours before check-in."
+              },
+              {
+                "id": "garden-2",
+                "hotel": "Garden Square",
+                "room": "Standard Queen",
+                "rate": "Flexible",
+                "dates": "Saturday–Tuesday",
+                "total": 580,
+                "walk": 15,
+                "terms": "Pay at hotel; free cancellation until 48 hours before check-in."
+              },
+              {
+                "id": "harbor-1",
+                "hotel": "Harbor Point",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 550,
+                "walk": 20,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "harbor-2",
+                "hotel": "Harbor Point",
+                "room": "Standard Queen",
+                "rate": "Saver",
+                "dates": "Saturday–Tuesday",
+                "total": 520,
+                "walk": 20,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "parkside-0",
+                "hotel": "Parkside Grand",
+                "room": "Deluxe King",
+                "rate": "Saver",
+                "dates": "Thursday–Sunday",
+                "total": 900,
+                "walk": 2,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "parkside-1",
+                "hotel": "Parkside Grand",
+                "room": "Deluxe King",
+                "rate": "Saver",
+                "dates": "Friday–Monday",
+                "total": 990,
+                "walk": 2,
+                "terms": "Pay now; nonrefundable."
+              },
+              {
+                "id": "parkside-2",
+                "hotel": "Parkside Grand",
+                "room": "Deluxe King",
+                "rate": "Saver",
+                "dates": "Saturday–Tuesday",
+                "total": 930,
+                "walk": 2,
+                "terms": "Pay now; nonrefundable."
+              }
+            ],
+            "recommendedPackageIds": [
+              "common-2",
+              "garden-0",
+              "parkside-0"
+            ],
+            "selectedPackageId": "garden-0"
+          }
         }
       ]
     }

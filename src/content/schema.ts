@@ -44,7 +44,7 @@ export const studySchema = z.object({
       note: text.optional(),
     }).strict(),
   ]),
-  settings: z.object({ allowBackNavigation: z.boolean(), firstTaskId: id.optional() }).strict(),
+  settings: z.object({ allowBackNavigation: z.boolean(), firstTaskId: id.optional(), taskOrder: z.array(id).min(1).optional() }).strict(),
   scenarios: z.array(scenarioSchema).min(1, 'A study needs at least one scenario'),
 }).strict().superRefine((study, ctx) => {
   const unique = (items: { id: string }[], path: (string | number)[]) => {
@@ -62,6 +62,12 @@ export const studySchema = z.object({
     });
   };
   unique(study.scenarios, ['scenarios']);
+  study.settings.taskOrder?.forEach((taskId, index, taskOrder) => {
+    if (taskOrder.indexOf(taskId) !== index) ctx.addIssue({ code: 'custom', path: ['settings', 'taskOrder', index], message: 'Task order cannot contain duplicate IDs' });
+    if (!study.scenarios.some(scenario => scenario.checkpoints.some(checkpoint => checkpoint.id === taskId))) {
+      ctx.addIssue({ code: 'custom', path: ['settings', 'taskOrder', index], message: 'Must match an existing checkpoint ID' });
+    }
+  });
   if (study.settings.firstTaskId && !study.scenarios.some(scenario => scenario.checkpoints.some(checkpoint => checkpoint.id === study.settings.firstTaskId))) {
     ctx.addIssue({ code: 'custom', path: ['settings', 'firstTaskId'], message: 'Must match an existing checkpoint ID' });
   }

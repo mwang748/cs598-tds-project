@@ -62,19 +62,19 @@ export function countAnswered(study: Study, session: ParticipantSession): number
 export const isComplete = (study: Study, session: ParticipantSession) => session.completed && countAnswered(study, session) === checkpointCount(study);
 export const hasUnexportedAnswers = (session: ParticipantSession | null) => !!session && session.revision > 0 && session.exportedRevision !== session.revision;
 
-/** Prioritize one task across conditions without changing response IDs or factor metadata. */
+/** Group tasks across conditions without changing response IDs or factor metadata. */
 export function orderedCheckpoints(study: Study): Extract<StudyRoute, { screen: 'checkpoint' }>[] {
   const checkpoints = study.scenarios.flatMap((scenario, scenarioIndex) => scenario.checkpoints.map((_, checkpointIndex) => ({
     screen: 'checkpoint' as const, scenarioIndex, checkpointIndex,
   })));
-  const firstTaskId = study.settings.firstTaskId;
-  if (!firstTaskId) return checkpoints;
-  const isFirst = (route: typeof checkpoints[number]) => study.scenarios[route.scenarioIndex].checkpoints[route.checkpointIndex].id === firstTaskId;
-  return [...checkpoints.filter(isFirst), ...checkpoints.filter(route => !isFirst(route))];
+  const taskOrder = study.settings.taskOrder ?? (study.settings.firstTaskId ? [study.settings.firstTaskId] : []);
+  if (!taskOrder.length) return checkpoints;
+  const matches = (route: typeof checkpoints[number], id: string) => study.scenarios[route.scenarioIndex].checkpoints[route.checkpointIndex].id === id;
+  return [...taskOrder.flatMap(id => checkpoints.filter(route => matches(route, id))), ...checkpoints.filter(route => !taskOrder.some(id => matches(route, id)))];
 }
 
 export function nextCheckpoint(study: Study, si: number, ci: number): StudyRoute {
-  if (study.settings.firstTaskId) {
+  if (study.settings.firstTaskId || study.settings.taskOrder?.length) {
     const order = orderedCheckpoints(study);
     const index = order.findIndex(route => route.scenarioIndex === si && route.checkpointIndex === ci);
     return order[index + 1] ?? { screen: 'complete' };
@@ -85,7 +85,7 @@ export function nextCheckpoint(study: Study, si: number, ci: number): StudyRoute
 }
 
 export function previousRoute(study: Study, route: StudyRoute): StudyRoute {
-  if (study.settings.firstTaskId) {
+  if (study.settings.firstTaskId || study.settings.taskOrder?.length) {
     const order = orderedCheckpoints(study);
     if (route.screen === 'complete') return order[order.length - 1];
     if (route.screen === 'checkpoint') {

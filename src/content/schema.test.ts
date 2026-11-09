@@ -86,6 +86,8 @@ describe('researcher content validation', () => {
     ['unsupported question type', (c: any) => { c.scenarios[0].checkpoints[0].responseType = 'multi-choice'; }, 'responseType'],
     ['empty options', (c: any) => { c.scenarios[0].checkpoints[0].options = []; }, 'options'],
     ['unknown first task', (c: any) => { c.settings.firstTaskId = 'missing-task'; }, 'firstTaskId'],
+    ['unknown ordered task', (c: any) => { c.settings.taskOrder = ['missing-task']; }, 'taskOrder'],
+    ['duplicate ordered task', (c: any) => { c.settings.taskOrder = ['hotel-selection', 'hotel-selection']; }, 'duplicate'],
   ])('rejects %s with a field path', (_name, mutate, message) => {
     const content = structuredClone(example);
     mutate(content);

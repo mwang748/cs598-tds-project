@@ -174,7 +174,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
               </dl>
               <p className="instruction-callout"><strong>For each task</strong> Use these trip details and choose how you’d proceed—with the chatbot or on your own. No message is needed.</p>
             </section>
-            <div className="page-actions">{study.settings.allowBackNavigation && route.scenarioIndex > 0 && !study.settings.firstTaskId ? <button className="button ghost" onClick={() => setRoute(previousRoute(study, route))}><ArrowLeft size={16} /> Back</button> : <span />}<button className="button primary" onClick={() => setRoute(study.settings.firstTaskId ? orderedCheckpoints(study)[0] : { screen: 'checkpoint', scenarioIndex: route.scenarioIndex, checkpointIndex: 0 })}>Begin scenario <ArrowRight size={17} /></button></div>
+            <div className="page-actions">{study.settings.allowBackNavigation && route.scenarioIndex > 0 && !study.settings.firstTaskId && !study.settings.taskOrder?.length ? <button className="button ghost" onClick={() => setRoute(previousRoute(study, route))}><ArrowLeft size={16} /> Back</button> : <span />}<button className="button primary" onClick={() => setRoute(study.settings.firstTaskId || study.settings.taskOrder?.length ? orderedCheckpoints(study)[0] : { screen: 'checkpoint', scenarioIndex: route.scenarioIndex, checkpointIndex: 0 })}>Begin scenario <ArrowRight size={17} /></button></div>
           </>}
           {route.screen === 'checkpoint' && scenario && checkpoint && <>
             {study.settings.allowBackNavigation && scenario.checkpoints.slice(0, route.checkpointIndex).map(previous => {
