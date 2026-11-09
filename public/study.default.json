@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "studyId": "boston-travel-study",
-  "contentVersion": "draft-21",
+  "contentVersion": "draft-22",
   "title": "Travel Chatbot Study",
   "stimulusLabel": "Fictional study details",
   "instructions": {
@@ -20,7 +20,7 @@
         "text": "This is where you decide how you’d want to pay for the trip."
       }
     ],
-    "note": "Complete the flight, hotel, and rental-car selection scenarios, then prepare one draft reservation for each service and answer one payment question. All travel details are fictional. Nothing is actually reserved or paid for. Treat each task independently. Click Start Study to begin."
+    "note": "Complete the flight, hotel, and rental-car selection scenarios, then prepare one draft reservation for each service and answer one payment question. The hotel reservation and payment questions are each followed by a question about recovering from a chatbot failure. All travel details are fictional. Nothing is actually reserved or paid for. Treat each task independently. Click Start Study to begin."
   },
   "settings": {
     "allowBackNavigation": true,
@@ -354,7 +354,7 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "What changed: Your departure time is now flexible.",
+              "text": "What changed: Your departure time is now flexible; your budget is still tight.",
               "emphasis": true
             },
             {
@@ -394,7 +394,7 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "What changed: Your hotel stay dates are now flexible.",
+              "text": "What changed: Your hotel stay dates are now flexible; budget is still tight.",
               "emphasis": true
             },
             {
@@ -1029,7 +1029,7 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "What changed: Your departure time is now flexible.",
+              "text": "What changed: Your departure time is now flexible; you also have a looser budget.",
               "emphasis": true
             },
             {
@@ -1069,7 +1069,7 @@
           "context": [
             {
               "type": "paragraph",
-              "text": "What changed: Your hotel stay dates are now flexible.",
+              "text": "What changed: Your hotel stay dates are now flexible; you also have a budget.",
               "emphasis": true
             },
             {
@@ -1492,12 +1492,12 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot prepares; I review\n\nIt enters my saved details, confirms the bag, and selects 14C. It pauses for my review."
+              "text": "Chatbot prepares; I review\n\nIt enters my saved details, confirms the bag, and selects 14C. It pauses for my review after each step."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Chatbot prepares; no required review\n\nIt does the same work and marks the draft ready. I can still edit it."
+              "text": "Chatbot prepares; no required review\n\nIt does the same work in one shot and marks the draft ready. I can still edit it."
             }
           ]
         },
@@ -1526,12 +1526,48 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot prepares; I review\n\nIt enters the saved guest details and selected dates and adds the note. It pauses for my review."
+              "text": "Chatbot prepares; I review\n\nIt enters the saved guest details and selected dates and adds the note. It pauses for my review after each step."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Chatbot prepares; no required review\n\nIt does the same work and marks the draft ready. I can still edit it."
+              "text": "Chatbot prepares; no required review\n\nIt does the same work in one shot and marks the draft ready. I can still edit it."
+            }
+          ]
+        },
+        {
+          "id": "reservation-recovery",
+          "title": "Recovering from a reservation preparation failure",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "Imagine you asked the chatbot to prepare the Common Street hotel reservation draft using your saved guest details. The chatbot understood your request, but a temporary error prevented it from preparing the draft. Your details are saved. No reservation was submitted."
+            }
+          ],
+          "question": "What would you do next? Choose the option you’d try first.",
+          "followUp": "What made you choose that option?",
+          "responseType": "single-choice",
+          "optionLayout": "cards",
+          "options": [
+            {
+              "id": "A",
+              "kind": "chatbot",
+              "text": "Ask the chatbot to try again using my saved information."
+            },
+            {
+              "id": "B",
+              "kind": "manual",
+              "text": "Open the booking site and continue myself from where I left off."
+            },
+            {
+              "id": "C",
+              "kind": "manual",
+              "text": "Contact customer support and have the chatbot share where I left off and what went wrong."
+            },
+            {
+              "id": "D",
+              "kind": "manual",
+              "text": "Pause or stop for now."
             }
           ]
         },
@@ -1560,12 +1596,12 @@
             {
               "id": "B",
               "kind": "chatbot",
-              "text": "Chatbot prepares; I review\n\nIt enters the saved driver details and selected pickup and return information. It pauses for my review."
+              "text": "Chatbot prepares; I review\n\nIt enters the saved driver details and selected pickup and return information. It pauses for my review after each step."
             },
             {
               "id": "C",
               "kind": "chatbot",
-              "text": "Chatbot prepares; no required review\n\nIt does the same work and marks the draft ready. I can still edit it."
+              "text": "Chatbot prepares; no required review\n\nIt does the same work in one shot and marks the draft ready. I can still edit it."
             }
           ]
         }
@@ -1618,6 +1654,42 @@
               "id": "C",
               "kind": "chatbot",
               "text": "Chatbot pays without asking again\n\nThe chatbot submits the payment using my authorized payment method without asking for another confirmation, but only if the reservation and total match what I already approved."
+            }
+          ]
+        },
+        {
+          "id": "payment-recovery",
+          "title": "Recovering from a payment failure",
+          "context": [
+            {
+              "type": "paragraph",
+              "text": "Imagine you’ve reviewed the trip total and authorized the chatbot to submit payment. The chatbot understood your request, but a temporary error prevented it from submitting the payment. Your checkout is saved. No payment was submitted."
+            }
+          ],
+          "question": "What would you do next? Choose the option you’d try first.",
+          "followUp": "What made you choose that option?",
+          "responseType": "single-choice",
+          "optionLayout": "cards",
+          "options": [
+            {
+              "id": "A",
+              "kind": "chatbot",
+              "text": "Ask the chatbot to try the payment again."
+            },
+            {
+              "id": "B",
+              "kind": "manual",
+              "text": "Open the payment page and retry the payment myself."
+            },
+            {
+              "id": "C",
+              "kind": "manual",
+              "text": "Contact customer support and have the chatbot share where I left off and what went wrong."
+            },
+            {
+              "id": "D",
+              "kind": "manual",
+              "text": "Pause or stop for now."
             }
           ]
         }

@@ -22,8 +22,10 @@ export function TaskChat({ checkpoint, headingRef, selected, followUpAnswer, onS
       <Blocks blocks={checkpoint.context.filter(block => block.type !== 'paragraph' || block.text !== checkpoint.question)} />
     </section>}
     <div className="question-section">
-      <h2>{checkpoint.question}</h2>
-      {checkpoint.options.some(option => option.kind === 'chatbot') && checkpoint.options.some(option => option.kind === 'manual') && <p className="task-instruction">Choose a chatbot approach, or scroll to “Do it yourself”.</p>}
+      <div className="question-heading">
+        <h2>{checkpoint.question}</h2>
+        {checkpoint.optionLayout !== 'cards' && checkpoint.options.some(option => option.kind === 'chatbot') && checkpoint.options.some(option => option.kind === 'manual') && <p className="task-instruction">Choose your preferred chatbot response or select the manual human option</p>}
+      </div>
       <Choices checkpoint={checkpoint} selected={selected} onSelect={onSelect} />
       {checkpoint.followUp && <section className="instruction-panel follow-up" aria-labelledby="follow-up-heading">
         <h3 id="follow-up-heading" className="instruction-label">Optional follow-up</h3>

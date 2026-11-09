@@ -44,6 +44,7 @@ Scenario IDs must be unique. Summary labels need not correspond to any fixed cat
 | `question` | string | Exact nonblank question wording, displayed above choices and included in the export. An identical context paragraph is omitted from the screen to avoid repetition. |
 | `followUp` | string, optional | Written prompt shown below the replies. A participant can select a reply, submit a written approach, or do both. |
 | `responseType` | string | Exactly `"single-choice"`. Other types are rejected. |
+| `optionLayout` | string, optional | Use `"cards"` to show every option as a flat action card. The legacy `optionAvatar: "human"` setting also uses cards. |
 | `options` | option array | At least one. Any number is supported, in array order. |
 | `researcherMetadata` | object, optional | Any JSON keys/values, e.g. researchQuestions or construct. Hidden from participant screens; not included in response exports. |
 
@@ -55,7 +56,7 @@ Each checkpoint shows the context, question, and authored alternatives immediate
 {"id":"compare","kind":"chatbot","text":"Here are the alternatives. You can choose."}
 ```
 
-`id` must be nonblank and unique within the checkpoint. `kind` is either `"chatbot"` or `"manual"`; it describes the source of the approach, not an authority category. Chatbot options appear as replies, followed by any manual options under **Do it yourself**. Participants can select one option per task across both kinds. `text` is the complete, nonblank response wording. Manual choices are optional: remove them or add them through JSON. Authority levels, products and research constructs are not enumerated in application code.
+`id` must be nonblank and unique within the checkpoint. `kind` is either `"chatbot"` or `"manual"`; it describes the source of the approach, not an authority category. By default, chatbot replies use speech bubbles with a robot icon and manual choices use flat action cards with a radio circle. Both appear in the same list. Participants can select one option per task across both kinds. `text` is the complete, nonblank response wording. Manual choices are optional: remove them or add them through JSON. Authority levels, products and research constructs are not enumerated in application code.
 
 Answers are stored against `[scenario ID, checkpoint ID]`, with the selected option ID as value. Text and display positions are never used as answer identifiers. Keep IDs stable when rewording a stimulus, and increase `contentVersion` when changing any study wording. A new active configuration always starts with no participant session.
 

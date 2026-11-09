@@ -18,9 +18,12 @@ const checkpointSchema = z.object({
   question: text,
   followUp: text.optional(),
   responseType: z.literal('single-choice'),
+  optionLayout: z.literal('cards').optional(),
+  optionAvatar: z.literal('human').optional(),
   options: z.array(optionSchema).min(1, 'Add at least one response option'),
   researcherMetadata: z.record(z.unknown()).optional(),
-}).strict();
+}).strict().transform(({ optionAvatar, ...checkpoint }) =>
+  optionAvatar === 'human' ? { ...checkpoint, optionLayout: 'cards' as const } : checkpoint);
 
 const scenarioSchema = z.object({
   id, title: text,

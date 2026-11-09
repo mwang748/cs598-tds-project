@@ -175,6 +175,5 @@ describe('rental-car selection scenarios', () => {
     expect(context).toContain('Shuttles are free');
     expect(context).toContain('times include waiting');
     expect(context).toContain('coverage and rental terms are identical.');
-    expect(study.settings.taskOrder).toEqual(['flight-selection', 'hotel-selection', 'rental-car-selection']);
   });
 });

@@ -5,7 +5,7 @@ import { answerKey, chooseAnswer, countAnswered, createSession, hasUnexportedAns
 import { Blocks } from './components/Blocks';
 import { Modal } from './components/Modal';
 import { ResearcherPanel } from './components/ResearcherPanel';
-import { ReplyText } from './components/ReplyText';
+import { ResponseCard } from './components/ResponseCard';
 import { ScenarioMenu } from './components/ScenarioMenu';
 import { TaskChat } from './components/TaskChat';
 import { submitResponses } from './results/client';
@@ -172,7 +172,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
               <dl className="inline-trip-summary">
                 {scenario.summary.map((item, index) => <div key={index}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}
               </dl>
-              <p className="instruction-callout">Choose a chatbot approach or do it yourself.</p>
+              <p className="instruction-callout">Choose a chatbot response or select a manual option.</p>
             </section>
             <div className="page-actions">{study.settings.allowBackNavigation && route.scenarioIndex > 0 && !study.settings.firstTaskId && !study.settings.taskOrder?.length ? <button className="button ghost" onClick={() => setRoute(previousRoute(study, route))}><ArrowLeft size={16} /> Back</button> : <span />}<button className="button primary" onClick={() => setRoute(study.settings.firstTaskId || study.settings.taskOrder?.length ? orderedCheckpoints(study)[0] : { screen: 'checkpoint', scenarioIndex: route.scenarioIndex, checkpointIndex: 0 })}>Begin scenario <ArrowRight size={17} /></button></div>
           </>}
@@ -185,8 +185,8 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
               return <details className="previous-task" key={key}>
                 <summary>Previous task · {previous.title}</summary>
                 {reply && <div className="previous-reply">
-                  <span>{reply.kind === 'manual' ? 'Do it yourself' : 'Preferred reply'}</span>
-                  <div className={reply.kind === 'manual' ? 'manual-answer' : 'reply-bubble'}><ReplyText text={reply.text} /></div>
+                  <span>Selected response</span>
+                  <ResponseCard text={reply.text} action={previous.optionLayout === 'cards' || reply.kind === 'manual'} />
                 </div>}
                 {written && <div className="previous-reply"><span>Written response</span><p>{written}</p></div>}
               </details>;
@@ -206,7 +206,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
             </div>
             <p className="keyboard-tip">Use <kbd>Tab</kbd> to focus choices, <kbd>↑</kbd> <kbd>↓</kbd> to select, and <kbd>Enter</kbd> or <kbd>Space</kbd> to choose.</p>
           </>}
-          {route.screen === 'complete' && <div className="completion-content"><span className="completion-icon"><Bot size={28} /></span><h1 ref={headingRef} tabIndex={-1}>{submitting ? 'Finishing the study…' : 'Thanks, that’s everything!'}</h1><p className="welcome-lede">You’ve shared how you’d like a travel chatbot to help.</p>
+          {route.screen === 'complete' && <div className="completion-content"><span className="completion-icon"><Bot size={28} /></span><h1 ref={headingRef} tabIndex={-1}>{submitting ? 'Finishing the study…' : 'Thanks, that’s everything!'}</h1>
             <div className="completion-card"><FileCheck2 size={26} /><div>
               <h2 role={saveToServer ? (submissionStatus === 'failed' ? 'alert' : 'status') : undefined}>
                 {submitted ? 'Your responses were saved' : submitting ? 'Submitting your responses…' : submissionStatus === 'failed' ? 'We couldn’t confirm that your responses were saved' : 'Your responses are ready to download'}

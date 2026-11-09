@@ -50,7 +50,7 @@ describe('participant and researcher flows', () => {
     }
   });
 
-  it('shows all flights, then all hotels, then all rental-car questions before reservation tasks', async () => {
+  it('shows the default study in order through reservation preparation, payment and recovery', async () => {
     const fetchStudy = vi.fn(async () => new Response(JSON.stringify(boston)));
     vi.stubGlobal('fetch', fetchStudy);
     try {
@@ -66,7 +66,7 @@ describe('participant and researcher flows', () => {
       expect(screen.getByRole('heading', { name: 'Boston · Tight budget, tight schedule' })).toBeVisible();
       expect(screen.getByText('$350 total, including taxes and one checked bag')).toBeVisible();
       expect(screen.getByText('$600 maximum, including taxes and fees')).toBeVisible();
-      expect(screen.getByText('Choose a chatbot approach or do it yourself.')).toBeVisible();
+      expect(screen.getByText('Choose a chatbot response or select a manual option.')).toBeVisible();
       expect(screen.queryByText('Hotel task assumptions')).not.toBeInTheDocument();
       expect(screen.queryByText('Rental task assumptions')).not.toBeInTheDocument();
       expect(screen.queryByText('Rental-car budget')).not.toBeInTheDocument();
@@ -79,7 +79,10 @@ describe('participant and researcher flows', () => {
       const followUp = screen.getByRole('region', { name: 'Optional follow-up' });
       expect(replies).toHaveLength(4);
       expect(replies.at(-1)).toBe(manual);
-      expect(screen.getByRole('heading', { name: 'Do it yourself' })).toBeVisible();
+      expect(screen.getByText('Choose your preferred chatbot response or select the manual human option')).toBeVisible();
+      expect(manual.parentElement).toBe(comparison.parentElement);
+      expect(manual.querySelector('.action-card .action-radio')).toBeVisible();
+      expect(comparison.querySelector('.lucide-bot')).toBeVisible();
       expect(manual.compareDocumentPosition(followUp) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
       expect(within(comparison).getByText('HarborLink Airways HL 112')).toBeVisible();
       expect(within(comparison).getByText('ORD 9:10 a.m. CT')).toBeVisible();
@@ -218,6 +221,14 @@ describe('participant and researcher flows', () => {
           await user.click(screen.getByRole('radio', { name: /Chatbot prepares; I review/ }));
           await user.click(screen.getByRole('button', { name: 'Next task' }));
         }
+        if (title === 'Hotel reservation') {
+          expect(screen.getByRole('heading', { name: 'Recovering from a reservation preparation failure' })).toBeVisible();
+          expect(screen.getAllByRole('radio')).toHaveLength(4);
+          const retry = screen.getByRole('radio', { name: 'Ask the chatbot to try again using my saved information.' });
+          expect(retry.querySelector('.action-radio')).toBeVisible();
+          await user.click(retry);
+          await user.click(screen.getByRole('button', { name: 'Next task' }));
+        }
       }
       expect(screen.queryByText(/flight number/i)).not.toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Next task' })).toBeDisabled();
@@ -234,8 +245,13 @@ describe('participant and researcher flows', () => {
       const reasonForPayment = screen.getByRole('textbox', { name: 'What is the main reason for your choice?' });
       expect(reasonForPayment).not.toBeRequired();
       expect(reasonForPayment).toHaveValue('');
-      expect(screen.getByRole('button', { name: 'Finish study' })).toBeDisabled();
+      expect(screen.getByRole('button', { name: 'Next task' })).toBeDisabled();
       await user.click(autoPay);
+      await user.click(screen.getByRole('button', { name: 'Next task' }));
+      expect(screen.getByRole('heading', { name: 'Recovering from a payment failure' })).toBeVisible();
+      expect(screen.getAllByRole('radio')).toHaveLength(4);
+      expect(screen.getByRole('button', { name: 'Finish study' })).toBeDisabled();
+      await user.click(screen.getByRole('radio', { name: 'Open the payment page and retry the payment myself.' }));
       expect(screen.getByRole('button', { name: 'Finish study' })).toBeEnabled();
     } finally {
       vi.unstubAllGlobals();

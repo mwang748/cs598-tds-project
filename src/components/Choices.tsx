@@ -1,7 +1,6 @@
 import { useRef } from 'react';
-import { Bot, Check } from 'lucide-react';
 import type { Checkpoint } from '../content/schema';
-import { ReplyText } from './ReplyText';
+import { ResponseCard } from './ResponseCard';
 
 export function Choices({ checkpoint, selected, onSelect }: {
   checkpoint: Checkpoint;
@@ -14,14 +13,14 @@ export function Choices({ checkpoint, selected, onSelect }: {
   const options = [...replies, ...manualOptions];
 
   function renderOption(option: Checkpoint['options'][number], index: number) {
-    const manual = option.kind === 'manual';
+    const action = checkpoint.optionLayout === 'cards' || option.kind === 'manual';
     const checked = selected === option.id;
     return <div
       key={option.id}
       ref={element => { refs.current[index] = element; }}
       role="radio" aria-checked={checked} aria-label={option.text}
       tabIndex={(selected ? checked : index === 0) ? 0 : -1}
-      className={`${manual ? 'manual-answer manual-choice' : 'choice-card'}${checked ? ' selected' : ''}`}
+      className={`choice-card${action ? ' action-choice' : ''}${checked ? ' selected' : ''}`}
       onClick={() => onSelect(option.id)}
       onKeyDown={event => {
         // A focused package viewport uses arrow keys and Space for scrolling.
@@ -39,24 +38,11 @@ export function Choices({ checkpoint, selected, onSelect }: {
         if (next !== undefined) { event.preventDefault(); onSelect(options[next].id); refs.current[next]?.focus(); }
       }}
     >
-      {manual ? <>
-        <span className="manual-choice-indicator" aria-hidden="true" />
-        <ReplyText text={option.text} />
-      </> : <>
-        <span className="reply-avatar" aria-hidden="true"><Bot size={18} /></span>
-        <span className="reply-bubble">
-          <ReplyText text={option.text} />
-          {checked && <span className="reply-selected" aria-hidden="true"><Check size={13} /> Selected</span>}
-        </span>
-      </>}
+      <ResponseCard text={option.text} action={action} selected={checked} />
     </div>;
   }
 
   return <div className="choice-group" role="radiogroup" aria-label="Choose an approach">
-    {replies.map(renderOption)}
-    {manualOptions.length > 0 && <div className="manual-options">
-      <h3>Do it yourself</h3>
-      {manualOptions.map((option, index) => renderOption(option, replies.length + index))}
-    </div>}
+    {options.map(renderOption)}
   </div>;
 }

@@ -7,10 +7,10 @@ The participant content is in `public/study.default.json`. Cancellation and paym
 1. Four flight-selection scenarios.
 2. Four combined hotel/room/rate scenarios.
 3. Four rental-car-selection scenarios.
-4. One reservation-preparation question per service: flight, hotel, and rental car.
-5. One general payment question.
+4. Flight and hotel reservation preparation, then hotel reservation recovery, then rental-car reservation preparation.
+5. One general payment question, followed by payment recovery.
 
-Each selection group runs tight budget/fixed schedule, tight budget/flexible schedule, higher budget/fixed schedule, then higher budget/flexible schedule. There are 16 tasks in the current draft. The four old `room-and-rate` questions are removed; combined accommodation questions retain the `hotel-selection` ID. Historical room/rate answers should not be treated as equivalent to the new combined task.
+Each selection group runs tight budget/fixed schedule, tight budget/flexible schedule, higher budget/fixed schedule, then higher budget/flexible schedule. There are 18 tasks in the current draft. The four old `room-and-rate` questions are removed; combined accommodation questions retain the `hotel-selection` ID. Historical room/rate answers should not be treated as equivalent to the new combined task.
 
 ## Shared fictional inventory
 
