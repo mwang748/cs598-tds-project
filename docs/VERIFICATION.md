@@ -11,7 +11,7 @@ All interactions used fictional example content. No real participant data was co
 - Helpful field paths and IDs. Invalid imports retain the active study. Validated imports can be activated as soon as the current session ends.
 - Keyboard arrow, Home, End and Enter controls; back-navigation settings; selection retention and latest-answer replacement.
 - Unchanged later stimuli after earlier choices. Literal HTML-like content and hidden researcher metadata.
-- Full participant completion, confirmation before reset, cancelled reset preserving answers, and fresh sessions clearing selections.
+- Full participant completion, direct confirmation of reset, cancelled reset preserving answers, and fresh sessions clearing selections.
 - Complete and partial workbook data, exact questions/responses/IDs, all unanswered rows, scenario factors and positions.
 - XLSX write/read round trip, literal formula-like strings, long responses, wrapped text and row height, bold headers, frozen panes, filters and no response-sheet merges.
 - CSV quoting, BOM, formula-injection protection and timezone-based filenames.
@@ -28,7 +28,6 @@ Tested through the actual localhost Vite server in the desktop in-app browser:
 - Different option counts, final completion, prominent Excel download and CSV fallback.
 - Actual partial and complete XLSX downloads, then reopened with ExcelJS to verify 4 response rows, Partial/Complete status, 2/4 versus 4/4 answers, correct first answer ID and question wording.
 - Actual CSV download with the expected header and selected response row.
-- Reset remains disabled until acknowledgement; confirming returns to the welcome screen.
 - Invalid JSON shows syntax errors without replacing content.
 
 Browser QA session `P-01c6026519af` and its downloads are fictional test data. The QA session was reset after export. The separate reproducible sample uses `P-TESTONLY` and `[TEST DATA]` in the study title to distinguish it from research results.

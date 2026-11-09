@@ -18,7 +18,6 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   const [route, setRoute] = useState<StudyRoute>({ screen: 'welcome' });
   const [researcherOpen, setResearcherOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
-  const [resetConfirmed, setResetConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [exportNotice, setExportNotice] = useState('');
   const [exportError, setExportError] = useState('');
@@ -59,6 +58,7 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
   }, [routeIdentity, study?.studyId]);
 
   if (!study) return <div className="loading-screen"><Compass size={32} /><h1>{loadError ? 'The study needs attention' : 'Opening your study…'}</h1>{loadError && <><pre role="alert">{loadError}</pre><p>Fix public/study.default.json using the format in docs/JSON_FORMAT.md, then reload.</p></>}</div>;
+  const { instructions } = study;
   const total = checkpointCount(study);
   const scenario = 'scenarioIndex' in route ? study.scenarios[route.scenarioIndex] : undefined;
   const checkpoint = route.screen === 'checkpoint' ? scenario!.checkpoints[route.checkpointIndex] : undefined;
@@ -137,9 +137,9 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
     } catch (error) { setExportError(`Download could not be created. ${error instanceof Error ? error.message : 'Try the CSV fallback.'}`); }
     finally { setBusy(false); }
   };
-  const requestReset = () => { setResetConfirmed(false); setResetOpen(true); };
+  const requestReset = () => setResetOpen(true);
   const reset = () => {
-    if (!resetConfirmed || busy || submitInFlight.current) return;
+    if (busy || submitInFlight.current) return;
     setMessages({});
     setSubmissionStatus('idle');
     submissionKey.current = '';
@@ -156,11 +156,21 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
           {route.screen === 'welcome' && <>
             <h1 className="welcome-heading" ref={headingRef} tabIndex={-1}>{study.title}</h1>
             <section className="instruction-panel welcome-instructions" aria-labelledby="study-instructions">
-              <h2 id="study-instructions" className="instruction-label"><ClipboardList size={18} aria-hidden="true" /> Study instructions</h2>
-              <p className="instruction-callout"><strong>How each task works</strong> Send one message per task, then choose how you’d proceed. Each task starts a separate chat. Use the trip details for the current scenario. Your choices from earlier tasks don’t carry over.</p>
-              <ul>{study.instructions.map((instruction, index) => <li key={index}>{instruction}</li>)}</ul>
+              <h2 id="study-instructions" className="instruction-label">
+                <ClipboardList size={18} aria-hidden="true" /> {Array.isArray(instructions) ? 'Study instructions' : 'About this study'}
+              </h2>
+              {Array.isArray(instructions) ? <>
+                <p className="instruction-callout"><strong>How each task works</strong> Send one message per task, then choose how you’d proceed. Each task starts a separate chat. Use the trip details for the current scenario. Your choices from earlier tasks don’t carry over.</p>
+                <ul>{instructions.map((instruction, index) => <li key={index}>{instruction}</li>)}</ul>
+              </> : <>
+                <p>{instructions.introduction}</p>
+                <ol>{instructions.steps.map(({ title, text }, index) => (
+                  <li key={index}><strong>{title}</strong> {text}</li>
+                ))}</ol>
+                <p className="welcome-note">{instructions.note ?? <>Click <strong>Start Study</strong> to begin.</>}</p>
+              </>}
             </section>
-            <div className="welcome-bottom"><span>No names or sign-in needed.</span><button className="button primary" onClick={start}>Start study <ArrowRight size={17} /></button></div>
+            <div className="welcome-bottom"><button className="button primary" onClick={start}>Start Study <ArrowRight size={17} /></button></div>
           </>}
           {route.screen === 'intro' && scenario && <>
             <section className="instruction-panel scenario-brief" aria-labelledby="scenario-title">
@@ -226,6 +236,6 @@ export function App({ initialStudy }: { initialStudy?: Study } = {}) {
     </div>
     <ResearcherPanel open={researcherOpen} study={study} session={session} busy={busy || submitting} siteResultsEnabled={siteResultsEnabled} onClose={() => setResearcherOpen(false)} onActivate={content => { if (session) return; setStudy(content); setUsingBundledStudy(false); setRoute({ screen: 'welcome' }); }} onReset={requestReset} onExport={exportResults} />
     {researcherOpen && !resetOpen && (exportNotice || exportError) && <div className="toast" role={exportError ? 'alert' : 'status'}>{exportError || exportNotice}</div>}
-    {resetOpen && <Modal title="Ready for the next participant?" onClose={() => setResetOpen(false)}><div className="reset-body"><div className="reset-warning"><AlertCircle size={22} /><p>{submitted ? 'This participant’s responses are saved. Resetting clears the current session from this browser.' : 'Download this participant’s results before continuing. Resetting clears their answers from this browser, including any responses you haven’t downloaded.'}</p></div><div className="button-row"><button className="button primary small" disabled={busy} onClick={() => exportResults('xlsx')}><Download size={15} /> Download current results</button><button className="text-button" disabled={busy} onClick={() => exportResults('csv')}>CSV fallback</button></div>{(exportNotice || exportError) && <p className={exportError ? 'error-text' : 'success-text'} role="status">{exportError || exportNotice}</p>}<label className="confirmation-label"><input type="checkbox" checked={resetConfirmed} onChange={event => setResetConfirmed(event.target.checked)} /> {submitted ? 'I’m ready to start a new session.' : 'I have retained the download, or I understand these responses will be lost.'}</label><div className="page-actions"><button className="button" onClick={() => setResetOpen(false)}>Keep session</button><button className="button danger" disabled={!resetConfirmed || busy} onClick={reset}>Confirm reset</button></div></div></Modal>}
+    {resetOpen && <Modal title="Ready for the next participant?" onClose={() => setResetOpen(false)}><div className="reset-body"><div className="reset-warning"><AlertCircle size={22} /><p>{submitted ? 'This participant’s responses are saved. Resetting clears the current session from this browser.' : 'Resetting clears this participant’s answers from this browser. Download their results first if you need a copy.'}</p></div><div className="button-row"><button className="button primary small" disabled={busy} onClick={() => exportResults('xlsx')}><Download size={15} /> Download current results</button><button className="text-button" disabled={busy} onClick={() => exportResults('csv')}>CSV fallback</button></div>{(exportNotice || exportError) && <p className={exportError ? 'error-text' : 'success-text'} role="status">{exportError || exportNotice}</p>}<div className="page-actions"><button className="button" onClick={() => setResetOpen(false)}>Keep session</button><button className="button danger" disabled={busy || submitting} onClick={reset}>Confirm reset</button></div></div></Modal>}
   </div>;
 }

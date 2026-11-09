@@ -11,7 +11,7 @@ The default configuration is `public/study.default.json`; start from `public/stu
 | `contentVersion` | string | Nonblank researcher-managed content version; increment when wording changes. |
 | `title` | string | Nonblank study title. |
 | `stimulusLabel` | string, optional | Optional participant-facing badge, e.g. `"Fictional draft stimuli"`. Change or omit it for your real stimuli. |
-| `instructions` | string array | At least one nonblank instruction. |
+| `instructions` | string array or object | Use a nonempty list of instructions, or an object with an `introduction` string, a nonempty `steps` array of `{title, text}` objects, and an optional `note` string. |
 | `settings.allowBackNavigation` | boolean | `true` enables reviewing earlier checkpoints; `false` disables Back and final review. |
 | `scenarios` | scenario array | At least one scenario. Rendered in array order. |
 

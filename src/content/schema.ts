@@ -36,7 +36,14 @@ export const studySchema = z.object({
   contentVersion: text,
   title: text,
   stimulusLabel: text.optional(),
-  instructions: z.array(text).min(1, 'Add at least one instruction'),
+  instructions: z.union([
+    z.array(text).min(1, 'Add at least one instruction'),
+    z.object({
+      introduction: text,
+      steps: z.array(z.object({ title: text, text }).strict()).min(1, 'Add at least one step'),
+      note: text.optional(),
+    }).strict(),
+  ]),
   settings: z.object({ allowBackNavigation: z.boolean() }).strict(),
   scenarios: z.array(scenarioSchema).min(1, 'A study needs at least one scenario'),
 }).strict().superRefine((study, ctx) => {

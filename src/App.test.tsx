@@ -21,7 +21,7 @@ async function sendTaskMessage(user: ReturnType<typeof userEvent.setup>, message
 async function begin(content = study) {
   const user = userEvent.setup();
   render(<App initialStudy={content} />);
-  await user.click(screen.getByRole('button', { name: /Start study/ }));
+  await user.click(screen.getByRole('button', { name: /Start Study/ }));
   await user.click(screen.getByRole('button', { name: /Begin scenario/ }));
   return user;
 }
@@ -39,7 +39,7 @@ describe('participant and researcher flows', () => {
     try {
       const user = userEvent.setup();
       render(<App initialStudy={oneTask} />);
-      await user.click(screen.getByRole('button', { name: 'Start study' }));
+      await user.click(screen.getByRole('button', { name: 'Start Study' }));
       await user.click(screen.getByRole('button', { name: 'Begin scenario' }));
       await sendTaskMessage(user, 'Could you help me pick a hotel?');
       await user.click(screen.getByRole('radio', { name: /I’d compare the hotels and make this choice myself/ }));
@@ -68,9 +68,13 @@ describe('participant and researcher flows', () => {
     try {
       const user = userEvent.setup();
       render(<App />);
-      expect(await screen.findByRole('heading', { name: 'Boston Travel Study' })).toBeVisible();
+      expect(await screen.findByRole('heading', { name: boston.title })).toBeVisible();
       expect(fetchStudy).toHaveBeenCalledWith('/study.default.json', expect.any(Object));
-      await user.click(screen.getByRole('button', { name: 'Start study' }));
+      const welcome = within(screen.getByRole('region', { name: 'About this study' }));
+      expect(welcome.getAllByRole('listitem').map(item => item.querySelector('strong')?.textContent)).toEqual([
+        'Planning your trip:', 'Preparing your reservations:', 'Completing the purchase:',
+      ]);
+      await user.click(screen.getByRole('button', { name: 'Start Study' }));
       expect(screen.getByRole('heading', { name: 'Boston · Tight budget, tight schedule' })).toBeVisible();
       expect(screen.getByText('$350 total, including taxes and one checked bag')).toBeVisible();
       expect(screen.getByText('$600 maximum, including taxes and fees')).toBeVisible();
@@ -145,7 +149,7 @@ describe('participant and researcher flows', () => {
     expect(screen.queryByRole('textbox', { name: 'Your message' })).not.toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent('Preparing replies…');
     expect(screen.queryByRole('radio')).not.toBeInTheDocument();
-    await screen.findByRole('heading', { name: 'Choose the reply you’d prefer' }, { timeout: 4000 });
+    await screen.findByRole('heading', { name: /^Choose the reply you’d prefer/ }, { timeout: 4000 });
     expect(screen.getByRole('radiogroup', { name: 'Choose an approach' })).toBeVisible();
     expect(screen.queryByText('Alternative responses')).not.toBeInTheDocument();
     expect(screen.queryByText(study.scenarios[0].checkpoints[0].question)).not.toBeInTheDocument();
@@ -207,14 +211,13 @@ describe('participant and researcher flows', () => {
     expect(screen.getByText(/4 checkpoints answered across 2 scenarios/)).toBeVisible();
     await user.click(screen.getByRole('button', { name: /Next participant/ }));
     const dialog = screen.getByRole('dialog', { name: /Ready for/ });
-    expect(within(dialog).getByRole('button', { name: /Confirm reset/ })).toBeDisabled();
+    expect(within(dialog).getByRole('button', { name: /Confirm reset/ })).toBeEnabled();
     await user.click(within(dialog).getByRole('button', { name: /Keep session/ }));
     expect(screen.getByRole('button', { name: /Download responses/ })).toBeEnabled();
     await user.click(screen.getByRole('button', { name: /Next participant/ }));
-    await user.click(screen.getByRole('checkbox'));
     await user.click(screen.getByRole('button', { name: /Confirm reset/ }));
-    expect(screen.getByRole('button', { name: /Start study/ })).toBeVisible();
-    await user.click(screen.getByRole('button', { name: /Start study/ }));
+    expect(screen.getByRole('button', { name: /Start Study/ })).toBeVisible();
+    await user.click(screen.getByRole('button', { name: /Start Study/ }));
     await user.click(screen.getByRole('button', { name: /Begin scenario/ }));
     expect(screen.getByRole('textbox', { name: 'Your message' })).toHaveValue('');
     await sendTaskMessage(user);
@@ -225,7 +228,7 @@ describe('participant and researcher flows', () => {
     content.settings.allowBackNavigation = false;
     const user = userEvent.setup();
     render(<App initialStudy={content} />);
-    await user.click(screen.getByRole('button', { name: /Start study/ }));
+    await user.click(screen.getByRole('button', { name: /Start Study/ }));
     await user.click(screen.getByRole('button', { name: /Begin scenario/ }));
     await sendTaskMessage(user);
     const radios = screen.getAllByRole('radio');
@@ -260,7 +263,7 @@ describe('participant and researcher flows', () => {
     expect(screen.getByText(/Study activated/)).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Close dialog' }));
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('A replacement study');
-    await user.click(screen.getByRole('button', { name: /Start study/ }));
+    await user.click(screen.getByRole('button', { name: /Start Study/ }));
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('A weekend by the coast');
   });
   it('keeps an uploaded and validated study ready to activate after ending the current session', async () => {
@@ -281,21 +284,21 @@ describe('participant and researcher flows', () => {
     expect(activate).toBeDisabled();
     await user.click(researcher.getByRole('button', { name: 'End / reset session' }));
     const reset = within(screen.getByRole('dialog', { name: /Ready for/ }));
-    await user.click(reset.getByRole('checkbox'));
+    expect(reset.getByRole('button', { name: 'Confirm reset' })).toBeEnabled();
     await user.click(reset.getByRole('button', { name: 'Confirm reset' }));
     expect(researcher.getByText('No active session')).toBeVisible();
     expect(activate).toBeEnabled();
     await user.click(activate);
     await user.click(researcher.getByRole('button', { name: 'Close dialog' }));
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Uploaded study');
-    expect(screen.getByRole('button', { name: 'Start study' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Start Study' })).toBeVisible();
   });
   it('renders HTML-like stimulus text literally and never reveals metadata', async () => {
     const content = structuredClone(study);
     content.scenarios[0].checkpoints[0].context = [{ type: 'paragraph', text: '<script>window.stolen=true</script>' }];
     const user = userEvent.setup();
     render(<App initialStudy={content} />);
-    await user.click(screen.getByRole('button', { name: /Start study/ }));
+    await user.click(screen.getByRole('button', { name: /Start Study/ }));
     await user.click(screen.getByRole('button', { name: /Begin scenario/ }));
     expect(screen.getByText('<script>window.stolen=true</script>')).toBeVisible();
     expect(screen.queryByText('Preferred hotel-selection authority')).not.toBeInTheDocument();

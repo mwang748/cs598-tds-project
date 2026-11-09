@@ -2,13 +2,25 @@
   "schemaVersion": "1.0",
   "studyId": "boston-travel-study",
   "contentVersion": "draft-01",
-  "title": "Boston Travel Study",
+  "title": "Travel Chatbot Study",
   "stimulusLabel": "Fictional study details",
-  "instructions": [
-    "Complete the flight and hotel tasks for one budget and schedule before moving to the next scenario.",
-    "The details in the study are fictional. Choose the approach you would prefer for each task. Nothing is actually reserved or paid for.",
-    "Some tasks give you a flight or hotel that has already been chosen for the exercise. Use the details stated in that task."
-  ],
+  "instructions": {
+    "introduction": "Imagine you’re planning and booking a trip with an AI assistant. We’re studying which parts of the process you’d want the assistant to handle, how you want the assistant to handle them, and which parts you’d prefer to do yourself. (The AI assistant isn’t perfect and it may break sometimes…how would you like that handled?) For each task, we’ll give you the trip details and tell you what you need to prioritize, and you choose the AI response you’d prefer in that situation. The study will be broken down into three portions:",
+    "steps": [
+      {
+        "title": "Planning your trip:",
+        "text": "Here is where you will decide how you’d like to find and choose a flight, a hotel, a room and rate, and a rental car."
+      },
+      {
+        "title": "Preparing your reservations:",
+        "text": "This is where you decide how you’d like to get the flight, hotel, and rental car reservations added to cart/ready for payment."
+      },
+      {
+        "title": "Completing the purchase:",
+        "text": "This is where you decide how you’d want to pay for the trip."
+      }
+    ]
+  },
   "settings": {
     "allowBackNavigation": true
   },

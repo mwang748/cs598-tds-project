@@ -89,7 +89,10 @@ h1 { font-size: 23px; font-weight: 600; line-height: 1.4; letter-spacing: -.5px;
   line-height: 1.65;
 }
 .instruction-callout strong { display: block; margin-bottom: 4px; }
-.welcome-instructions ul { padding-left: 20px; margin: 16px 0 0; font-size: 14px; line-height: 1.75; }
+.welcome-instructions > p:not(.instruction-callout) { font-size: 14px; line-height: 1.75; }
+.welcome-instructions ul, .welcome-instructions ol { padding-left: 20px; margin: 16px 0 0; font-size: 14px; line-height: 1.75; }
+.welcome-instructions ol li::marker { font-weight: 700; }
+.welcome-note { margin-top: 16px; }
 .welcome-instructions li + li { margin-top: 11px; }
 .welcome-bottom { margin: 23px 0 55px 44px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .welcome-bottom > span { font-size: 11px; color: #93959c; }
@@ -308,8 +311,6 @@ kbd { font: inherit; color: #9699a4; }
 .reset-warning { display: flex; align-items: flex-start; gap: 13px; color: #b49980; margin-bottom: 23px; }
 .reset-warning svg { flex-shrink: 0; margin-top: 3px; }
 .reset-warning p { font-size: 12px; line-height: 1.9; }
-.confirmation-label { display: flex; align-items: flex-start; gap: 10px; margin-top: 25px; font-size: 11px; line-height: 1.8; color: #999fae; }
-.confirmation-label input { accent-color: var(--blue); width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; }
 .reset-body .page-actions { margin-left: 0; margin-bottom: 0; }
 .export-notice { display: flex; align-items: flex-start; gap: 10px; padding: 15px 18px; margin: 0 0 25px 44px; background: #f1f5f0; border: 1px solid #e0e8db; border-radius: 11px; color: #8d9f7e; font-size: 11px; line-height: 1.8; }
 .export-notice.error { background: #fff4ed; color: #b28d71; border-color: #eddccf; }

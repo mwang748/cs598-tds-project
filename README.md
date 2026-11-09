@@ -30,7 +30,7 @@ npm run sample   # regenerate the clearly marked test-data workbook
 3. Read each scenario brief and click **Begin scenario**. For each **New task**, type a message and select **Send**. Choose an AI reply or select an option under **Do it yourself**, when available. Where a follow-up is provided, you can also write your own approach. **Next task** collapses the exchange. **Next scenario** introduces a fresh trip. The exports record selected options and written follow-up answers. The opening chat messages stay in memory for display.
 4. Use **Back** to review or change answers, if enabled in the JSON. Responses use stable IDs and exports retain the latest selection.
 5. At completion, click **Download responses** for a formatted `.xlsx`. CSV is available as a fallback. Check your browser’s download list and retain the file. Downloading does not clear answers or prove that a file was permanently saved.
-6. Click **Next participant**, download if needed, acknowledge the reminder and click **Confirm reset**. This clears responses and returns to the welcome screen. The next **Start study** generates a new ID. Cancelling keeps the existing session.
+6. Click **Next participant**, download if needed, then click **Confirm reset**. This clears responses and returns to the welcome screen. The next **Start study** generates a new ID. Cancelling keeps the existing session.
 
 For an early departure, choose **Researcher → Export partial**. A partial workbook includes every checkpoint, with unanswered rows explicitly marked. End/reset through that workspace before the next participant.
 
