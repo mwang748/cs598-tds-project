@@ -81,7 +81,7 @@ export function TaskChat({ checkpoint, headingRef, message, selected, followUpAn
         <div className="thinking-bubble" aria-hidden="true"><span /><span /><span /></div>
       </div> : <div className="question-section">
         <h2 ref={repliesHeading} tabIndex={-1}>
-          {checkpoint.options.some(option => option.kind === 'chatbot') ? 'Choose the reply you’d prefer' : 'Choose how you’d proceed'}
+          {checkpoint.options.some(option => option.kind === 'chatbot') ? 'Choose the reply you’d prefer OR scroll and select the "Do it yourself" option ' : 'Choose how you’d proceed'}
         </h2>
         <Choices checkpoint={checkpoint} selected={selected} onSelect={onSelect} />
         {checkpoint.followUp && <section className="instruction-panel follow-up" aria-labelledby="follow-up-heading">
